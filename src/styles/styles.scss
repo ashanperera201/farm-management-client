@@ -1,0 +1,8 @@
+@import "./base";
+@import "./theme/theme";
+
+@import "../../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+@import "../../node_modules/ag-grid-community/dist/styles/ag-theme-material.css";
+@import "../../node_modules/angular-calendar/css/angular-calendar.css";
+@import '~ngx-toastr/toastr';
