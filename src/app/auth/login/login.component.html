@@ -1,1 +1,22 @@
-<p>login works!</p>
+<div class="auth-container">
+    <div class="auth-background"></div>
+    <div class="auth-panel">
+        <div class="auth-panel__header">
+            <img src="../../../assets/user-2.png" alt="login-img">
+        </div>
+        <div class="auth-panel__form" autocomplete="off">
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Email" type="email">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput placeholder="Password" type="password" name="password">
+            </mat-form-field>
+        </div>
+        <div class="auth-panel__action">
+            <button mat-raised-button color="primary">Login</button>
+            <button mat-button color="primary">Create a account</button>
+        </div>
+    </div>
+</div>
