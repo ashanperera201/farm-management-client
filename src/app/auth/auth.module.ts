@@ -17,6 +17,8 @@ import { ForgetPasswordComponent } from './forget-password/forget-password.compo
 import { RegisterComponent } from './register/register.component';
 import { AuthRoutingModule } from './auth.routing';
 import { AuthComponent } from './auth.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { AuthComponent } from './auth.component';
   imports: [
     CommonModule,
     AuthRoutingModule,
+<<<<<<< Updated upstream
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
@@ -36,6 +39,10 @@ import { AuthComponent } from './auth.component';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule
+=======
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+>>>>>>> Stashed changes
   ]
 })
 export class AuthModule { }
