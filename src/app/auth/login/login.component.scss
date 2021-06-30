@@ -1,113 +1,41 @@
-@import "../../../styles/responsive";
-
-.auth-container {
+.auth-wrapper {
+    height: 100vh;
+    width: 100%;
+    background-color: #fff;
     display: grid;
-    grid-template-columns: [sign-background-start] 75% [sign-background-end signup-form-start] 25% [signup-form-end];
-    grid-template-rows: 100vh;
+    grid-template-columns: 35% 65%;
+    grid-template-rows: 1fr;
 
-    @include respond(laptop) {
-        grid-template-columns: [sign-background-start] 70% [sign-background-end signup-form-start] 30% [signup-form-end];
-    }
-
-    @include respond(tab-land) {
-        grid-template-columns: 100vw;
-        grid-template-rows: 100vh;
-    }
-
-    .auth-background {
+    &__background {
+        grid-column: 1/2;
         grid-row: 1/-1;
-        grid-column: sign-background-start/sign-background-end;
-        background-image: url("https://bridgera.com/wp-content/uploads/2019/12/IoT-in-Agriculture.jpeg");
-        background-size: cover;
-        background-repeat: no-repeat;
+        background-color: #f2c98a;
 
-        @include respond(tab-land) {
-            grid-column: 1/-1;
-            grid-row: 1/-1;
-            background-size: cover;
-        }
-    }
-
-    .auth-panel {
-        grid-row: 1/-1;
-        grid-column: signup-form-start/signup-form-end;
-
-        @include respond(tab-land) {
-            grid-column: 1/-1;
-            grid-row: 1/-1;
-            justify-self: center;
-            align-self: center;
-            width: 75%;
-            height: 80%;
-            z-index: 100;
-            background-color: #fff;
-            box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
-            border-radius: 0.8rem;
-            opacity: 0.9;
+        .application-header {
+            width: 100%;
+            height: 35%;
         }
 
-        @include respond(phone) {
-            width: 90%;
-        }
-
-        &__header {
-            display: flex;
-            align-self: center;
-            justify-content: center;
-            padding-top: 8rem;
+        .application-header-background {
+            width: 100%;
+            height: 65%;
 
             img {
-                width: 30%;
-                @include respond(tab-land) {
-                    width: 22%;
-                }
-
-                @include respond(phone) {
-                    width: 22%;
-                }
+                height: 50%;
             }
         }
+    }
 
-        &__form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 6rem;
+    &__content {
+        grid-column: 2/-1;
+        grid-row: 1/-1;
+        padding: 10rem;
 
-            mat-form-field {
-                width: 75%;
-                font-size: 1.6rem;
-
-                @include respond(tab-land) {
-                    font-size: 1.8rem;
-                }
-
-                @include respond(phone) {
-                    width: 85%;
-                }
-            }
-        }
-
-        &__action {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-evenly;
-
-            @include respond(phone) {
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-
-            button {
-                width: 31%;
-
-                @include respond(phone) {
-                    width: 85%;
-
-                    &:last-child {
-                        margin-top: 1rem;
-                    }
+        &--login {
+            div.form-group {
+                width: 100%;
+                &:last-child {
+                    margin-top: 1rem;
                 }
             }
         }

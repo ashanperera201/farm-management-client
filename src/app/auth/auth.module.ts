@@ -17,6 +17,7 @@ import { ForgetPasswordComponent } from './forget-password/forget-password.compo
 import { RegisterComponent } from './register/register.component';
 import { AuthRoutingModule } from './auth.routing';
 import { AuthComponent } from './auth.component';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { AuthComponent } from './auth.component';
     MatDialogModule,
     MatIconModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    InlineSVGModule
   ]
 })
 export class AuthModule { }
