@@ -18,6 +18,7 @@ import { RegisterComponent } from './register/register.component';
 import { AuthRoutingModule } from './auth.routing';
 import { AuthComponent } from './auth.component';
 import { InlineSVGModule } from 'ng-inline-svg';
+//import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,10 @@ import { InlineSVGModule } from 'ng-inline-svg';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    InlineSVGModule
+    InlineSVGModule,
+    FormsModule,
+    ReactiveFormsModule,
+    //ToastrModule.forRoot(),
   ]
 })
 export class AuthModule { }

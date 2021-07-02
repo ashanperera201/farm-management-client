@@ -6,6 +6,7 @@ import { BlockUIModule } from 'ng-block-ui';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -19,7 +20,8 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     BlockUIModule.forRoot(),
     InlineSVGModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
