@@ -19,7 +19,7 @@
                 Welcome to Farm Management System
             </h3>
             <span class="text-muted font-weight-bold font-size-h4">New Here?
-                <a id="kt_login_signup" class="text-primary font-weight-bolder">XXXXXXXXXXX</a>
+                <a id="kt_login_signup" class="text-primary font-weight-bolder" (click)="openSignUpPopup()">Sign Up</a>
             </span>
         </div>
         <div [formGroup]="loginForm">
@@ -45,6 +45,9 @@
                     class="svg-icon svg-icon-md">
                     <img src="./assets/media/svg/social-icons/google.svg"></span> Sign in with Google
             </button>
+        </div>
+        <div class="pb-lg-0 pb-5">
+            <a id="kt_login_signup" class="text-primary font-weight-bolder" (click)="openResetPassword()">Forgot Password ?</a>
         </div>
     </div>
 </div>

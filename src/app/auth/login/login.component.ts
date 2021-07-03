@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal, ModalDismissReasons, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { RegisterComponent } from '../register/register.component';
+import { ForgetPasswordComponent } from '../forget-password/forget-password.component';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -9,8 +12,12 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
   loginForm! : FormGroup;
+  signUpModal! : NgbModalRef;
+  resetPasswordModal! : NgbModalRef;
+
   constructor( private authService : AuthService,
     private toastrService:ToastrService,
+    private modalService : NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -41,8 +48,22 @@ export class LoginComponent implements OnInit {
     this.loginForm.reset();
   }
 
-  openRegisterPopup = () => {
-    
+  openSignUpPopup = () => {
+    this.signUpModal = this.modalService.open(RegisterComponent,{
+      animation: true,
+      keyboard: true,
+      backdrop: true,
+      modalDialogClass: 'modal-xl'
+    });
+  }
+
+  openResetPassword = () => {
+    this.resetPasswordModal = this.modalService.open(ForgetPasswordComponent,{
+      animation: true,
+      keyboard: true,
+      backdrop: true,
+      modalDialogClass: 'modal-md'
+    });
   }
 
 }

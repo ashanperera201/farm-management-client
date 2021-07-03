@@ -23,4 +23,9 @@ export class AuthService {
     this.serviceUrl = 'http://localhost:3000/api/v1/user/sign-up';
     return this.http.post(this.serviceUrl, userData)
   }
+
+  resetPassword(userData: any): Observable<any> {
+    this.serviceUrl = 'http://localhost:3000/api/v1/user/reset';
+    return this.http.post(this.serviceUrl, userData)
+  }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth.service';
+import { userModel } from '../shared/models/user-model';
 
 @Component({
   selector: 'app-register',
@@ -23,6 +24,14 @@ export class RegisterComponent implements OnInit {
   initRegisterForm= () => {
     this.registerForm = new FormGroup({
       userName: new FormControl(null, Validators.compose([Validators.required])),
+      userEmail: new FormControl(null, Validators.compose([Validators.required])),
+      firstName: new FormControl(null, Validators.compose([Validators.required])),
+      middleName: new FormControl(null),
+      lastName: new FormControl(null, Validators.compose([Validators.required])),
+      contact: new FormControl(null, Validators.compose([Validators.required])),
+      userAddress: new FormControl(null, Validators.compose([Validators.required])),
+      nic: new FormControl(null, Validators.compose([Validators.required])),
+      passpordId: new FormControl(null),
       password: new FormControl(null, Validators.compose([Validators.required])),
       rePassword: new FormControl(null, Validators.compose([Validators.required]))
     });
@@ -31,7 +40,8 @@ export class RegisterComponent implements OnInit {
   registerUser = () => {
     if(this.registerForm.valid){
       if(this.checkExistingUser(this.registerForm.value)){
-        this.authService.registerUser(this.registerForm).subscribe(res =>{
+        let userModelData = new userModel();
+        this.authService.registerUser(userModelData).subscribe(res =>{
           if(res){
 
           }
