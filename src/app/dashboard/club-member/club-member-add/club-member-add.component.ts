@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ClubMemberService } from '../club-member.service';
 
 @Component({
   selector: 'app-club-member-add',
@@ -6,10 +9,40 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./club-member-add.component.scss']
 })
 export class ClubMemberAddComponent implements OnInit {
-
-  constructor() { }
+  addClubmembersForm!: FormGroup;
+  constructor(private clubMemberService : ClubMemberService,
+    private toastrService:ToastrService) { }
 
   ngOnInit(): void {
+    this.initAddClubMembersForm();
+  } 
+
+  initAddClubMembersForm= () => {
+    this.addClubmembersForm = new FormGroup({
+      firstName: new FormControl(null, Validators.compose([Validators.required])),
+      lastName: new FormControl(null, Validators.compose([Validators.required])),
+      email: new FormControl(null),
+      contact: new FormControl(null, Validators.compose([Validators.required])),
+      address: new FormControl(null, Validators.compose([Validators.required])),
+      city: new FormControl(null, Validators.compose([Validators.required])),
+      addUser: new FormControl(0),
+      userName: new FormControl(null, Validators.compose([Validators.required])),
+      password: new FormControl(null, Validators.compose([Validators.required]))
+    });
+  }
+
+  clearDddClubmembersForm = () => {
+    this.addClubmembersForm.reset();
+  }
+
+  saveClubMember = () => {
+    if(this.addClubmembersForm.valid){
+      this.clubMemberService.saveClubMember(this.addClubmembersForm).subscribe(res=>{
+        if(res){
+          this.toastrService.success("Club member saved successfully.","Successfully Saved");
+        }
+      });
+    }
   }
 
 }

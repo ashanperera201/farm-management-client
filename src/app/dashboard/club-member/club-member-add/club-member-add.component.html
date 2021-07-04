@@ -1,1 +1,70 @@
-<p>club-member-add works!</p>
+<form class="text-center border border-light p-5">
+    <p class="h4 mb-4 text-primary ">Add Club Member</p>
+    <p>The field labels marked with * are required input fields</p>
+    <div [formGroup]="addClubmembersForm">
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark">First Name</label>
+                <input type="text" class="form-control" placeholder="First name" formControlName="firstName">
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark">Last Name</label>
+                <input type="text" class="form-control" placeholder="Last name" formControlName="lastname">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark">Email</label>
+                <input type="email" class="form-control mb-4" placeholder="E-mail" formControlName="email">
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark">Contact Number</label>
+                <input type="text" class="form-control" placeholder="Contact Number" formControlName="contact">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark">Address</label>
+                <input type="text" class="form-control" placeholder="Address" formControlName="address">
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark">City</label>
+                <input type="text" class="form-control" placeholder="City" formControlName="City">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark">Passport ID</label>
+                <input type="text" class="form-control" placeholder="Passport ID" formControlName="passpordId">
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark">Email Address</label>
+                <input type="email" class="form-control mb-4" placeholder="E-mail" formControlName="userEmail">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark">Add User</label>
+                <input  type="checkbox" formControlName="addUser" >
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark">User Name</label>
+                <input type="text" class="form-control" placeholder="User Name" formControlName="userName">
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark">Password</label>
+                <input type="password" class="form-control mb-4" placeholder="Password" formControlName="password" >
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <button type="button" [disabled]="addClubmembersForm.invalid"  (click)="saveClubMember()"
+                class="btn btn-primary  font-size-h7 px-8 py-4 my-3 mr-3">
+                Submit
+            </button>
+            </div>
+        </div>
+    </div>
+</form>
