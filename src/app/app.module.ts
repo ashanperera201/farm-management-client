@@ -7,6 +7,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -21,7 +22,9 @@ import { ToastrModule } from 'ngx-toastr';
     BlockUIModule.forRoot(),
     InlineSVGModule.forRoot(),
     HttpClientModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

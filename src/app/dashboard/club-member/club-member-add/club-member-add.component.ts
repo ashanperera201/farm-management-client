@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { error } from 'console';
 import { ToastrService } from 'ngx-toastr';
-import { ClubMemberService } from '../club-member.service';
+import { ClubMemberService } from '../../../shared/services/club-member.service';
 
 @Component({
   selector: 'app-club-member-add',
@@ -41,6 +42,9 @@ export class ClubMemberAddComponent implements OnInit {
         if(res){
           this.toastrService.success("Club member saved successfully.","Successfully Saved");
         }
+      }, 
+      error => {
+        this.toastrService.error("Unable to save","Error")
       });
     }
   }

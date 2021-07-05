@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { ClubMemberService } from '../club-member.service';
+import { ExportTypes } from 'src/app/shared/enums/export-type';
+import { ClubMemberService } from '../../../shared/services/club-member.service';
 
 @Component({
   selector: 'app-club-member-list',
@@ -33,8 +34,7 @@ selectedClubmembers = [];
   }
 
   exportClubMembers = (type: any) => {
-    //export types to be added to an enum
-    if(type == "csv"){
+    if(type == ExportTypes.CSV){
 
     }
     else{

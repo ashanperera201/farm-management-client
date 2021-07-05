@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from '../auth.service';
-import { userModel } from '../shared/models/user-model';
+import { userModel } from '../../shared/models/user-model';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -45,13 +45,13 @@ export class RegisterComponent implements OnInit {
           if(res){
 
           }
-          else{
-            this.toastrService.error("Unable to save user","Error");
-          }
+        },
+        error => {
+          this.toastrService.error("Unable to save user.","Error")
         });
       }
       else{
-        this.toastrService.error("This user already exists.","Error")
+        this.toastrService.error("This user already exists.","Error");
       }
     }
   }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgbModal, ModalDismissReasons, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RegisterComponent } from '../register/register.component';
 import { ForgetPasswordComponent } from '../forget-password/forget-password.component';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,6 +15,7 @@ export class LoginComponent implements OnInit {
   loginForm! : FormGroup;
   signUpModal! : NgbModalRef;
   resetPasswordModal! : NgbModalRef;
+  xxmodal! : NgbModalRef;
 
   constructor( private authService : AuthService,
     private toastrService:ToastrService,
@@ -37,10 +39,10 @@ export class LoginComponent implements OnInit {
         if(res){
 
         }
-        else{
-          this.toastrService.error("Login Failed","Error")
-        }
-      })
+      }, 
+      error => {
+        this.toastrService.error("Login Failed","Error")
+      });
     }
   }
 

@@ -5,6 +5,7 @@ import { ClubMemberListComponent } from './club-member-list/club-member-list.com
 import { ClubMemberAddComponent } from './club-member-add/club-member-add.component';
 import { ClubMemberCardComponent } from './club-member-card/club-member-card.component';
 import { ClubMemberdRoutingModule } from './club-member.routing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -16,7 +17,9 @@ import { ClubMemberdRoutingModule } from './club-member.routing';
   ],
   imports: [
     CommonModule,
-    ClubMemberdRoutingModule
+    ClubMemberdRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 

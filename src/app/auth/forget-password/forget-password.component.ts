@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-forget-password',
@@ -40,9 +40,9 @@ export class ForgetPasswordComponent implements OnInit {
           this.toastrService.success("Password Reset Successfull.","Success");
           this.redirectToLogin();
         }
-        else{
-          this.toastrService.error("Password Reset was Unsuccessfull.","Rest Failed");
-        }
+      },
+      error => {
+        this.toastrService.error("Password Reset was Unsuccessfull.","Rest Failed");
       });
     }
   }
