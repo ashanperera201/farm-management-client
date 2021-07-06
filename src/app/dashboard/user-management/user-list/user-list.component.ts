@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserManagementService } from 'src/app/shared/services/user-management.service';
+import { ExportTypes } from '../../../shared/enums/export-type';
 
 @Component({
   selector: 'app-user-list',
@@ -7,9 +9,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private userManagementService: UserManagementService) { }
 
   ngOnInit(): void {
   }
 
+  addUser = () => {
+
+  }
+
+  exportUserList = (type: any) => {
+    if(type == ExportTypes.CSV){
+
+    }
+    else{
+
+    }
+  }
 }
