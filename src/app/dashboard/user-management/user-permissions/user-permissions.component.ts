@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { UserManagementService } from 'src/app/shared/services/user-management.service';
 
 @Component({
   selector: 'app-user-permissions',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserPermissionsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private userManagementService: UserManagementService,
+    private toastrService: ToastrService) { }
 
   ngOnInit(): void {
   }
 
+  fetchUserPermissions = (userId: number) => {
+    this.userManagementService.getUserPermission(userId).subscribe(res => {
+      if (res) {
+
+      }
+    }, error => {
+
+    });
+  }
 }
