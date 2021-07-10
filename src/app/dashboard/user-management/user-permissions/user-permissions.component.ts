@@ -24,4 +24,14 @@ export class UserPermissionsComponent implements OnInit {
 
     });
   }
+
+  saveUserPermission = (permission: any) => {
+    this.userManagementService.saveUserPermission(permission).subscribe(res => {
+      if(res){
+        this.toastrService.success("User permissions saved successfully","Success")
+      }
+    }, error => {
+      this.toastrService.error("Unable to save user permission","Error")
+    })
+  }
 }

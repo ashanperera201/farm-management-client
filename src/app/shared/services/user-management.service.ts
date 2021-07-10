@@ -34,4 +34,9 @@ export class UserManagementService {
     this.serviceUrl = '';
     return this.http.get(this.serviceUrl);
   }
+  
+  saveUserPermission(permission : any): Observable<any> {
+    this.serviceUrl = '';
+    return this.http.post(this.serviceUrl, permission);
+  }
 }

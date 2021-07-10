@@ -41,6 +41,17 @@ export class RegisterComponent implements OnInit {
     if(this.registerForm.valid){
       if(this.checkExistingUser(this.registerForm.value)){
         let userModelData = new userModel();
+        userModelData.userName = this.registerForm.value.userName;
+        userModelData.userEmail = this.registerForm.value.userEmail;
+        userModelData.password = this.registerForm.value.userName;
+        userModelData.firstName = this.registerForm.value.userName;
+        userModelData.middleName = this.registerForm.value.userName;
+        userModelData.contact = this.registerForm.value.userName;
+        userModelData.userAddress = this.registerForm.value.userName;
+        userModelData.nic = this.registerForm.value.userName;
+        userModelData.passportId = this.registerForm.value.userName;
+        userModelData.profileImage = "";
+        userModelData.countryCode = "SRI-LANKAN"
         this.authService.registerUser(userModelData).subscribe(res =>{
           if(res){
 

@@ -1,13 +1,14 @@
 export class userModel {
-    UserName! : string;
-    UserEmail!: string;
-    Password! : string;
-    FirstName! : string;
-    LastName! : string;
-    MiddleName! : string;
-    Contact! : string;
-    UserAddress! : string
-    Nic! : string;
-    PassportId! : string;
-    ProfileImage! : string;
+    userName!: string;
+    userEmail!: string;
+    password!: string;
+    firstName!: string;
+    lastName!: string;
+    middleName!: string;
+    contact!: string;
+    userAddress!: string
+    nic!: string;
+    passportId!: string;
+    profileImage!: string;
+    countryCode!: string;
 }
