@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RegisterComponent } from '../register/register.component';
 import { ForgetPasswordComponent } from '../forget-password/forget-password.component';
+import { loginUserModel } from 'src/app/shared/models/user-model';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,6 @@ export class LoginComponent implements OnInit {
   loginForm! : FormGroup;
   signUpModal! : NgbModalRef;
   resetPasswordModal! : NgbModalRef;
-  xxmodal! : NgbModalRef;
 
   constructor( private authService : AuthService,
     private toastrService:ToastrService,
@@ -28,16 +28,19 @@ export class LoginComponent implements OnInit {
 
   initLoginForm = () => {
     this.loginForm = new FormGroup({
-      userName: new FormControl(null, Validators.compose([Validators.required])),
+      userNameOrEmail: new FormControl(null, Validators.compose([Validators.required])),
       password: new FormControl(null, Validators.compose([Validators.required])),
     });
   }
 
   login = () => {
     if(this.loginForm.valid){
-      this.authService.authenticateUser(this.loginForm.value).subscribe(res => {
+      const loginUser = new loginUserModel();
+      loginUser.userNameOrEmail = this.loginForm.value.userNameOrEmail;
+      loginUser.password = this.loginForm.value.password;
+      this.authService.authenticateUser(loginUser).subscribe(res => {
         if(res){
-
+          this.clearLoginForm();
         }
       }, 
       error => {

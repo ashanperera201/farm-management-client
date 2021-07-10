@@ -1,42 +1,44 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserManagementService {
 
-  serviceUrl!: string;
+  baseUrl: string = environment.baseUrl;
+  
   constructor(private http: HttpClient) { }
 
   getUserList(): Observable<any> {
-    this.serviceUrl = '';
-    return this.http.get(this.serviceUrl);
+    const url: string = `${this.baseUrl}/api/v1/`;
+    return this.http.get(url);
   }
 
   getRoleList(): Observable<any> {
-    this.serviceUrl = '';
-    return this.http.get(this.serviceUrl);
+    const url: string = `${this.baseUrl}/api/v1/`;
+    return this.http.get(url);
   }
 
   addUser(userData: any): Observable<any> {
-    this.serviceUrl = '';
-    return this.http.post(this.serviceUrl, userData)
+    const url: string = `${this.baseUrl}/api/v1/`;
+    return this.http.post(url, userData)
   }
 
   addRole(roleData: any): Observable<any> {
-    this.serviceUrl = '';
-    return this.http.post(this.serviceUrl, roleData)
+    const url: string = `${this.baseUrl}/api/v1/`;
+    return this.http.post(url, roleData)
   }
 
   getUserPermission(userId : number): Observable<any> {
-    this.serviceUrl = '';
-    return this.http.get(this.serviceUrl);
+    const url: string = `${this.baseUrl}/api/v1/`;
+    return this.http.get(url);
   }
   
   saveUserPermission(permission : any): Observable<any> {
-    this.serviceUrl = '';
-    return this.http.post(this.serviceUrl, permission);
+    const url: string = `${this.baseUrl}/api/v1/`;
+    return this.http.post(url, permission);
   }
 }

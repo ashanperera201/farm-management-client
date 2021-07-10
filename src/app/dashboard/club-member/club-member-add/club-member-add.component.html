@@ -45,12 +45,12 @@
         <div class="form-row mb-4">
             <div class="col">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="addUser">
+                    <input type="checkbox" class="form-check-input" id="addUser" (change)="onAddUserChange($event)">
                     <label class="form-check-label" for="addUser">Add User</label>
                   </div>
             </div>
         </div>
-        <div class="form-row mb-4">
+        <div class="form-row mb-4" *ngIf="showAddUser">
             <div class="col">
                 <label class="font-size-h7  text-dark required">User Name</label>
                 <input type="text" class="form-control" placeholder="User Name" formControlName="userName">

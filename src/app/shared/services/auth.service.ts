@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { userModel } from '../models/user-model';
+import { loginUserModel, userModel } from '../models/user-model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class AuthService {
     return this.http.get(url);
   }
 
-  authenticateUser(user: any): Observable<any> {
+  authenticateUser(user: loginUserModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/user/sign-in`;
     return this.http.post(url, user);
   }

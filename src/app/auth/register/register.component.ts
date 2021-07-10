@@ -54,7 +54,7 @@ export class RegisterComponent implements OnInit {
         userModelData.countryCode = "SRI-LANKAN"
         this.authService.registerUser(userModelData).subscribe(res =>{
           if(res){
-
+            this.clearRegisterForm();
           }
         },
         error => {
@@ -74,7 +74,8 @@ export class RegisterComponent implements OnInit {
         existingUser = users.filter((x: { userName: any; }) => x.userName == userName) ? false : true;
       }
     });
-    return existingUser;
+    //return existingUser;
+    return false;
   }
 
   clearRegisterForm = () => {
