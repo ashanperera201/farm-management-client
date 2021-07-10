@@ -24,7 +24,7 @@ export class ClubMemberAddComponent implements OnInit {
     this.addClubmembersForm = new FormGroup({
       firstName: new FormControl(null, Validators.compose([Validators.required])),
       lastName: new FormControl(null, Validators.compose([Validators.required])),
-      email: new FormControl(null),
+      email: new FormControl(null,  Validators.compose([Validators.email])),
       contact: new FormControl(null, Validators.compose([Validators.required])),
       address: new FormControl(null, Validators.compose([Validators.required])),
       city: new FormControl(null, Validators.compose([Validators.required])),

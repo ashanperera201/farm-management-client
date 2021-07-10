@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { ExportTypes } from 'src/app/shared/enums/export-type';
+import { FarmService } from 'src/app/shared/services/farm.service';
 
 @Component({
   selector: 'app-farm-list',
@@ -7,9 +10,39 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FarmListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private farmService : FarmService,
+    private toastrService:ToastrService,) { }
 
-  ngOnInit(): void {
-  }
+ ngOnInit(): void {
+   this.fetchFarmList();
+ }
 
+ fetchFarmList = () => {
+
+ }
+
+ addFarms = () => {
+
+ }
+
+ importFarms = () => {
+
+ }
+
+ updateRecord = () =>{
+
+ }
+
+ exportFarmData = (type: any) => {
+   if(type == ExportTypes.CSV){
+
+   }
+   else{
+
+   }
+ }
+
+ deleteFarms = () => {
+
+ }
 }

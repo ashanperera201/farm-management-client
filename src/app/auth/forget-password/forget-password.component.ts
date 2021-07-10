@@ -23,7 +23,7 @@ export class ForgetPasswordComponent implements OnInit {
 
   initPasswordResetForm= () => {
     this.passwordResetForm = new FormGroup({
-      email: new FormControl(null, Validators.compose([Validators.required])),
+      email: new FormControl(null, Validators.compose([Validators.required, Validators.email])),
       password: new FormControl(null, Validators.compose([Validators.required])),
       reEnterPassword: new FormControl(null, Validators.compose([Validators.required])),
     });

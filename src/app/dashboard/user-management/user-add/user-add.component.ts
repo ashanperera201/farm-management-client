@@ -23,7 +23,7 @@ export class UserAddComponent implements OnInit {
       password: new FormControl(null, Validators.compose([Validators.required])),
       roll: new FormControl(null, Validators.compose([Validators.required])),
       phoneNumber: new FormControl(null, Validators.compose([Validators.required])),
-      email: new FormControl(null),
+      email: new FormControl(null, Validators.compose([Validators.email])),
       isActive: new FormControl(0),
     });
   }

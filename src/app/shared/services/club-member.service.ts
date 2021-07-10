@@ -22,4 +22,10 @@ export class ClubMemberService {
     const url: string = `${this.baseUrl}/api/v1/`;
     return this.http.post(url, clubMemberData)
   }
+
+  
+  deleteClubMember(memberIds: number): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/`;
+    return this.http.delete(url)
+  }
 }
