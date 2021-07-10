@@ -1,31 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import { userModel } from '../models/user-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  serviceUrl!: string;
+
+  baseUrl: string = environment.baseUrl;
+
   constructor(private http: HttpClient) { }
 
   fetchUsers(): Observable<any> {
-    this.serviceUrl = '';
-    return this.http.get(this.serviceUrl);
+    const url: string = `${this.baseUrl}/api/v1/user/get-all`;
+    return this.http.get(url);
   }
 
-  loginUser(user: any): Observable<any> {
-    this.serviceUrl = 'http://localhost:3000/api/v1/user/sign-in';
-    return this.http.post(this.serviceUrl, user);
+  authenticateUser(user: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/user/sign-in`;
+    return this.http.post(url, user);
   }
 
-  registerUser(userData: any): Observable<any> {
-    this.serviceUrl = 'http://localhost:3000/api/v1/user/sign-up';
-    return this.http.post(this.serviceUrl, userData)
+  registerUser(userData: userModel): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/user/sign-up`;
+    return this.http.post(url, userData)
   }
 
   resetPassword(userData: any): Observable<any> {
-    this.serviceUrl = 'http://localhost:3000/api/v1/user/reset';
-    return this.http.post(this.serviceUrl, userData)
+    const url: string = `${this.baseUrl}/api/v1/user/change-password`;
+    return this.http.post(url, userData)
   }
 }
