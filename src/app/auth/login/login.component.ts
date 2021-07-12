@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RegisterComponent } from '../register/register.component';
 import { ForgetPasswordComponent } from '../forget-password/forget-password.component';
-import { loginUserModel } from 'src/app/shared/models/user-model';
+import { loginUserModel } from '../../shared/models/login-user';
 
 @Component({
   selector: 'app-login',
