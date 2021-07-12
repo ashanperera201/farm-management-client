@@ -1,26 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService } from '../../shared/services/auth.service';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { AuthService } from '../../shared/services/auth.service';
 import { RegisterComponent } from '../register/register.component';
 import { ForgetPasswordComponent } from '../forget-password/forget-password.component';
-import { loginUserModel } from '../../shared/models/login-user';
+import { TokenManagementService } from '../../shared/services/token-management.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
-  loginForm! : FormGroup;
-  signUpModal! : NgbModalRef;
-  resetPasswordModal! : NgbModalRef;
 
-  constructor( private authService : AuthService,
-    private toastrService:ToastrService,
-    private modalService : NgbModal
-  ) { }
+export class LoginComponent implements OnInit, OnDestroy {
+  
+  @BlockUI() blockUI!: NgBlockUI;
+  loginForm!: FormGroup;
+  signUpModal!: NgbModalRef;
+  resetPasswordModal!: NgbModalRef;
+  xxmodal!: NgbModalRef;
+  authSubscription!: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private toastrService: ToastrService,
+    private modalService: NgbModal,
+    private tokenManagementService: TokenManagementService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.initLoginForm();
@@ -34,18 +44,21 @@ export class LoginComponent implements OnInit {
   }
 
   login = () => {
-    if(this.loginForm.valid){
-      const loginUser = new loginUserModel();
-      loginUser.userNameOrEmail = this.loginForm.value.userNameOrEmail;
-      loginUser.password = this.loginForm.value.password;
-      this.authService.authenticateUser(loginUser).subscribe(res => {
-        if(res){
-          this.clearLoginForm();
+    if (this.loginForm.valid) {
+      this.blockUI.start('Authenticating.....');
+      this.authSubscription = this.authService.authenticateUser(this.loginForm.value).subscribe(userServiceResult => {
+        if (userServiceResult && userServiceResult.validity) {
+          const tokenData: any = userServiceResult.result;
+          this.tokenManagementService.storeToken(tokenData.accessToken);
+          this.router.navigate(['/dashboard/home']);
+          this.blockUI.stop();
         }
-      }, 
-      error => {
-        this.toastrService.error("Login Failed","Error")
-      });
+      },
+        error => {
+          console.log(error);
+          this.toastrService.error("Login Failed", "Error");
+          this.blockUI.stop();
+        });
     }
   }
 
@@ -54,7 +67,7 @@ export class LoginComponent implements OnInit {
   }
 
   openSignUpPopup = () => {
-    this.signUpModal = this.modalService.open(RegisterComponent,{
+    this.signUpModal = this.modalService.open(RegisterComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
@@ -63,7 +76,7 @@ export class LoginComponent implements OnInit {
   }
 
   openResetPassword = () => {
-    this.resetPasswordModal = this.modalService.open(ForgetPasswordComponent,{
+    this.resetPasswordModal = this.modalService.open(ForgetPasswordComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
@@ -71,4 +84,9 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
 }

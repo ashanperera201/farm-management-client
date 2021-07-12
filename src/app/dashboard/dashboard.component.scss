@@ -20,20 +20,4 @@
             }
         }
     }
-
-    .nav-header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-
-        .logo {
-            text-transform: uppercase;
-            h3 {
-                margin: 0 !important;
-                font-size: 1.2rem !important;
-                color: #fff !important;
-            }
-        }
-    }
 }

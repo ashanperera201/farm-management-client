@@ -22,6 +22,8 @@ export class SideNavigationComponent implements OnInit {
   toggle = () => {
     if (this.mode === NavigationModes.over && this.show) {
       this.show = !this.show;
-    } 
+    } else { 
+      this.show = !this.show;
+    }
   }
 }

@@ -8,7 +8,7 @@ const routes: Routes = [
     {
         path: '', component: DashboardComponent,
         children: [
-            { path: 'home', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'club-member', loadChildren: () => import(`./club-member/club-member.module`).then(m => m.ClubMemberModule) },
             { path: 'farm-management', loadChildren: () => import(`./farm-management/farm-management.module`).then(m => m.FarmManagementModule) },

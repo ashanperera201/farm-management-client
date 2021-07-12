@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationModes } from '../shared/enums/navigation.enum';
-import { MenuItemService } from '../shared/services/menu-item.service';
+import { MenuItemService } from '../../services/menu-item.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  selector: 'app-navigation-menu-item',
+  templateUrl: './navigation-menu-item.component.html',
+  styleUrls: ['./navigation-menu-item.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class NavigationMenuItemComponent implements OnInit {
 
-  navigationModes = NavigationModes;
   asideMenuDropdown: any = 1;
   asideMenuScroll = 1;
 
@@ -19,10 +17,9 @@ export class DashboardComponent implements OnInit {
   constructor(private menuItemService: MenuItemService) { }
 
   ngOnInit(): void {
-   
+    this.menuItems = this.menuItemService.getMenuItems();
   }
 
-  // menu related methods
 
   onMenuItemClick = (index: number) => {
     if (this.currentIndex >= 0) {
@@ -34,4 +31,5 @@ export class DashboardComponent implements OnInit {
     this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
     this.currentIndex = index;
   }
+
 }
