@@ -63,7 +63,7 @@ export class PondAddComponent implements OnInit {
         if(res){
           this.toastrService.success("Ponda data saved successfully.","Successfully Saved");
         }
-      }, _error => {
+      }, error => {
         this.toastrService.error("Unable to save pond data","Error")
       });
     }
