@@ -12,3 +12,8 @@ export class userModel {
     profileImage!: string;
     countryCode!: string;
 }
+
+export class loginUserModel {
+    userNameOrEmail!: string;
+    password!: string;
+}

@@ -2,30 +2,29 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { clubMemberModel } from '../models/club-member-model';
+import { pondModel } from '../models/pond-model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClubMemberService {
+export class PondService {
 
   baseUrl: string = environment.baseUrl;
   
   constructor(private http: HttpClient) { }
 
-  fetchClubMembers(): Observable<any> {
+  fetchPonds(): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
     return this.http.get(url);
   }
 
-  saveClubMember(clubMemberData: clubMemberModel): Observable<any> {
+  savePond(pondData: pondModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
-    return this.http.post(url, clubMemberData)
+    return this.http.post(url, pondData)
   }
 
-  
-  deleteClubMember(memberIds: number): Observable<any> {
+  deletePonds(pondData: pondModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
-    return this.http.delete(url)
+    return this.http.post(url, pondData)
   }
 }

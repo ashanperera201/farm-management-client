@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { ExportTypes } from 'src/app/shared/enums/export-type';
+import { PondService } from 'src/app/shared/services/pond.service';
 
 @Component({
   selector: 'app-pond-list',
@@ -7,9 +10,40 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PondListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private pondService : PondService,
+    private toastrService:ToastrService,) { }
 
-  ngOnInit(): void {
-  }
+ ngOnInit(): void {
+   this.fetchPondsList();
+ }
+
+ fetchPondsList = () => {
+
+ }
+
+ addPonds = () => {
+
+ }
+
+ importPonds = () => {
+
+ }
+
+ updateRecord = () =>{
+
+ }
+
+ exportPondData = (type: any) => {
+   if(type == ExportTypes.CSV){
+
+   }
+   else{
+
+   }
+ }
+
+ deletePonds = () => {
+
+ }
 
 }

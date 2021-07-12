@@ -3,28 +3,28 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { clubMemberModel } from '../models/club-member-model';
+import { farmModel } from '../models/farm-model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClubMemberService {
+export class FarmService {
 
   baseUrl: string = environment.baseUrl;
   
   constructor(private http: HttpClient) { }
 
-  fetchClubMembers(): Observable<any> {
+  fetchFarms(): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
     return this.http.get(url);
   }
 
-  saveClubMember(clubMemberData: clubMemberModel): Observable<any> {
+  saveFarm(farmData: farmModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
-    return this.http.post(url, clubMemberData)
+    return this.http.post(url, farmData)
   }
 
-  
-  deleteClubMember(memberIds: number): Observable<any> {
+  deleteFarms(farmIds: number): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
     return this.http.delete(url)
   }
