@@ -1,9 +1,10 @@
 @import "./responsive";
+@import "./overrides/navigation";
 @import "../../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "../../node_modules/ag-grid-community/dist/styles/ag-theme-material.css";
 @import "../../node_modules/angular-calendar/css/angular-calendar.css";
-@import '~ngx-toastr/toastr';
+@import "~ngx-toastr/toastr";
 
 /* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700");
@@ -112,6 +113,6 @@
 }
 
 .required:after {
-    content:" *";
+    content: " *";
     color: red;
-  }
+}

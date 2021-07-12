@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ExportTypes } from 'src/app/shared/enums/export-type';
+import { ExportTypes } from '../../../shared/enums/export-type';
 import { UserManagementService } from 'src/app/shared/services/user-management.service';
 
 @Component({
