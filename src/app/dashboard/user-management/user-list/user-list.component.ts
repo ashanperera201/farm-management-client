@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { UserManagementService } from 'src/app/shared/services/user-management.service';
 import { ExportTypes } from '../../../shared/enums/export-type';
 
@@ -7,7 +8,10 @@ import { ExportTypes } from '../../../shared/enums/export-type';
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
+
+  userListSubscription!: Subscription;
+
 
   sampleDataSet: any = [{
     "id": 1,
@@ -170,9 +174,19 @@ export class UserListComponent implements OnInit {
     "_createdDate": "10/06/2013",
     "_updatedDate": "03/27/2017"
   }]
+
   constructor(private userManagementService: UserManagementService) { }
 
   ngOnInit(): void {
+    this.fetchAllUsers();
+  }
+
+  fetchAllUsers = () => {
+    this.userListSubscription = this.userManagementService.fetchUserList().subscribe(userResult => {
+      console.log(userResult);
+    }, error => {
+      console.log(error);
+    })
   }
 
   addUser = () => {
@@ -185,6 +199,13 @@ export class UserListComponent implements OnInit {
     }
     else {
 
+    }
+  }
+
+
+  ngOnDestroy() {
+    if (this.userListSubscription) {
+      this.userListSubscription.unsubscribe();
     }
   }
 }
