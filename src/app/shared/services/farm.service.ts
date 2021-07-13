@@ -19,6 +19,11 @@ export class FarmService {
     return this.http.get(url);
   }
 
+  fetchFarmByOwnerId(ownerId: number): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/`+ ownerId;
+    return this.http.get(url);
+  }
+
   saveFarm(farmData: farmModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
     return this.http.post(url, farmData)

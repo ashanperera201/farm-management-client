@@ -11,17 +11,17 @@ import { FarmService } from 'src/app/shared/services/farm.service';
   styleUrls: ['./farm-add.component.scss']
 })
 export class FarmAddComponent implements OnInit {
-  addCFarmForm!: FormGroup;
+  addFarmForm!: FormGroup;
   constructor(private clubMemberService : ClubMemberService,
     private farmService : FarmService,
     private toastrService:ToastrService) { }
 
   ngOnInit(): void {
-    this.initAddCFarmForm();
+    this.initAddFarmForm();
   }
 
-  initAddCFarmForm= () => {
-    this.addCFarmForm = new FormGroup({
+  initAddFarmForm= () => {
+    this.addFarmForm = new FormGroup({
       owner: new FormControl(null, Validators.compose([Validators.required])),
       farmName: new FormControl(null, Validators.compose([Validators.required])),
       contact: new FormControl(null, Validators.compose([Validators.required])),
@@ -42,7 +42,7 @@ export class FarmAddComponent implements OnInit {
   }
 
   saveFarm = () => {
-    if(this.addCFarmForm.valid){
+    if(this.addFarmForm.valid){
       const farm = new farmModel();
       this.farmService.saveFarm(farm).subscribe(res => {
         if(res){
@@ -54,7 +54,7 @@ export class FarmAddComponent implements OnInit {
     }
   }
 
-  clearDddClubmembersForm = () => {
-    this.addCFarmForm.reset();
+  clearAddFarmForm = () => {
+    this.addFarmForm.reset();
   }
 }

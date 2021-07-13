@@ -1,1 +1,52 @@
-<p>pond-add works!</p>
+<div class="text-center border border-light p-5">
+    <p class="h4 mb-4 text-primary ">Add Pond</p>
+    <p>The field labels marked with * are required input fields</p>
+    <div [formGroup]="addPondForm">
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Owner</label>
+                <select name="owner" id="owner" formControlName="owner">
+                    <option value=null disabled selected>Select Owner</option>
+                    <option value="1">Owner 1</option>
+                    <option value="2">Owner 2</option>
+                  </select>
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Farm</label>
+                <select name="farm" id="farm" formControlName="farm">
+                    <option value=null disabled selected>Select Farm</option>
+                    <option value="1">Farm 1</option>
+                    <option value="2">Farm 2</option>
+                  </select>
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Pond Number</label>
+                <input type="text" class="form-control" placeholder="Pond Number" formControlName="pondNumber">
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Area of the pond</label>
+                <input type="text" class="form-control" placeholder="Area of the pond" formControlName="area">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Grade of the pond</label>
+                <input type="text" class="form-control" placeholder="Grade of the pond" formControlName="grade">
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Other fixed cost per Kg</label>
+                <input type="text" class="form-control" placeholder="Fixed cost per Kg" formControlName="cost">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <button type="button" [disabled]="addPondForm.invalid"  (click)="savePond()"
+                class="btn btn-primary  font-size-h7 px-8 py-4 my-3 mr-3">
+                Submit
+            </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import { FarmListComponent } from './farm-list/farm-list.component';
 import { FarmAddComponent } from './farm-add/farm-add.component';
 import { FarmCardComponent } from './farm-card/farm-card.component';
 import { FarmManagementRoutingModule } from './farm-management.routing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,9 @@ import { FarmManagementRoutingModule } from './farm-management.routing';
   ],
   imports: [
     CommonModule,
-    FarmManagementRoutingModule
+    FarmManagementRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 

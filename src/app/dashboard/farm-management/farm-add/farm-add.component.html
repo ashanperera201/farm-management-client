@@ -1,1 +1,44 @@
-<p>farm-add works!</p>
+<div class="text-center border border-light p-5">
+    <p class="h4 mb-4 text-primary ">Add Farm</p>
+    <p>The field labels marked with * are required input fields</p>
+    <div [formGroup]="addFarmForm">
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Owner</label>
+                <select name="owner" id="owner" formControlName="owner">
+                    <option value=null disabled selected>Select Owner</option>
+                    <option value="1">Owner 1</option>
+                    <option value="2">Owner 2</option>
+                  </select>
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Name of the farm</label>
+                <input type="text" class="form-control" placeholder = "Farm Name" formControlName="farmName">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark">Contact Number</label>
+                <input type="text" class="form-control" placeholder="Contact Number" formControlName="contact">
+            </div>
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Address</label>
+                <input type="text" class="form-control" placeholder="Address" formControlName="address">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark required">No of Ponds</label>
+                <input type="text" class="form-control" placeholder="No of Ponds" formControlName="ponds">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <button type="button" [disabled]="addFarmForm.invalid"  (click)="saveFarm()"
+                class="btn btn-primary  font-size-h7 px-8 py-4 my-3 mr-3">
+                Submit
+            </button>
+            </div>
+        </div>
+    </div>
+</div>
