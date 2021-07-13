@@ -1,0 +1,26 @@
+<div class="text-center border border-light p-5">
+    <p class="h4 mb-4 text-primary ">Add Role</p>
+    <p>The field labels marked with * are required input fields</p>
+    <div [formGroup]="addRoleForm">
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Name</label>
+                <input type="text" class="form-control" placeholder="Role Name" formControlName="roleName">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark">Roll</label>
+                <input type="text" class="form-control mb-4" placeholder="Role Description" formControlName="description">
+            </div>
+        </div>
+        <div class="form-row mb-4">
+            <div class="col">
+                <button type="button" [disabled]="addRoleForm.invalid"  (click)="addRole()"
+                class="btn btn-primary  font-size-h7 px-8 py-4 my-3 mr-3">
+                Submit
+            </button>
+            </div>
+        </div>
+    </div>
+</div>

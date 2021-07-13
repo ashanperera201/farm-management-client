@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { userModel } from '../models/user-model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class UserManagementService {
     return this.http.post(url, roleData)
   }
 
-  addUser(userData: any): Observable<any> {
+  addUser(userData: userModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/user/sign-up`;
     return this.http.post(url, userData)
   }

@@ -1,5 +1,5 @@
-<div class="text-center border border-light p-5">
-    <p class="h4 mb-4 text-primary ">User Management</p>
+<div class="p-5">
+    <p class="h4 mb-4 text-primary pull-right">Add User</p>
     <p>The field labels marked with * are required input fields</p>
     <div [formGroup]="addUserForm">
         <div class="form-row mb-4">
@@ -14,8 +14,8 @@
         </div>
         <div class="form-row mb-4">
             <div class="col">
-                <label class="font-size-h7  text-dark">Roll</label>
-                <input type="text" class="form-control mb-4" placeholder="Roll" formControlName="roll">
+                <label class="font-size-h7  text-dark">Role</label>
+                <input type="text" class="form-control mb-4" placeholder="User Role" formControlName="role">
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Phone Number</label>
