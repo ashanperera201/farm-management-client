@@ -38,6 +38,20 @@ export class UserAddComponent implements OnInit {
     });
   }
 
+  generatePassword = () => {
+
+  }
+
+  fetchRoles = () => {
+    this.userManagementService.fetchRoleList().subscribe(res => {
+      if(res){
+
+      }
+    }, error => {
+      this.toastrService.error("Unable to load user roles","Error")
+    });
+  }
+
   clearAddUserForm = () => {
     this.addUserForm.reset();
   }

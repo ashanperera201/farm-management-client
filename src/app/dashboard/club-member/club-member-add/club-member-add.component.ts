@@ -34,7 +34,7 @@ export class ClubMemberAddComponent implements OnInit {
     });
   }
 
-  clearDddClubmembersForm = () => {
+  clearAddClubmembersForm = () => {
     this.addClubmembersForm.reset();
   }
 

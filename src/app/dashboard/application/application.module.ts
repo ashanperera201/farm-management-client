@@ -5,6 +5,7 @@ import { ApplicationListComponent } from './application-list/application-list.co
 import { ApplicationCardComponent } from './application-card/application-card.component';
 import { ApplicationAddComponent } from './application-add/application-add.component';
 import { ApplicationRoutingModule } from './application.routing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,9 @@ import { ApplicationRoutingModule } from './application.routing';
   ],
   imports: [
     CommonModule,
-    ApplicationRoutingModule
+    ApplicationRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class ApplicationModule { }

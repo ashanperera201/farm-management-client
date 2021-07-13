@@ -12,12 +12,12 @@ export class UserManagementService {
   
   constructor(private http: HttpClient) { }
 
-  getUserList(): Observable<any> {
+  fetchUserList(): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
     return this.http.get(url);
   }
 
-  getRoleList(): Observable<any> {
+  fetchRoleList(): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
     return this.http.get(url);
   }
@@ -32,7 +32,7 @@ export class UserManagementService {
     return this.http.post(url, roleData)
   }
 
-  getUserPermission(userId : number): Observable<any> {
+  fetchUserPermission(userId : number): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/`;
     return this.http.get(url);
   }

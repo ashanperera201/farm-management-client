@@ -5,6 +5,7 @@ import { PondListComponent } from './pond-list/pond-list.component';
 import { PondAddComponent } from './pond-add/pond-add.component';
 import { PondCardComponent } from './pond-card/pond-card.component';
 import { PondRoutingModule } from './pond-management.routing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -17,7 +18,9 @@ import { PondRoutingModule } from './pond-management.routing';
   ],
   imports: [
     CommonModule,
-    PondRoutingModule
+    PondRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class PondManagementModule { }

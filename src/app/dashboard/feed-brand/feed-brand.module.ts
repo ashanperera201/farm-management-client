@@ -5,6 +5,7 @@ import { FeedBrandListComponent } from './feed-brand-list/feed-brand-list.compon
 import { FeedBrandCardComponent } from './feed-brand-card/feed-brand-card.component';
 import { FeedBrandAddComponent } from './feed-brand-add/feed-brand-add.component';
 import { FeedBrandRoutingModule } from './feed-brand.routing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,9 @@ import { FeedBrandRoutingModule } from './feed-brand.routing';
   ],
   imports: [
     CommonModule,
-    FeedBrandRoutingModule
+    FeedBrandRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class FeedBrandModule { }

@@ -1,3 +1,4 @@
+import { FarmService } from 'src/app/shared/services/farm.service';
 import { pondModel } from './../../../shared/models/pond-model';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -12,9 +13,12 @@ import { ClubMemberService } from 'src/app/shared/services/club-member.service';
 })
 export class PondAddComponent implements OnInit {
   addPondForm!: FormGroup;
+  farmList!: [];
+  ownerList!: [];
 
   constructor(private pondService : PondService,
     private clubMemberService : ClubMemberService,
+    private farmService : FarmService,
     private toastrService:ToastrService) { }
 
   ngOnInit(): void {
@@ -24,7 +28,7 @@ export class PondAddComponent implements OnInit {
 
   initAddPondForm = () => {
     this.addPondForm = new FormGroup({
-      owner : new FormControl(null,Validators.compose([Validators.required])),
+      pond : new FormControl(null,Validators.compose([Validators.required])),
       farm : new FormControl(null,Validators.compose([Validators.required])),
       pondNumber : new FormControl(null,Validators.compose([Validators.required])),
       area : new FormControl(null,Validators.compose([Validators.required])),
@@ -33,20 +37,26 @@ export class PondAddComponent implements OnInit {
     });
   }
 
-  clearDddClubmembersForm = () => {
+  clearAddPondFormForm = () => {
     this.addPondForm.reset();
   }
 
   fetchOwnersList = () => {
     this.clubMemberService.fetchClubMembers().subscribe(res => {
-
+      this.ownerList = res;
     }, error => {
       this.toastrService.error("Unable to load owners","Error");
     });
   }
 
-  fetchFarmsOwnerWise = () => {
-    
+  fetchFarmsOwnerWise = (ownerId: number) => {
+    this.farmService.fetchFarmByOwnerId(ownerId).subscribe(res => {
+      if(res){
+        this.farmList = res;
+      }
+    }, error => {
+      this.toastrService.error("Unable to load Farms","Error");
+    });
   }
 
   savePond = () => {
@@ -61,10 +71,10 @@ export class PondAddComponent implements OnInit {
 
       this.pondService.savePond(pond).subscribe(res => {
         if(res){
-          this.toastrService.success("Ponda data saved successfully.","Successfully Saved");
+          this.toastrService.success("Pond data saved successfully.","Successfully Saved");
         }
       }, error => {
-        this.toastrService.error("Unable to save pond data","Error")
+        this.toastrService.error("Unable to save pond data","Error");
       });
     }
   }
