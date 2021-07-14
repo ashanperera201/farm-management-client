@@ -4,7 +4,7 @@
             <h3 class="card-label">User Management</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary">Create New User</a>
+            <a type="button" class="btn btn-primary" (click)="addNewUser()"><i class="fa fa-plus" aria-hidden="true"></i> Add User</a>
         </div>
     </div>
     <div class="card-body">
@@ -14,39 +14,32 @@
                 <div class="col-lg-4">
                     <div class="row">
                         <div class="col-lg-6">
-                            <select class="form-control" name="status" placeholder="Filter by Status">
-                                <option value="">All</option>
-                                <option value="1">Selling</option>
-                                <option value="2">Sold</option>
-                            </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
-                        </div>
-                        <div class="col-lg-6">
                             <select class="form-control" placeholder="Filter by Contition" name="condition">
                                 <option value="">All</option>
-                                <option value="1">New</option>
-                                <option value="2">Used</option>
-                            </select><small class="form-text text-muted"><b>Filter</b> by Condition</small>
+                                <option value="1">A</option>
+                                <option value="2">B</option>
+                            </select><small class="form-text text-muted"><b>Records</b> per page</small>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <input type="text" class="form-control" name="searchText" placeholder="Search" value="" /><small
-                        class="form-text text-muted"><b>Search</b> in all fields</small>
+                        class="form-text text-muted"><b>Search</b></small>
                 </div>
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
-                        <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-2">
-                            <i class="fa fa-trash"></i>
-                            <span>Delete All</span>
-                        </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportUserList(1)">
                             <i class="fa fa-stream"></i>
-                            <span>Fetch Selected</span>
+                            <span>PDF</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportUserList(2)">
                             <i class="fa fa-sync-alt"></i>
-                            <span>Update Status</span>
+                            <span>CSV</span>
+                        </button>
+                        <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-2">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            <span>Delete</span>
                         </button>
                         <div class="form-label form-label-no-wrap">
                             <label class="font-bold font-danger"><span>Selected records count:
@@ -66,49 +59,34 @@
                     <th class="selection-cell-header" data-row-selection="true">
                         <label class="checkbox checkbox-single"><input type="checkbox" /><span></span></label>
                     </th>
-                    <th> VIN CODE (ID) </th>
-                    <th> MANUFACTURE </th>
-                    <th> MODEL </th>
-                    <th> YEAR </th>
-                    <th> COLOR </th>
-                    <th> PRICE </th>
-                    <th> STATUS </th>
-                    <th> CONDITION </th>
-                    <th>ACTIONS</th>
+                    <th> Username </th>
+                    <th> Role </th>
+                    <th> Phone Number </th>
+                    <th> Email </th>
+                    <th> Status </th>
+                    <th> Action </th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let sample of sampleDataSet">
+                    <tr *ngFor="let user of userList">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single"><input type="checkbox" />
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{ sample.VINCode }}</td>
-                        <td>{{ sample.manufacture }}</td>
-                        <td>{{ sample.model }}</td>
-                        <td>{{ sample.modelYear }}</td>
+                        <td>{{ user.userName }}</td>
+                        <td>{{ user.userName }}</td>
+                        <td>{{ user.contact }}</td>
+                        <td>{{ user.userEmail }}</td>
                         <td>
-                            <span [style.color]="sample.color">{{ sample.color }}</span>
-                        </td>
-                        <td>$ {{ sample.price }}</td>
-                        <td>
-                            <span class="label label-lg label-inline" [class.label-light-success]="sample.status === 1"
-                                [class.label-light-primary]="sample.status === 2">
-                                <ng-container *ngIf="sample.status === 1">Selling</ng-container>
-                                <ng-container *ngIf="sample.status === 2">Sold</ng-container>
-                            </span>
-                        </td>
-                        <td>
-                            <ng-container *ngIf="sample.condition === 1">NEW</ng-container>
-                            <ng-container *ngIf="sample.condition === 2">USED</ng-container>
+                            <span [ngClass]="user.isActive ? 'active' : 'inactive'"></span>
                         </td>
                         <td class="d-flex justify-content-start">
-                            <a title="Edit sample" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                            <a title="Edit user" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="editUser($event)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteUser($event)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

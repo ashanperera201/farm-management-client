@@ -9,6 +9,7 @@ import { UserPermissionsComponent } from './user-permissions/user-permissions.co
 import { UserManagementRoutingModule } from './user-management.routing';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { RoleAddComponent } from './role-add/role-add.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
     UserAddComponent,
     UserListComponent,
     UserRolesComponent,
-    UserPermissionsComponent
+    UserPermissionsComponent,
+    RoleAddComponent
   ],
   imports: [
     CommonModule,
