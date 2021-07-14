@@ -1,8 +1,9 @@
+import { UserRoleModel } from './../models/user-role-model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { userModel } from '../models/user-model';
+import { UserModel } from '../models/user-model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class UserManagementService {
     return this.http.post(url, roleData)
   }
 
-  addUser(userData: userModel): Observable<any> {
+  addUser(userData: UserModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/user/sign-up`;
     return this.http.post(url, userData)
   }
@@ -41,5 +42,25 @@ export class UserManagementService {
   saveUserPermission(permission: any): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/permission/create`;
     return this.http.post(url, permission);
+  }
+
+  deleteRole(roleId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/role/${roleId}/${true}`;
+    return this.http.delete(url)
+  }
+
+  updateRole(roleData: UserRoleModel): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/role/update`;
+    return this.http.post(url, roleData)
+  }
+
+  deleteUser(userId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/user/${userId}/${true}`;
+    return this.http.delete(url)
+  }
+
+  updateUser(userData: UserModel): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/user/update`;
+    return this.http.post(url, userData)
   }
 }

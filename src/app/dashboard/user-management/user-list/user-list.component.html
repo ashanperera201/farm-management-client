@@ -30,21 +30,21 @@
                     <!-- begin: Grouping -->
                     <div>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportUserList(1)">
-                            <i class="fa fa-stream"></i>
+                            <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportUserList(2)">
-                            <i class="fa fa-sync-alt"></i>
+                            <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
-                        <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-2">
+                        <!-- <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-2">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                             <span>Delete</span>
                         </button>
                         <div class="form-label form-label-no-wrap">
                             <label class="font-bold font-danger"><span>Selected records count:
                                     <b>100</b></span></label>
-                        </div>
+                        </div> -->
                     </div>
                     <!-- end: Grouping -->
                 </div>
@@ -81,12 +81,12 @@
                             <span [ngClass]="user.isActive ? 'active' : 'inactive'"></span>
                         </td>
                         <td class="d-flex justify-content-start">
-                            <a title="Edit user" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="editUser($event)">
+                            <a title="Edit user" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="editUser(user.userId)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteUser($event)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteUser(user.userId)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>
