@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { userModel } from '../../shared/models/user-model';
+import { UserModel } from '../../shared/models/user-model';
 import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
@@ -40,7 +40,7 @@ export class RegisterComponent implements OnInit {
   registerUser = () => {
     if (this.registerForm.valid) {
       if (this.checkPasswords(this.registerForm.value)) {
-        let userModelData = new userModel();
+        let userModelData = new UserModel();
         userModelData.userName = (this.registerForm.value.userName).trim();
         userModelData.userEmail = this.registerForm.value.userEmail;
         userModelData.password = (this.registerForm.value.password).trim();

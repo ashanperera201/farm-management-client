@@ -34,7 +34,7 @@ export class UserRolesComponent implements OnInit {
     });
   }
 
-  addRole = () => {
+  addNewRole = () => {
     this.addRoleModal = this.modalService.open(RoleAddComponent, {
       animation: true,
       keyboard: true,
@@ -43,6 +43,28 @@ export class UserRolesComponent implements OnInit {
     });
   }
 
+  deleteRole = (roleId: any) => {
+    this.userManagementService.deleteRole(roleId).subscribe(res => {
+      if(res){
+        this.toastrService.success("User role deleted","Success");
+        this.roleList = [];
+        this.fetchUserRoles();
+      }
+    }, errpr => {
+      this.toastrService.error("Unable to delete user role","Error");
+    });
+  }
+
+  updateRole = (roleId : any) => {
+    this.userManagementService.updateRole(roleId).subscribe(res => {
+      if(res){
+        this.toastrService.success("User role updated","Success");
+        this.fetchUserRoles();
+      }
+    }, errpr => {
+      this.toastrService.error("Unable to update user role","Error");
+    });
+  }
 
   exportRoleList = (type: any) => {
     if(type == ExportTypes.CSV){

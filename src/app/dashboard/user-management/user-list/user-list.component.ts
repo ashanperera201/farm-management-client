@@ -43,16 +43,8 @@ export class UserListComponent implements OnInit, OnDestroy {
       animation: true,
       keyboard: true,
       backdrop: true,
-      modalDialogClass: 'modal-md'
+      modalDialogClass: 'modal-xl'
     });
-  }
-
-  deleteUser = (event: any) => {
-
-  }
-
-  editUser = (event: any) => {
-    
   }
 
   exportUserList = (type: any) => {
@@ -62,6 +54,29 @@ export class UserListComponent implements OnInit, OnDestroy {
     else {
 
     }
+  }
+
+  deleteUser = (userId: any) => {
+    this.userManagementService.deleteUser(userId).subscribe(res => {
+      if(res){
+        this.toastrService.success("User deleted","Success");
+        this.userList = [];
+        this.fetchAllUsers();
+      }
+    }, errpr => {
+      this.toastrService.error("Unable to delete user","Error");
+    });
+  }
+
+  editUser = (userId : any) => {
+    this.userManagementService.updateUser(userId).subscribe(res => {
+      if(res){
+        this.toastrService.success("User updated","Success");
+        this.fetchAllUsers();
+      }
+    }, error => {
+      this.toastrService.error("Unable to update user","Error");
+    });
   }
 
 

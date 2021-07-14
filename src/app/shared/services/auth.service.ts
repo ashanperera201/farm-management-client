@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { userModel } from '../models/user-model';
+import { UserModel } from '../models/user-model';
 import { loginUserModel } from '../models/login-user';
 
 @Injectable({
@@ -24,7 +24,7 @@ export class AuthService {
     return this.http.post(url, user);
   }
 
-  registerUser(userData: userModel): Observable<any> {
+  registerUser(userData: UserModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/user/sign-up`;
     return this.http.post(url, userData)
   }

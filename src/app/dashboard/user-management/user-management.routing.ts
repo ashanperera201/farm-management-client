@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { UserManagementComponent } from './user-management.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserRolesComponent } from './user-roles/user-roles.component';
+import { UserAddComponent } from './user-add/user-add.component';
 
 const routes: Routes = [
     {
@@ -11,6 +12,7 @@ const routes: Routes = [
         children: [
             { path: 'view-users', redirectTo: 'view-users', pathMatch: 'full' },
             { path: 'view-users', component: UserListComponent },
+            { path: 'user-add', component: UserAddComponent },
             { path: 'view-roles', component: UserRolesComponent },
             { path: '**', redirectTo: 'view-users' }
         ]
