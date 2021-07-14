@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { UserRoleModel } from 'src/app/shared/models/user-role-model';
+import { UserRoleModel } from '../../../shared/models/user-role-model';
 import { UserManagementService } from 'src/app/shared/services/user-management.service';
 
 @Component({
