@@ -4,7 +4,7 @@
             <h3 class="card-label">User Management</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addNewUser()">Create New User</a>
+            <a type="button" class="btn btn-primary" (click)="addNewUser()"><i class="fa fa-plus" aria-hidden="true"></i> Add User</a>
         </div>
     </div>
     <div class="card-body">
@@ -14,39 +14,32 @@
                 <div class="col-lg-4">
                     <div class="row">
                         <div class="col-lg-6">
-                            <select class="form-control" name="status" placeholder="Filter by Status">
-                                <option value="">All</option>
-                                <option value="1">A</option>
-                                <option value="2">B</option>
-                            </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
-                        </div>
-                        <div class="col-lg-6">
                             <select class="form-control" placeholder="Filter by Contition" name="condition">
                                 <option value="">All</option>
                                 <option value="1">A</option>
                                 <option value="2">B</option>
-                            </select><small class="form-text text-muted"><b>Filter</b> by Condition</small>
+                            </select><small class="form-text text-muted"><b>Records</b> per page</small>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <input type="text" class="form-control" name="searchText" placeholder="Search" value="" /><small
-                        class="form-text text-muted"><b>Search</b> in all fields</small>
+                        class="form-text text-muted"><b>Search</b></small>
                 </div>
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
-                        <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-2">
-                            <i class="fa fa-trash"></i>
-                            <span>Delete All</span>
-                        </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportUserList(1)">
                             <i class="fa fa-stream"></i>
-                            <span>Fetch Selected</span>
+                            <span>PDF</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportUserList(2)">
                             <i class="fa fa-sync-alt"></i>
-                            <span>Update Status</span>
+                            <span>CSV</span>
+                        </button>
+                        <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-2">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            <span>Delete</span>
                         </button>
                         <div class="form-label form-label-no-wrap">
                             <label class="font-bold font-danger"><span>Selected records count:
