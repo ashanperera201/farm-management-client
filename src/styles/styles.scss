@@ -116,3 +116,32 @@
     content: " *";
     color: red;
 }
+
+nav.navigation.navigation--side:not(.side-nav-width) {
+    .nav-header {
+        justify-content: center;
+        transition: 0.1s;
+        .logo {
+            h3 {
+               display: none;
+            }
+        }
+    }
+    .aside-menu {
+        .menu-nav {
+            .menu-item {
+                .menu-text {
+                    display: none;
+                }
+                .menu-submenu {
+                    display: none;
+                }
+            }
+            .menu-section {
+               h4 {
+                   display: none;
+               }
+            }
+        }
+    }
+}

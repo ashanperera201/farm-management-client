@@ -1,6 +1,6 @@
 .main {
     width: inherit;
-    transition: 0.5s;
+    transition: 0.1s;
     position: inherit;
 
     &--side {
@@ -25,5 +25,5 @@
 }
 
 .hide-side-nav {
-    margin: 0 !important;
+    margin-left: 70px !important;
 }

@@ -1,13 +1,13 @@
 .navigation {
     height: 100%;
-    width: 0;
+    width: 70px;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
     background-color: #1e1e2d;
     overflow-x: hidden;
-    transition: 0.5s;
+    transition: 0.1s;
 }
 
 .side-nav-width {
@@ -16,4 +16,8 @@
 
 .hide-side-nav {
     margin: 0 !important;
+}
+
+.navigation {
+
 }
