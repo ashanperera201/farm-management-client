@@ -27,9 +27,15 @@ export class NavigationMenuItemComponent implements OnInit {
       this.menuItems[this.currentIndex].activeClass = '';
       this.currentIndex = -1;
     }
-    this.menuItems[index].selected = !this.menuItems[index].selected;
-    this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
-    this.currentIndex = index;
+    
+    if (this.menuItems[index].subItems.length > 0) {
+      this.menuItems[index].selected = !this.menuItems[index].selected;
+      this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-submenu menu-item-open' : '';
+    } else {
+      this.menuItems[index].selected = !this.menuItems[index].selected;
+      this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
+      this.currentIndex = index;
+    }
   }
 
 }

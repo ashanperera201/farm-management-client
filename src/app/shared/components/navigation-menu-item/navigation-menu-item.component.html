@@ -7,10 +7,33 @@
             <h4 class="menu-text" *ngIf="menu?.isMenuHeading">{{menu?.displayName}}</h4>
             <i class="menu-icon flaticon-more-v2" *ngIf="menu?.isMenuHeading"></i>
 
-            <a class="menu-link" [routerLink]="menu?.route" routerLinkActive="active" *ngIf="!menu?.isMenuHeading">
+            <a class="menu-link" [routerLink]="menu?.route" routerLinkActive="active"
+                *ngIf="!menu?.isMenuHeading && menu?.subItems.length === 0">
                 <span [inlineSVG]="menu?.svgIconPath" class="svg-icon menu-icon"></span>
                 <span class="menu-text">{{menu?.displayName}}</span>
+                <i class="menu-arrow" *ngIf="menu?.subItems.length > 0"></i>
             </a>
+
+            <a class="menu-link" [routerLink]="menu?.route" *ngIf="!menu?.isMenuHeading && menu?.subItems.length > 0">
+                <span [inlineSVG]="menu?.svgIconPath" class="svg-icon menu-icon"></span>
+                <span class="menu-text">{{menu?.displayName}}</span>
+                <i class="menu-arrow" *ngIf="menu?.subItems.length > 0"></i>
+            </a>
+
+            <div class="menu-submenu">
+                <i class="menu-arrow"></i>
+                <ul class="menu-subnav">
+                    <!-- begin::3 Level -->
+                    <li class="menu-item" *ngFor="let subItem of menu?.subItems" aria-haspopup="true" routerLinkActive="menu-item-active">
+                        <a class="menu-link" [routerLink]="subItem?.route" routerLinkActive="active">
+                            <i class="menu-bullet menu-bullet-dot">
+                                <span></span>
+                            </i>
+                            <span class="menu-text">{{subItem?.displayName}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
     </ul>
 </div>
