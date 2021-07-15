@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { UserManagementService } from 'src/app/shared/services/user-management.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoleAddComponent } from '../role-add/role-add.component';
 import { ToastrService } from 'ngx-toastr';
 
@@ -11,7 +11,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./user-roles.component.scss']
 })
 export class UserRolesComponent implements OnInit {
-  addRoleModal!: NgbModalRef;
   roleList : any[] = [];
   
   constructor(private userManagementService: UserManagementService,
@@ -30,12 +29,12 @@ export class UserRolesComponent implements OnInit {
         });
       }
     },error => {
-      this.toastrService.error("Failed to load users","Error");
+      this.toastrService.error("Failed to load Roles","Error");
     });
   }
 
   addNewRole = () => {
-    this.addRoleModal = this.modalService.open(RoleAddComponent, {
+    const addRoleModal = this.modalService.open(RoleAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
@@ -56,14 +55,19 @@ export class UserRolesComponent implements OnInit {
   }
 
   updateRole = (roleId : any) => {
-    this.userManagementService.updateRole(roleId).subscribe(res => {
-      if(res){
-        this.toastrService.success("User role updated","Success");
-        this.fetchUserRoles();
-      }
-    }, errpr => {
-      this.toastrService.error("Unable to update user role","Error");
+    const addRoleModal = this.modalService.open(RoleAddComponent, {
+      animation: true,
+      keyboard: true,
+      backdrop: true,
+      modalDialogClass: 'modal-md',
     });
+    addRoleModal.componentInstance.roleId = roleId;
+    addRoleModal.componentInstance.isEditMode = true;
+    addRoleModal.componentInstance.afterSave = this.roleAfterSave();
+  }
+
+  roleAfterSave = () => {
+
   }
 
   exportRoleList = (type: any) => {

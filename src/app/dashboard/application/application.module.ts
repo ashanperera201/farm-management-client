@@ -6,6 +6,7 @@ import { ApplicationCardComponent } from './application-card/application-card.co
 import { ApplicationAddComponent } from './application-add/application-add.component';
 import { ApplicationRoutingModule } from './application.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ApplicationRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InlineSVGModule
   ]
 })
 export class ApplicationModule { }

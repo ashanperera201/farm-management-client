@@ -6,7 +6,7 @@ import { ClubMemberAddComponent } from './club-member-add/club-member-add.compon
 import { ClubMemberCardComponent } from './club-member-card/club-member-card.component';
 import { ClubMemberdRoutingModule } from './club-member.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { InlineSVGModule } from 'ng-inline-svg';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ClubMemberdRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InlineSVGModule
   ]
 })
 

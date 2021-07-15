@@ -10,6 +10,7 @@ import { ClubMemberService } from '../../../shared/services/club-member.service'
 })
 export class ClubMemberListComponent implements OnInit {
 selectedClubmembers = [];
+clubMemberList = [];
   constructor(private clubMemberService : ClubMemberService,
      private toastrService:ToastrService,) { }
 
@@ -21,7 +22,7 @@ selectedClubmembers = [];
 
   }
 
-  addClubMember = () => {
+  addNewClubMember = () => {
 
   }
 
@@ -29,11 +30,15 @@ selectedClubmembers = [];
 
   }
 
-  updateRecord = () =>{
+  updateClubMember = (clubMemberId: any) =>{
 
   }
 
-  exportClubMembers = (type: any) => {
+  deleteClubMember = (clubMemberId: any) => {
+
+  }
+
+  exportClubMemberList = (type: any) => {
     if(type == ExportTypes.CSV){
 
     }
@@ -42,7 +47,4 @@ selectedClubmembers = [];
     }
   }
 
-  deleteClubMembers = () => {
-
-  }
 }

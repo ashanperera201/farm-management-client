@@ -72,7 +72,7 @@ export class MenuItemService {
       {
         id: 5,
         displayName: 'Application Management',
-        route: '/dashboard/pond-management/view-all',
+        route: '/dashboard/applications/view-all',
         svgIconPath: './assets/media/svg/icons/General/Expand-arrows.svg',
         classes: 'menu-item',
         activeClass: '',

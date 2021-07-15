@@ -1,8 +1,8 @@
 <div class="modal-header">
     <div class="row">
         <div class="col-md-12">
-            <h4 class="modal-title mb-1">Add Role</h4>
-            <p>The field labels marked with <span class="required"></span> are required input fields</p>
+            <h4 class="modal-title mb-1">{{headerText}}</h4>
+            <p *ngIf="!isEditMode">The field labels marked with <span class="required"></span> are required input fields</p>
         </div>
     </div>
 </div>
@@ -18,12 +18,12 @@
             <div class="col">
                 <label class="font-size-h7  text-dark">Description</label>
                 <input type="text" class="form-control mb-4" placeholder="Role Description"
-                    formControlName="description">
+                    formControlName="roleDescription">
             </div>
         </div>
     </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-    <button type="button" class="btn btn-primary" [disabled]="addRoleForm.invalid" (click)="addRole()">Save changes</button>
+    <button type="button" class="btn btn-primary" [disabled]="addRoleForm.invalid" (click)="addRole()">{{saveButtonText}}</button>
 </div>

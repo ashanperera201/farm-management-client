@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../shared/services/auth.service';
 
@@ -14,7 +14,7 @@ export class ForgetPasswordComponent implements OnInit {
 
   constructor(private authService : AuthService,
     private toastrService : ToastrService,
-    //public modalRef : NgbModalRef
+    private activeModal: NgbActiveModal
     ) { }
 
   ngOnInit(): void {
@@ -29,9 +29,10 @@ export class ForgetPasswordComponent implements OnInit {
     });
   }
 
-  closeResetPassword = () => {
-    //this.modalRef.close();
+  closeModal = () => {
+    this.activeModal.close();
   }
+  
 
   resetPassword = () => {
     if(this.passwordResetForm.valid){

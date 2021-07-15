@@ -9,40 +9,37 @@ import { ApplicationsService } from 'src/app/shared/services/applications.servic
   styleUrls: ['./application-list.component.scss']
 })
 export class ApplicationListComponent implements OnInit {
-
+  
+ applicationList = [];
+ 
   constructor(private applicationService : ApplicationsService,
     private toastrService:ToastrService,) { }
 
  ngOnInit(): void {
-   this.fetchApplicationsList();
+  this.fetchApplicationsList();
+}
+
+fetchApplicationsList = () => {
+
+}
+
+ addNewApplication = () => {
+
  }
 
- fetchApplicationsList = () => {
+ updateApplication = (appId: any) => {
 
  }
 
- addApplications = () => {
+ deleteApplication = (appId: any) => {
+   
+ }
+
+ exportApplicationList = (type: any) => {
 
  }
 
  importApplications = () => {
-
- }
-
- updateRecord = () =>{
-
- }
-
- exportApplicationData = (type: any) => {
-   if(type == ExportTypes.CSV){
-
-   }
-   else{
-
-   }
- }
-
- deleteApplications = () => {
-
+   
  }
 }

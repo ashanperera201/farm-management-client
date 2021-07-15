@@ -10,40 +10,51 @@ import { FeedBrandService } from 'src/app/shared/services/feed-brand.service';
 })
 export class FeedBrandListComponent implements OnInit {
 
-  constructor(private pondService : FeedBrandService,
-    private toastrService:ToastrService,) { }
+  feedBrandList = [];
+  constructor(private feedbandService: FeedBrandService,
+    private toastrService: ToastrService,) { }
 
- ngOnInit(): void {
-   this.fetchFeedBrandsList();
- }
+  ngOnInit(): void {
+    this.fetchFeedBrandsList();
+  }
 
- fetchFeedBrandsList = () => {
+  fetchFeedBrandsList = () => {
+    this.feedbandService.fetchFeedBands().subscribe(res =>{
+      if(res){
 
- }
+      }
+    }, error => {
 
- addFeedBrands = () => {
+    })
+  }
 
- }
+  addNewFeedBrand = () => {
 
- importFeedBrands = () => {
+  }
 
- }
+  importFeedBrands = () => {
 
- updateRecord = () =>{
+  }
 
- }
+  updateFeedBrand = (feedbBrandId: any) => {
 
- exportFeedBrandData = (type: any) => {
-   if(type == ExportTypes.CSV){
+  }
 
-   }
-   else{
+  deleteFeedBrand = (feedbBrandId: any) => {
 
-   }
- }
+  }
 
- deleteFeedBrands = () => {
+  exportFeedBrandList = (type: any) => {
+    if (type == ExportTypes.CSV) {
 
- }
+    }
+    else {
+
+    }
+  }
+
+  importFeedBands = () => {
+    
+  }
 
 }

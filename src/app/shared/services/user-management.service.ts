@@ -24,6 +24,16 @@ export class UserManagementService {
     return this.http.get(url);
   }
 
+  fetchRole(roleId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/role/${roleId}`;
+    return this.http.get(url)
+  }
+
+  fetchUser(userId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/user/${userId}`;
+    return this.http.get(url)
+  }
+
   addRole(roleData: any): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/role/create`;
     return this.http.post(url, roleData)
@@ -51,7 +61,7 @@ export class UserManagementService {
 
   updateRole(roleData: UserRoleModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/role/update`;
-    return this.http.post(url, roleData)
+    return this.http.put(url, roleData)
   }
 
   deleteUser(userId: any): Observable<any> {
@@ -61,6 +71,6 @@ export class UserManagementService {
 
   updateUser(userData: UserModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/user/update`;
-    return this.http.post(url, userData)
+    return this.http.put(url, userData)
   }
 }

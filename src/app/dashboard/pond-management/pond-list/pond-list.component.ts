@@ -10,40 +10,42 @@ import { PondService } from 'src/app/shared/services/pond.service';
 })
 export class PondListComponent implements OnInit {
 
-  constructor(private pondService : PondService,
-    private toastrService:ToastrService,) { }
+  pondList = [];
 
- ngOnInit(): void {
-   this.fetchPondsList();
- }
+  constructor(private pondService: PondService,
+    private toastrService: ToastrService,) { }
 
- fetchPondsList = () => {
+  ngOnInit(): void {
+    this.fetchPondsList();
+  }
 
- }
+  fetchPondsList = () => {
 
- addPonds = () => {
+  }
 
- }
+  addNewPond = () => {
 
- importPonds = () => {
+  }
 
- }
+  importPonds = () => {
 
- updateRecord = () =>{
+  }
 
- }
+  updatePond = (pondId: any) => {
 
- exportPondData = (type: any) => {
-   if(type == ExportTypes.CSV){
+  }
 
-   }
-   else{
+  deletePond = (pondId: any) => {
 
-   }
- }
+  }
 
- deletePonds = () => {
+  exportPondList = (type: any) => {
+    if (type == ExportTypes.CSV) {
 
- }
+    }
+    else {
+
+    }
+  }
 
 }
