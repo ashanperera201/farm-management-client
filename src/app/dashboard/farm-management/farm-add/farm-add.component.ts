@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { farmModel } from 'src/app/shared/models/farm-model';
 import { ClubMemberService } from 'src/app/shared/services/club-member.service';
@@ -11,13 +12,37 @@ import { FarmService } from 'src/app/shared/services/farm.service';
   styleUrls: ['./farm-add.component.scss']
 })
 export class FarmAddComponent implements OnInit {
+
+  @Input() isEditMode: boolean = false;
+  @Input() farmId: any;
+  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  saveButtonText: string = 'Submit';
+  headerText: string = 'Add Farm';
+  feedBrandList: any[] = [];
+  existingData = new farmModel();
+  farmList!: [];
   addFarmForm!: FormGroup;
+
   constructor(private clubMemberService : ClubMemberService,
     private farmService : FarmService,
-    private toastrService:ToastrService) { }
+    private toastrService:ToastrService,
+    private activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.initAddFarmForm();
+    this.configValues();
+  }
+
+  configValues = () => {
+    if (this.isEditMode) {
+      this.saveButtonText = "Update";
+      this.headerText = "Update Farm";
+      this.fetchFarmData();
+    }
+  }
+
+  fetchFarmData = () => {
+
   }
 
   initAddFarmForm= () => {
@@ -56,5 +81,9 @@ export class FarmAddComponent implements OnInit {
 
   clearAddFarmForm = () => {
     this.addFarmForm.reset();
+  }
+
+  closeModal = () => {
+    this.activeModal.close();
   }
 }

@@ -1,8 +1,9 @@
 import { ApplicationModel } from './../../../shared/models/application-model';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ApplicationsService } from 'src/app/shared/services/applications.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-application-add',
@@ -11,14 +12,35 @@ import { ApplicationsService } from 'src/app/shared/services/applications.servic
 })
 export class ApplicationAddComponent implements OnInit {
 
+  @Input() isEditMode: boolean = false;
+  @Input() userId: any;
+  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
   addApplicationForm!: FormGroup;
-
+  saveButtonText: string = 'Submit';
+  headerText: string = 'Add Application';
+  feedBrandList: any[] = [];
+  existingData = new ApplicationModel();
+  
   constructor(private applicationService : ApplicationsService,
-    private toastrService:ToastrService) { }
+    private toastrService:ToastrService,
+    private activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.initAddApplicationForm();
-  } 
+    this.configValues();
+  }
+  
+  configValues = () => {
+    if (this.isEditMode) {
+      this.saveButtonText = "Update";
+      this.headerText = "Update Application";
+      this.fetchApplicationData();
+    }
+  }
+
+  fetchApplicationData = () => {
+
+  }
 
   initAddApplicationForm = () => {
     this.addApplicationForm = new FormGroup({
@@ -44,5 +66,9 @@ export class ApplicationAddComponent implements OnInit {
         this.toastrService.error("Unable to save Application","Error")
       })
     }
+  }
+
+  closeModal = () => {
+    this.activeModal.close();
   }
 }

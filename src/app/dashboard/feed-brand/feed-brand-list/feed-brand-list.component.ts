@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { ExportTypes } from 'src/app/shared/enums/export-type';
 import { FeedBrandService } from 'src/app/shared/services/feed-brand.service';
+import { FeedBrandAddComponent } from '../feed-brand-add/feed-brand-add.component';
 
 @Component({
   selector: 'app-feed-brand-list',
@@ -12,7 +14,8 @@ export class FeedBrandListComponent implements OnInit {
 
   feedBrandList = [];
   constructor(private feedbandService: FeedBrandService,
-    private toastrService: ToastrService,) { }
+    private toastrService: ToastrService,
+    private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.fetchFeedBrandsList();
@@ -29,14 +32,31 @@ export class FeedBrandListComponent implements OnInit {
   }
 
   addNewFeedBrand = () => {
+    const addFeedBrandModal = this.modalService.open(FeedBrandAddComponent, {
+      animation: true,
+      keyboard: true,
+      backdrop: true,
+      modalDialogClass: 'modal-md',
+    });
+  }
+
+  updateFeedBrand = (feedBrandId: any) => {
+    const addFeedBrandModal = this.modalService.open(FeedBrandAddComponent, {
+      animation: true,
+      keyboard: true,
+      backdrop: true,
+      modalDialogClass: 'modal-md',
+    });
+    addFeedBrandModal.componentInstance.roleId = feedBrandId;
+    addFeedBrandModal.componentInstance.isEditMode = true;
+    addFeedBrandModal.componentInstance.afterSave = this.feedBandAfterSave();
+  }
+
+  feedBandAfterSave = () => {
 
   }
 
   importFeedBrands = () => {
-
-  }
-
-  updateFeedBrand = (feedbBrandId: any) => {
 
   }
 

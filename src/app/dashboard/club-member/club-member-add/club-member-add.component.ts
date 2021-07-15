@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { clubMemberModel } from 'src/app/shared/models/club-member-model';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
@@ -10,15 +11,37 @@ import { ClubMemberService } from '../../../shared/services/club-member.service'
   styleUrls: ['./club-member-add.component.scss']
 })
 export class ClubMemberAddComponent implements OnInit {
+  @Input() isEditMode: boolean = false;
+  @Input() clubMemberId: any;
+  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  saveButtonText: string = 'Submit';
+  headerText: string = 'Add Club Member';
+  feedBrandList: any[] = [];
+  existingData = new clubMemberModel();
+  clubMemberList!: [];
   addClubmembersForm!: FormGroup;
   showAddUser: boolean = false;
 
   constructor(private clubMemberService : ClubMemberService,
-    private toastrService:ToastrService) { }
+    private toastrService:ToastrService,
+    private activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.initAddClubMembersForm();
-  } 
+    this.configValues();
+  }
+  
+  configValues = () => {
+    if (this.isEditMode) {
+      this.saveButtonText = "Update";
+      this.headerText = "Update Club Member";
+      this.fetchClubMemberData();
+    }
+  }
+
+  fetchClubMemberData = () => {
+
+  }
 
   initAddClubMembersForm= () => {
     this.addClubmembersForm = new FormGroup({
@@ -65,6 +88,10 @@ export class ClubMemberAddComponent implements OnInit {
     if(event){
       this.showAddUser = true;
     }
+  }
+
+  closeModal = () => {
+    this.activeModal.close();
   }
 
 }
