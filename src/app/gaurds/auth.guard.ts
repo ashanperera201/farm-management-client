@@ -14,9 +14,9 @@ export class CanActivateGuard implements CanActivate {
     canActivate(): Observable<boolean> {
         return new Observable(obs => {
             const isAuthenticated = !!this.tokenManagementService.getItem();
-            // TODO 1 : EXPIRATION SHOULD BE VALIDATED.
-            // TODO 2 : SET PERMISSION FROM USER ID.
-            if (isAuthenticated) {
+            const isExpired: boolean = this.tokenManagementService.isTokenExpired();
+
+            if (isAuthenticated && !isExpired) {
                 obs.next(true);
                 obs.complete();
             } else {
