@@ -6,6 +6,7 @@ import { FarmAddComponent } from './farm-add/farm-add.component';
 import { FarmCardComponent } from './farm-card/farm-card.component';
 import { FarmManagementRoutingModule } from './farm-management.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FarmManagementRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InlineSVGModule
   ]
 })
 

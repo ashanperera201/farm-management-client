@@ -10,39 +10,42 @@ import { FarmService } from 'src/app/shared/services/farm.service';
 })
 export class FarmListComponent implements OnInit {
 
-  constructor(private farmService : FarmService,
-    private toastrService:ToastrService,) { }
+  farmList = [];
 
- ngOnInit(): void {
-   this.fetchFarmList();
- }
+  constructor(private farmService: FarmService,
+    private toastrService: ToastrService,) { }
 
- fetchFarmList = () => {
+  ngOnInit(): void {
+    this.fetchFarmList();
+  }
 
- }
+  fetchFarmList = () => {
 
- addFarms = () => {
+  }
 
- }
+  addNewFarm = () => {
 
- importFarms = () => {
+  }
 
- }
 
- updateRecord = () =>{
+  updateFarm = (farmId: any) => {
 
- }
+  }
 
- exportFarmData = (type: any) => {
-   if(type == ExportTypes.CSV){
+  deleteFarm = (farmId: any) => {
 
-   }
-   else{
+  }
 
-   }
- }
+  importFarms = () => {
 
- deleteFarms = () => {
+  }
 
- }
+  exportFarmList = (type: any) => {
+    if (type == ExportTypes.CSV) {
+
+    }
+    else {
+
+    }
+  }
 }

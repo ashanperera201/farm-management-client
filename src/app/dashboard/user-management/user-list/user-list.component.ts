@@ -69,14 +69,15 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   editUser = (userId : any) => {
-    this.userManagementService.updateUser(userId).subscribe(res => {
-      if(res){
-        this.toastrService.success("User updated","Success");
-        this.fetchAllUsers();
-      }
-    }, error => {
-      this.toastrService.error("Unable to update user","Error");
-    });
+      const addRoleModal = this.modalService.open(UserAddComponent, {
+        animation: true,
+        keyboard: true,
+        backdrop: true,
+        modalDialogClass: 'modal-lg',
+      });
+      addRoleModal.componentInstance.userId = userId;
+      addRoleModal.componentInstance.isEditMode = true;
+      //addRoleModal.componentInstance.afterSave = this.roleAfterSave();
   }
 
 

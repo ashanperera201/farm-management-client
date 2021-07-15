@@ -15,6 +15,7 @@ const routes: Routes = [
             { path: 'user-management', loadChildren: () => import(`./user-management/user-management.module`).then(m => m.UserManagementModule) },
             { path: 'pond-management', loadChildren: () => import(`./pond-management/pond-management.module`).then(m => m.PondManagementModule) },
             { path: 'feed-brand', loadChildren: () => import(`./feed-brand/feed-brand.module`).then(m => m.FeedBrandModule) },
+            { path: 'applications', loadChildren: () => import(`./application/application.module`).then(m => m.ApplicationModule) },
             { path: '**', redirectTo: 'home' }
         ]
     }

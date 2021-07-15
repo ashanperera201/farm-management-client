@@ -1,1 +1,98 @@
-<p>pond-list works!</p>
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Ponds</h3>
+        </div>
+        <div class="card-toolbar">
+            <a type="button" class="btn btn-primary" (click)="addNewPond()"><i class="fa fa-plus" aria-hidden="true"></i> Add Pond</a>
+            <a type="button" class="btn btn-success m-1" (click)="importPonds()"><i class="fa fa-files-o" aria-hidden="true"></i> Import Ponds</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- begin: Filtration form -->
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <select class="form-control" placeholder="Filter by Contition" name="condition">
+                                <option value="">5</option>
+                                <option value="1">10</option>
+                                <option value="2">15</option>
+                            </select><small class="form-text text-muted"><b>Records</b> per page</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <input type="text" class="form-control" name="searchText" placeholder="Search" value="" /><small
+                        class="form-text text-muted"><b>Search</b></small>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
+                    <!-- begin: Grouping -->
+                    <div>
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportPondList(1)">
+                            <i class="fa fa-file-text"></i>
+                            <span>PDF</span>
+                        </button>
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportPondList(2)">
+                            <i class="fa fa-table"></i>
+                            <span>CSV</span>
+                        </button>
+                    </div>
+                    <!-- end: Grouping -->
+                </div>
+            </div>
+        </div>
+        <!-- end: Filtration form -->
+
+        <!-- begin:Table -->
+        <div class="table-responsive angular-bootstrap-table">
+            <table class="table table-head-custom table-vertical-center overflow-hidden">
+                <thead>
+                    <th class="selection-cell-header" data-row-selection="true">
+                        <label class="checkbox checkbox-single"><input type="checkbox" /><span></span></label>
+                    </th>
+                    <th> Owner</th>
+                    <th> Farm </th>
+                    <th> Pond No </th>
+                    <th> Area of Pond </th>
+                    <th> Grade of Pond </th>
+                    <th> Other fixed cost per Kg </th>
+                    <th> Action </th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pond of pondList">
+                        <td class="selection-cell">
+                            <label class="checkbox checkbox-single"><input type="checkbox" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <!-- <td>{{ pond.feedBrandName }}</td>
+                        <td>{{ pond.feedBrandGrade }}</td>
+                        <td>{{ pond.feedBrandPrice }}</td>
+                        <td>{{ pond.feedBrandWeight }}</td> -->
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td class="d-flex justify-content-start">
+                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updatePond(1)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                    class="svg-icon svg-icon-md svg-icon-primary">
+                                </span>
+                            </a>
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deletePond(1)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                    class="svg-icon svg-icon-md svg-icon-danger">
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

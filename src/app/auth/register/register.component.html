@@ -1,6 +1,12 @@
-<form class="text-center p-5">
-    <p class="h4 mb-4 text-primary ">Register User</p>
-    
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="modal-title mb-1">Register User</h4>
+            <p class="mb-0">The field labels marked with <span class="required"></span> are required input fields</p>
+        </div>
+    </div>
+</div>
+<div class="modal-body mb-0">
     <div [formGroup]="registerForm">
         <div class="form-row mb-4">
             <div class="col">
@@ -57,15 +63,15 @@
         </div>
         <div class="form-row mb-4">
             <div class="col">
-                <label class="font-size-h7  text-dark required">Re-Enter Password</label>
-                <input type="password" class="form-control mb-4" placeholder="Re-enter Password" formControlName="rePassword" >
+                <label class="font-size-h7  text-dark required">Re-enter Password</label>
+                <input type="password" class="form-control mb-4" placeholder="Re-enter Password" formControlName="rePassword">
             </div>
-            <div class="col">
-                <button type="button" [disabled]="registerForm.invalid"  (click)="registerUser()"
-                class="btn btn-primary  font-size-h7 px-8 py-4 my-3 mr-3">
-                Sign Up
-            </button>
+            <div class="col">              
             </div>
         </div>
     </div>
-</form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+    <button type="button" class="btn btn-primary" [disabled]="registerForm.invalid" (click)="registerUser()">Sign Up</button>
+</div>

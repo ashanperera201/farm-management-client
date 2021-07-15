@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { UserModel } from '../../shared/models/user-model';
 import { AuthService } from '../../shared/services/auth.service';
@@ -15,6 +16,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(private authService : AuthService,
     private toastrService:ToastrService,
+    private activeModal: NgbActiveModal
     ) { }
 
   ngOnInit(): void {
@@ -77,6 +79,10 @@ export class RegisterComponent implements OnInit {
 
   clearRegisterForm = () => {
     this.registerForm.reset();
+  }
+
+  closeModal = () => {
+    this.activeModal.close();
   }
 
 }
