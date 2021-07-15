@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { feedBrandModel } from 'src/app/shared/models/feed-brand-model';
 import { FeedBrandService } from 'src/app/shared/services/feed-brand.service';
@@ -10,14 +11,35 @@ import { FeedBrandService } from 'src/app/shared/services/feed-brand.service';
   styleUrls: ['./feed-brand-add.component.scss']
 })
 export class FeedBrandAddComponent implements OnInit {
+  @Input() isEditMode: boolean = false;
+  @Input() userId: any;
+  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
   addFeedBrandForm!: FormGroup;
+  saveButtonText: string = 'Submit';
+  headerText: string = 'Register User';
+  feedBrandList: any[] = [];
+  existingData = new feedBrandModel();
 
   constructor(private feedBrandService : FeedBrandService,
-    private toastrService:ToastrService) { }
+    private toastrService:ToastrService,
+    private activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.initAddPondForm();
+    this.configValues();
   } 
+
+  configValues = () => {
+    if (this.isEditMode) {
+      this.saveButtonText = "Update";
+      this.headerText = "Update Feed Brand";
+      this.fetchFeedBrandData();
+    }
+  }
+
+  fetchFeedBrandData = () => {
+
+  }
 
   initAddPondForm = () => {
     this.addFeedBrandForm = new FormGroup({
@@ -48,6 +70,10 @@ export class FeedBrandAddComponent implements OnInit {
         this.toastrService.error("Unable to save feed brand data","Error");
       });
     }
+  }
+
+  closeModal = () => {
+    this.activeModal.close();
   }
 
 }

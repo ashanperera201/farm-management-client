@@ -1,10 +1,11 @@
 import { FarmService } from 'src/app/shared/services/farm.service';
 import { pondModel } from './../../../shared/models/pond-model';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PondService } from 'src/app/shared/services/pond.service';
 import { ClubMemberService } from 'src/app/shared/services/club-member.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-pond-add',
@@ -12,6 +13,13 @@ import { ClubMemberService } from 'src/app/shared/services/club-member.service';
   styleUrls: ['./pond-add.component.scss']
 })
 export class PondAddComponent implements OnInit {
+  @Input() isEditMode: boolean = false;
+  @Input() pondId: any;
+  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  saveButtonText: string = 'Submit';
+  headerText: string = 'Add Pond';
+  feedBrandList: any[] = [];
+  existingData = new pondModel();
   addPondForm!: FormGroup;
   farmList!: [];
   ownerList!: [];
@@ -19,12 +27,26 @@ export class PondAddComponent implements OnInit {
   constructor(private pondService : PondService,
     private clubMemberService : ClubMemberService,
     private farmService : FarmService,
-    private toastrService:ToastrService) { }
+    private toastrService:ToastrService,
+    private activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.initAddPondForm();
+    this.configValues();
     this.fetchOwnersList();
   } 
+
+  configValues = () => {
+    if (this.isEditMode) {
+      this.saveButtonText = "Update";
+      this.headerText = "Update Application";
+      this.fetchPondData();
+    }
+  }
+
+  fetchPondData = () => {
+
+  }
 
   initAddPondForm = () => {
     this.addPondForm = new FormGroup({
@@ -77,6 +99,10 @@ export class PondAddComponent implements OnInit {
         this.toastrService.error("Unable to save pond data","Error");
       });
     }
+  }
+
+  closeModal = () => {
+    this.activeModal.close();
   }
 
 }

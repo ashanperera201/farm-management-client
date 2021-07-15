@@ -1,6 +1,13 @@
-<div class="text-center p-5">
-    <p class="h4 mb-4 text-primary ">Add Club Member</p>
-    <p>The field labels marked with <span class="required"></span> are required input fields</p>
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="modal-title mb-1">{{headerText}}</h4>
+            <p *ngIf="!isEditMode">The field labels marked with <span class="required"></span> are required input fields</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body mb-0">
     <div [formGroup]="addClubmembersForm">
         <div class="form-row mb-4">
             <div class="col">
@@ -9,7 +16,7 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Last Name</label>
-                <input type="text" class="form-control" placeholder="Last name" formControlName="lastname">
+                <input type="text" class="form-control" placeholder="Last name" formControlName="lastName">
             </div>
         </div>
         <div class="form-row mb-4">
@@ -29,17 +36,7 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">City</label>
-                <input type="text" class="form-control" placeholder="City" formControlName="City">
-            </div>
-        </div>
-        <div class="form-row mb-4">
-            <div class="col">
-                <label class="font-size-h7  text-dark required">Passport ID</label>
-                <input type="text" class="form-control" placeholder="Passport ID" formControlName="passpordId">
-            </div>
-            <div class="col">
-                <label class="font-size-h7  text-dark required">Email Address</label>
-                <input type="email" class="form-control mb-4" placeholder="E-mail" formControlName="userEmail">
+                <input type="text" class="form-control" placeholder="City" formControlName="city">
             </div>
         </div>
         <div class="form-row mb-4">
@@ -60,13 +57,9 @@
                 <input type="password" class="form-control mb-4" placeholder="Password" formControlName="password" >
             </div>
         </div>
-        <div class="form-row mb-4">
-            <div class="col">
-                <button type="button" [disabled]="addClubmembersForm.invalid"  (click)="saveClubMember()"
-                class="btn btn-primary  font-size-h7 px-8 py-4 my-3 mr-3">
-                Submit
-            </button>
-            </div>
-        </div>
     </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+    <button type="button" class="btn btn-primary" [disabled]="addClubmembersForm.invalid" (click)="saveClubMember()">{{saveButtonText}}</button>
 </div>
