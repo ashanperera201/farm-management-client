@@ -44,7 +44,7 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
 
   proceedSaveUpdate = () => {
     if (this.permissionFormGroup.valid) {
-      const userPermission = this.permissionFormGroup.getRawValue();
+      const userPermission = this.permissionFormGroup.value;
       if (this.existingRecord) {
         this.existingRecord.permissionCode = userPermission.permissionCode;
         this.existingRecord.permissionName = userPermission.permissionName;

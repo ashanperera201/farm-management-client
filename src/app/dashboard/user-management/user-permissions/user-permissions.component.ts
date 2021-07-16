@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileService } from '../../../shared/services/file.service';
@@ -57,9 +56,21 @@ export class UserPermissionsComponent implements OnInit, OnDestroy {
 
   exportData = (fileType: number) => {
     if (fileType === ExportTypes.CSV) {
-
+      this.fileService.exportAsExcelFile(this.userPermissionList, "user-permissions");
     } else {
-
+      // const roleList: any[] = this.roleList.map(x => {
+      //   return {
+      //     role_code: x.roleCode,
+      //     role_description: x.roleDescription,
+      //     role_name: x.roleName,
+      //     created_by: x.createdBy,
+      //     created_date: moment(x.createdOn).format('YYYY-MM-DD'),
+      //     modified_by: x.modifiedBy ? x.modifiedBy : '-',
+      //     modified_on: x.modifiedOn ? moment(x.modifiedOn).format('YYYY-MM-DD') : "-"
+      //   }
+      // });
+      // const headers: any[] = ['role_code', 'role_description', 'role_name', 'created_by', 'created_date', 'modified_by', 'modified_on'];
+      // this.fileService.exportToPDF("User Permissions",)
     }
   }
 

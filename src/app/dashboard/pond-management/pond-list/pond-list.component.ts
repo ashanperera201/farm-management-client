@@ -14,7 +14,7 @@ export class PondListComponent implements OnInit {
 
   pondList: any[] = [];
   filterParam!: string;
-  
+
   constructor(private pondService: PondService,
     private toastrService: ToastrService,
     private modalService: NgbModal) { }
@@ -24,12 +24,12 @@ export class PondListComponent implements OnInit {
   }
 
   fetchPondsList = () => {
-    this.pondService.fetchPonds().subscribe(res=> {
-      if(res && res.result){
+    this.pondService.fetchPonds().subscribe(res => {
+      if (res && res.result) {
         this.pondList = res.result;
       }
     }, error => {
-      this.toastrService.error("Unable ot load Pond data","Error");
+      this.toastrService.error("Unable ot load Pond data", "Error");
     });
   }
 
@@ -55,15 +55,18 @@ export class PondListComponent implements OnInit {
     });
     addFeedBrandModal.componentInstance.existingPond = pond;
     addFeedBrandModal.componentInstance.isEditMode = true;
-    addFeedBrandModal.componentInstance.afterSave = this.pondAfterSave();
+    if (addFeedBrandModal.componentInstance.afterSave) {
+      addFeedBrandModal.componentInstance.afterSave.subscribe((result: any) => {
+
+      });
+    }
   }
 
-  pondAfterSave = () => {
-
-  }
 
   deletePond = (pondId: any) => {
-
+    const pondIds = JSON.stringify([].concat(pondId));
+    let form = new FormData();
+    form.append("", pondIds);
   }
 
   exportPondList = (type: any) => {

@@ -37,7 +37,7 @@ export class FileService {
     doc.save(fileName);
   }
 
-  createHeaders(keys: any) {
+  private createHeaders(keys: any) {
     return keys.map((key: any) => ({
       'name': key,
       'prompt': key,

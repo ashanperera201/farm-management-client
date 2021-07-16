@@ -60,11 +60,11 @@
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{ userPermission.permissionCode }}</td>
-                        <td>{{ userPermission.permissionDescription }}</td>
-                        <td>{{ userPermission.permissionName }}</td>
-                        <td>{{ userPermission.isActive }}</td>
-                        <td>{{ userPermission.createdOn }}</td>
+                        <td>{{ userPermission?.permissionCode }}</td>
+                        <td>{{ userPermission?.permissionDescription }}</td>
+                        <td>{{ userPermission?.permissionName }}</td>
+                        <td>{{ userPermission?.isActive }}</td>
+                        <td>{{ userPermission?.createdOn }}</td>
                         <td class="d-flex justify-content-start">
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
                                 (click)="updatePermission(userPermission)">
