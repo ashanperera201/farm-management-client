@@ -5,6 +5,7 @@ import { UserManagementComponent } from './user-management.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserRolesComponent } from './user-roles/user-roles.component';
 import { UserAddComponent } from './user-add/user-add.component';
+import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
 
 const routes: Routes = [
     {
@@ -14,6 +15,7 @@ const routes: Routes = [
             { path: 'view-users', component: UserListComponent },
             { path: 'user-add', component: UserAddComponent },
             { path: 'view-roles', component: UserRolesComponent },
+            { path: 'view-permissions', component: UserPermissionsComponent },
             { path: '**', redirectTo: 'view-users' }
         ]
     }

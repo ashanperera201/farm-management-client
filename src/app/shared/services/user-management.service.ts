@@ -44,7 +44,7 @@ export class UserManagementService {
     return this.http.post(url, userData)
   }
 
-  fetchUserPermission(userId: number): Observable<any> {
+  fetchUserPermission(): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/permission/get-all`;
     return this.http.get(url);
   }
@@ -52,6 +52,11 @@ export class UserManagementService {
   saveUserPermission(permission: any): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/permission/create`;
     return this.http.post(url, permission);
+  }
+
+  updateUserPermission = (permission: any) => {
+    const url: string = `${this.baseUrl}/api/v1/permission/update`;
+    return this.http.put(url, permission);
   }
 
   deleteRole(roleId: any): Observable<any> {

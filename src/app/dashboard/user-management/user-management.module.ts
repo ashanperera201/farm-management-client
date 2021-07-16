@@ -12,6 +12,7 @@ import { UserPermissionsComponent } from './user-permissions/user-permissions.co
 import { UserManagementRoutingModule } from './user-management.routing';
 import { RoleAddComponent } from './role-add/role-add.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { UserPermissionAddComponent } from './user-permission-add/user-permission-add.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     UserListComponent,
     UserRolesComponent,
     UserPermissionsComponent,
-    RoleAddComponent
+    RoleAddComponent,
+    UserPermissionAddComponent
   ],
   imports: [
     CommonModule,

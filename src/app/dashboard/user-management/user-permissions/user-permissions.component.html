@@ -1,1 +1,87 @@
-<p>user-permissions works!</p>
+<div class="card card-custom" id="htmlData">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">User Permission</h3>
+        </div>
+        <div class="card-toolbar">
+            <a type="button" class="btn btn-primary" (click)="addPermission()"><i class="fa fa-plus"
+                    aria-hidden="true"></i> Add Permission</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- begin: Filtration form -->
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-6">
+                    <div class="col-lg-5">
+                        <input type="text" class="form-control" name="searchText" placeholder="Search"
+                            [(ngModel)]="searchParam" />
+                        <small class="form-text text-muted"><b>Search</b></small>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
+                    <!-- begin: Grouping -->
+                    <div>
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
+                            (click)="exportData(exportTypes.PDF)">
+                            <i class="fa fa-file-text"></i>
+                            <span>PDF</span>
+                        </button>
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
+                            (click)="exportData(exportTypes.CSV)">
+                            <i class="fa fa-table"></i>
+                            <span>CSV</span>
+                        </button>
+                    </div>
+                    <!-- end: Grouping -->
+                </div>
+            </div>
+        </div>
+        <!-- end: Filtration form -->
+
+        <!-- begin:Table -->
+        <div class="table-responsive angular-bootstrap-table">
+            <table class="table table-head-custom table-vertical-center overflow-hidden">
+                <thead>
+                    <th class="selection-cell-header" data-row-selection="true">
+                        <label class="checkbox checkbox-single"><input type="checkbox" /><span></span></label>
+                    </th>
+                    <th> Permission Code </th>
+                    <th> Permission Description </th>
+                    <th> Permission Name </th>
+                    <th> Active </th>
+                    <th> Created On </th>
+                    <th> Action </th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let userPermission of userPermissionList | filter:searchParam">
+                        <td class="selection-cell">
+                            <label class="checkbox checkbox-single"><input type="checkbox" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td>{{ userPermission.permissionCode }}</td>
+                        <td>{{ userPermission.permissionDescription }}</td>
+                        <td>{{ userPermission.permissionName }}</td>
+                        <td>{{ userPermission.isActive }}</td>
+                        <td>{{ userPermission.createdOn }}</td>
+                        <td class="d-flex justify-content-start">
+                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
+                                (click)="updatePermission(userPermission)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                    class="svg-icon svg-icon-md svg-icon-primary">
+                                </span>
+                            </a>
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
+                                (click)="deletePermission(userPermission._id)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                    class="svg-icon svg-icon-md svg-icon-danger">
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
