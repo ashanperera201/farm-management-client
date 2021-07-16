@@ -66,21 +66,17 @@
                                 <span></span>
                             </label>
                         </td>
-                        <!-- <td>{{ pond.feedBrandName }}</td>
-                        <td>{{ app.feedBrandGrade }}</td>
-                        <td>{{ app.feedBrandPrice }}</td>
-                        <td>{{ app.feedBrandWeight }}</td> -->
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
+                       <td>{{ app.applicationType }}</td>
+                         <td>{{ app.applicantName }}</td>
+                        <td>{{ app.unit }}</td>
+                        <td>{{ app.costPerUnit }}</td>
                         <td class="d-flex justify-content-start">
-                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateApplication(1)">
+                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateApplication(app)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteApplication(1)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteApplication(app.applicationUniqueId)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

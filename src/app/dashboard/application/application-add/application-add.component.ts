@@ -13,8 +13,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class ApplicationAddComponent implements OnInit {
 
   @Input() isEditMode: boolean = false;
-  @Input() userId: any;
-  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  @Input() existingApplication: any;
+  @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
   addApplicationForm!: FormGroup;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Application';
@@ -34,20 +34,16 @@ export class ApplicationAddComponent implements OnInit {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Application";
-      this.fetchApplicationData();
+      this.addApplicationForm.patchValue(this.existingApplication);
     }
-  }
-
-  fetchApplicationData = () => {
-
   }
 
   initAddApplicationForm = () => {
     this.addApplicationForm = new FormGroup({
-      type : new FormControl(null,Validators.compose([Validators.required])),
-      name : new FormControl(null,Validators.compose([Validators.required])),
+      applicationType : new FormControl(null,Validators.compose([Validators.required])),
+      applicantName : new FormControl(null,Validators.compose([Validators.required])),
       unit : new FormControl(null),
-      cost : new FormControl(null)
+      costPerUnit : new FormControl(null)
     });
   }
 
@@ -56,15 +52,40 @@ export class ApplicationAddComponent implements OnInit {
   }
 
   saveApplication = () => {
-    if(this.addApplicationForm.valid){
-      const application = new ApplicationModel();
-      this.applicationService.saveApplication(application).subscribe(res => {
-        if(res){
-          this.toastrService.success("Application saved successfully","Success")
-        }
-      }, error => {
-        this.toastrService.error("Unable to save Application","Error")
-      })
+    if(this.isEditMode){
+      if(this.addApplicationForm.valid){
+        const application = this.existingApplication;
+        application.applicationType = this.addApplicationForm.value.applicationType;
+        application.applicantName = this.addApplicationForm.value.applicantName;
+        application.unit = this.addApplicationForm.value.unit;
+        application.costPerUnit = this.addApplicationForm.value.costPerUnit;
+        this.applicationService.updateApplication(application).subscribe(res => {
+          if(res){
+            this.closeModal();
+            this.toastrService.success("Application data updated successfully","Success");
+            this.afterSave.emit();
+          }
+        }, error => {
+          this.toastrService.error("Unable to update Application","Error");
+        });
+      }
+    }
+    else{
+      if(this.addApplicationForm.valid){
+        const application = new ApplicationModel();
+        application.applicationType = this.addApplicationForm.value.applicationType;
+        application.applicantName = this.addApplicationForm.value.applicantName;
+        application.unit = this.addApplicationForm.value.unit;
+        application.costPerUnit = this.addApplicationForm.value.costPerUnit;
+        this.applicationService.saveApplication(application).subscribe(res => {
+          if(res){
+            this.closeModal();
+            this.toastrService.success("Application saved successfully","Success");
+          }
+        }, error => {
+          this.toastrService.error("Unable to save Application","Error")
+        });
+      }
     }
   }
 

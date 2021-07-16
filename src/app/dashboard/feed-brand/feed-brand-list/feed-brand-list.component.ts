@@ -12,7 +12,9 @@ import { FeedBrandAddComponent } from '../feed-brand-add/feed-brand-add.componen
 })
 export class FeedBrandListComponent implements OnInit {
 
-  feedBrandList = [];
+  feedBrandList : any[] = [];
+  feedBrandIdList : any[] = [];
+
   constructor(private feedbandService: FeedBrandService,
     private toastrService: ToastrService,
     private modalService: NgbModal) { }
@@ -23,12 +25,12 @@ export class FeedBrandListComponent implements OnInit {
 
   fetchFeedBrandsList = () => {
     this.feedbandService.fetchFeedBands().subscribe(res =>{
-      if(res){
-
+      if(res && res.result){
+        this.feedBrandList = res.result;
       }
     }, error => {
-
-    })
+      this.toastrService.error("Failed to load Feed Brands","Error");
+    });
   }
 
   addNewFeedBrand = () => {
@@ -40,14 +42,14 @@ export class FeedBrandListComponent implements OnInit {
     });
   }
 
-  updateFeedBrand = (feedBrandId: any) => {
+  updateFeedBrand = (feedBrand: any) => {
     const addFeedBrandModal = this.modalService.open(FeedBrandAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addFeedBrandModal.componentInstance.roleId = feedBrandId;
+    addFeedBrandModal.componentInstance.existingFeedBrand = feedBrand;
     addFeedBrandModal.componentInstance.isEditMode = true;
     addFeedBrandModal.componentInstance.afterSave = this.feedBandAfterSave();
   }
@@ -56,12 +58,17 @@ export class FeedBrandListComponent implements OnInit {
 
   }
 
-  importFeedBrands = () => {
-
-  }
-
-  deleteFeedBrand = (feedbBrandId: any) => {
-
+  deleteFeedBrand = (feedBrandId: any) => {
+    this.feedBrandList.push(feedBrandId);
+    this.feedbandService.deleteFeedBands(this.feedBrandList).subscribe(res => {
+      if(res){
+        this.toastrService.success("Feed Brand deleted","Success");
+        this.feedBrandList = [];
+        this.fetchFeedBrandsList();
+      }
+    }, error => {
+      this.toastrService.error("Unable to delete Feed Brand","Error");
+    });
   }
 
   exportFeedBrandList = (type: any) => {

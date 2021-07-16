@@ -14,18 +14,27 @@ export class ClubMemberService {
   constructor(private http: HttpClient) { }
 
   fetchClubMembers(): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+    const url: string = `${this.baseUrl}/api/v1/club-member/details`;
+    return this.http.get(url);
+  }
+
+  fetchClubMemberById(clubMemberId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/club-member/${clubMemberId}`;
     return this.http.get(url);
   }
 
   saveClubMember(clubMemberData: clubMemberModel): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+    const url: string = `${this.baseUrl}/api/v1/club-member/create`;
     return this.http.post(url, clubMemberData)
   }
 
-  
-  deleteClubMember(memberIds: number): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+  updateClubMember(clubMemberData: clubMemberModel): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/club-member/update`;
+    return this.http.put(url, clubMemberData)
+  }
+
+  deleteClubMember(memberId: number): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/club-member/delete`;
     return this.http.delete(url)
   }
 }
