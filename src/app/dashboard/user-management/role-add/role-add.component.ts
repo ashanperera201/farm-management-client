@@ -3,7 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { UserRoleModel } from '../../../shared/models/user-role-model';
-import { UserManagementService } from '../../../../app/shared/services/user-management.service';
+import { UserManagementService } from 'src/app/shared/services/user-management.service';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { RolePermissionService } from 'src/app/shared/services/role-permission.service';
 
 @Component({
   selector: 'app-role-add',
@@ -17,14 +19,29 @@ export class RoleAddComponent implements OnInit {
   addRoleForm!: FormGroup;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Role';
+  dropdownList = [];
+  selectedItems = [];
+  dropdownSettings: IDropdownSettings = {};
 
   constructor(private userManagementService: UserManagementService,
     private toastrService: ToastrService,
-    private activeModal: NgbActiveModal) { }
+    private activeModal: NgbActiveModal,
+    private rolePermissionService: RolePermissionService) { }
 
   ngOnInit(): void {
     this.initRoleForm();
     this.patchExistsRole();
+    this.fetchRolePermissionData();
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'item_id',
+      textField: 'item_text',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
 
   initRoleForm = () => {
@@ -86,6 +103,23 @@ export class RoleAddComponent implements OnInit {
 
   closeModal = () => {
     this.activeModal.close();
+  }
+
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+
+  fetchRolePermissionData = () => {
+    this.rolePermissionService.fetchPermissionList().subscribe(res => {
+      if (res) {
+        this.dropdownList = res.result;
+      }
+    }, error => {
+      this.toastrService.error("Unable to load Role permission data", "Error");
+    });
   }
 
 }

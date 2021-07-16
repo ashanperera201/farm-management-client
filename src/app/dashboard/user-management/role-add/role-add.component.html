@@ -21,6 +21,19 @@
                     formControlName="roleDescription">
             </div>
         </div>
+        <div class="form-row mb-4">
+          <div class="col">
+              <label class="font-size-h7  text-dark">Role Permissions</label>
+              <ng-multiselect-dropdown
+                [placeholder]="'Permissions'"
+                [settings]="dropdownSettings"
+                [data]="dropdownList"
+                [(ngModel)]="selectedItems"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)">
+              </ng-multiselect-dropdown>
+          </div>
+      </div>      
     </div>
 </div>
 <div class="modal-footer">
