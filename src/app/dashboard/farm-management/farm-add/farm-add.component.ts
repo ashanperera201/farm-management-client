@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { farmModel } from 'src/app/shared/models/farm-model';
-import { ClubMemberService } from 'src/app/shared/services/club-member.service';
-import { FarmService } from 'src/app/shared/services/farm.service';
+import { farmModel } from '../../../shared/models/farm-model';
+import { ClubMemberService } from '../../../shared/services/club-member.service';
+import { FarmService } from '../../../shared/services/farm.service';
 
 @Component({
   selector: 'app-farm-add',

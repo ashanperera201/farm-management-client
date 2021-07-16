@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { UserManagementService } from 'src/app/shared/services/user-management.service';
+import { UserManagementService } from '../../../../app/shared/services/user-management.service';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { UserAddComponent } from '../user-add/user-add.component';
 

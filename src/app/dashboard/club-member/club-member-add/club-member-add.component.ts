@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { clubMemberModel } from 'src/app/shared/models/club-member-model';
+import { clubMemberModel } from '../../../../app/shared/models/club-member-model';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 
 @Component({

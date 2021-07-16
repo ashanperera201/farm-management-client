@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ExportTypes } from 'src/app/shared/enums/export-type';
-import { FarmService } from 'src/app/shared/services/farm.service';
+import { ExportTypes } from '../../../shared/enums/export-type';
+import { FarmService } from '../../../shared/services/farm.service';
 import { FarmAddComponent } from '../farm-add/farm-add.component';
 
 @Component({

@@ -2,8 +2,8 @@ import { UserModel } from './../../../shared/models/user-model';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { UserManagementService } from 'src/app/shared/services/user-management.service';
-import { AuthService } from 'src/app/shared/services/auth.service';
+import { UserManagementService } from '../../../shared/services/user-management.service';
+import { AuthService } from '../../../shared/services/auth.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -82,7 +82,7 @@ export class UserAddComponent implements OnInit {
     userModelData.userEmail = user.userEmail;
     userModelData.firstName = user.firstName;
     userModelData.middleName = user.middleName;
-    userModelData.lastName =user.lastName;
+    userModelData.lastName = user.lastName;
     userModelData.contact = user.contact;
     userModelData.userAddress = user.userAddress;
     userModelData.nic = user.nic;
@@ -96,7 +96,7 @@ export class UserAddComponent implements OnInit {
         let userModelData = new UserModel();
         userModelData.userName = (this.addUserForm.value.userName).trim();
         userModelData.userEmail = this.addUserForm.value.userEmail;
-        userModelData.password =   this.existingUser.password;
+        userModelData.password = this.existingUser.password;
         userModelData.firstName = this.addUserForm.value.firstName;
         userModelData.middleName = this.addUserForm.value.middleName;
         userModelData.lastName = this.addUserForm.value.lastName;

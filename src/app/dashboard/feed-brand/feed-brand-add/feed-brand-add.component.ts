@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { feedBrandModel } from 'src/app/shared/models/feed-brand-model';
-import { FeedBrandService } from 'src/app/shared/services/feed-brand.service';
+import { feedBrandModel } from '../../../shared/models/feed-brand-model';
+import { FeedBrandService } from '../../../shared/services/feed-brand.service';
 
 @Component({
   selector: 'app-feed-brand-add',

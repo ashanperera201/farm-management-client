@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ExportTypes } from 'src/app/shared/enums/export-type';
-import { PondService } from 'src/app/shared/services/pond.service';
+import { ExportTypes } from '../../../../app/shared/enums/export-type';
+import { PondService } from '../../../../app/shared/services/pond.service';
 import { PondAddComponent } from '../pond-add/pond-add.component';
 
 @Component({

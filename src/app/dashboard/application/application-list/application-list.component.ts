@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ExportTypes } from 'src/app/shared/enums/export-type';
-import { ApplicationsService } from 'src/app/shared/services/applications.service';
+import { ExportTypes } from '../../../shared/enums/export-type';
+import { ApplicationsService } from '../../../../app/shared/services/applications.service';
 import { ApplicationAddComponent } from '../application-add/application-add.component';
 
 @Component({

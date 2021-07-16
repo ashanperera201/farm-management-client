@@ -29,8 +29,8 @@ export class FileService {
     FileSaver.saveAs(data, `${fileName}${EXCEL_EXTENSION}`);
   }
 
-  exportToPDF(data: any, fileName: string) {
-    const header = this.createHeaders(['role_code', 'role_description', 'role_name', 'created_by', 'created_date', 'modified_by', 'modified_on']);
+  exportToPDF(headers: any[], data: any, fileName: string) {
+    const header = this.createHeaders(headers);
     let doc = new jsPDF();
     doc.text("User Role Table", 9, 10);
     doc.table(12, 25, data, header, {});

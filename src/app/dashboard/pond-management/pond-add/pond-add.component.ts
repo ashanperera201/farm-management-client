@@ -1,10 +1,10 @@
-import { FarmService } from 'src/app/shared/services/farm.service';
+import { FarmService } from '../../../shared/services/farm.service';
 import { pondModel } from './../../../shared/models/pond-model';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { PondService } from 'src/app/shared/services/pond.service';
-import { ClubMemberService } from 'src/app/shared/services/club-member.service';
+import { PondService } from '../../../shared/services/pond.service';
+import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

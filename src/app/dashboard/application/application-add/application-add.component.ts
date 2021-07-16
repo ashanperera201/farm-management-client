@@ -2,7 +2,7 @@ import { ApplicationModel } from './../../../shared/models/application-model';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { ApplicationsService } from 'src/app/shared/services/applications.service';
+import { ApplicationsService } from '../../../shared/services/applications.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { UserRoleModel } from '../../../shared/models/user-role-model';
-import { UserManagementService } from 'src/app/shared/services/user-management.service';
+import { UserManagementService } from '../../../../app/shared/services/user-management.service';
 
 @Component({
   selector: 'app-role-add',

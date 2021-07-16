@@ -109,7 +109,8 @@ export class UserRolesComponent implements OnInit, OnDestroy {
           modified_on: x.modifiedOn ? moment(x.modifiedOn).format('YYYY-MM-DD') : "-"
         }
       });
-      this.fileService.exportToPDF(roleList,'user_roles');
+      const headers: any[] = ['role_code', 'role_description', 'role_name', 'created_by', 'created_date', 'modified_by', 'modified_on'];
+      this.fileService.exportToPDF(headers, roleList, 'user_roles');
     }
   }
 
