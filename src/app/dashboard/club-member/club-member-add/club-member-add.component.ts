@@ -44,12 +44,12 @@ export class ClubMemberAddComponent implements OnInit {
       firstName: new FormControl(null, Validators.compose([Validators.required])),
       lastName: new FormControl(null, Validators.compose([Validators.required])),
       email: new FormControl(null,  Validators.compose([Validators.email])),
-      contact: new FormControl(null, Validators.compose([Validators.required])),
+      contactNumber: new FormControl(null, Validators.compose([Validators.required])),
       address: new FormControl(null, Validators.compose([Validators.required])),
       city: new FormControl(null, Validators.compose([Validators.required])),
       addUser: new FormControl(0),
-      userName: new FormControl(null, Validators.compose([Validators.required])),
-      password: new FormControl(null, Validators.compose([Validators.required]))
+      userName: new FormControl(null),
+      password: new FormControl(null)
     });
   }
 
@@ -60,40 +60,19 @@ export class ClubMemberAddComponent implements OnInit {
   saveClubMember = () => {
     if(this.isEditMode){
       if(this.addClubmembersForm.valid){
-        const clubMember = new clubMemberModel();
-        clubMember.firstName = this.addClubmembersForm.value.firstName;
-        clubMember.lastName = this.addClubmembersForm.value.lastName;
-        clubMember.email = this.addClubmembersForm.value.email;
-        clubMember.contact = this.addClubmembersForm.value.contact;
-        clubMember.address = this.addClubmembersForm.value.address;
-        clubMember.city = this.addClubmembersForm.value.city;
-        clubMember.userName = this.addClubmembersForm.value.userName;
-        clubMember.password = this.addClubmembersForm.value.password;
-  
-        this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
-          if(res){
-            this.toastrService.success("Club Member saved successfully.","Successfully Saved");
-          }
-        }, 
-        error => {
-          this.toastrService.error("Unable to save","Error");
-        });
-      }
-    }
-    else{
-      if(this.addClubmembersForm.valid){
         const clubMember = this.existingClubMember;
         clubMember.firstName = this.addClubmembersForm.value.firstName;
         clubMember.lastName = this.addClubmembersForm.value.lastName;
         clubMember.email = this.addClubmembersForm.value.email;
-        clubMember.contact = this.addClubmembersForm.value.contact;
+        clubMember.contactNumber = this.addClubmembersForm.value.contactNumber;
         clubMember.address = this.addClubmembersForm.value.address;
         clubMember.city = this.addClubmembersForm.value.city;
         clubMember.userName = this.addClubmembersForm.value.userName;
         clubMember.password = this.addClubmembersForm.value.password;
-  
-        this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
+
+        this.clubMemberService.updateClubMember(clubMember).subscribe(res=>{
           if(res){
+            this.closeModal();
             this.toastrService.success("Club Member updated successfully.","Successfully Saved");
           }
         }, 
@@ -102,10 +81,37 @@ export class ClubMemberAddComponent implements OnInit {
         });
       }
     }
+    else{
+      if(this.addClubmembersForm.valid){
+        const clubMember = new clubMemberModel();
+        clubMember.firstName = this.addClubmembersForm.value.firstName;
+        clubMember.lastName = this.addClubmembersForm.value.lastName;
+        clubMember.email = this.addClubmembersForm.value.email;
+        clubMember.contactNumber = this.addClubmembersForm.value.contactNumber;
+        clubMember.address = this.addClubmembersForm.value.address;
+        clubMember.city = this.addClubmembersForm.value.city;
+        clubMember.userName = this.addClubmembersForm.value.userName;
+        clubMember.password = this.addClubmembersForm.value.password;
+        clubMember.nic = '00';
+  
+        this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
+          if(res){
+            this.toastrService.success("Club Member saved successfully.","Successfully Saved");
+            this.closeModal();
+          }
+        }, 
+        error => {
+          this.toastrService.error("Unable to save Club Member data","Error");
+        });
+      }
+    }
   }
 
   onAddUserChange = (event: any) => {
-    if(event){
+    if(event && this.showAddUser){
+      this.showAddUser = false;
+    }
+    else{
       this.showAddUser = true;
     }
   }
