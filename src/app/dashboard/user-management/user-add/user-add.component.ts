@@ -22,6 +22,7 @@ export class UserAddComponent implements OnInit {
   saveButtonText: string = 'Submit';
   headerText: string = 'Register User';
   selectedItems = [];
+  dropdownList = [];
   dropdownSettings: IDropdownSettings = {};
 
   constructor(private userManagementService: UserManagementService,
@@ -32,16 +33,7 @@ export class UserAddComponent implements OnInit {
   ngOnInit(): void {
     this.initAddUserForm();
     this.configValues();
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: '_id',
-      textField: 'roleName',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
+    this.fetchUserRoles();
   }
 
   initAddUserForm = () => {
@@ -75,6 +67,16 @@ export class UserAddComponent implements OnInit {
       this.headerText = "Update User";
       this.fetchUserData();
     }
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: '_id',
+      textField: 'roleName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
 
   fetchUserData = () => {
@@ -119,7 +121,7 @@ export class UserAddComponent implements OnInit {
         userModelData.passportId = this.addUserForm.value.passpordId;
         userModelData.profileImage = "";
         userModelData.countryCode = "SRI-LANKAN";
-        userModelData.rolse = this.addUserForm.value.role;
+        userModelData.roles = [].concat((this.addUserForm.get("role")?.value).map((x: any) => x._id));
 
         if (this.isEditMode) {
           this.userManagementService.updateUser(userModelData).subscribe(res => {
@@ -161,6 +163,7 @@ export class UserAddComponent implements OnInit {
   fetchUserRoles = () => {
     this.userManagementService.fetchRoleList().subscribe(res => {
       if (res && res.result) {
+        this.dropdownList = res.result;
         res.result.forEach((role: any) => {
           this.roleList.push(role);
 

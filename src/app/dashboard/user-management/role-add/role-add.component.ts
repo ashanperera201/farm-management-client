@@ -32,7 +32,11 @@ export class RoleAddComponent implements OnInit {
     this.initRoleForm();
     this.patchExistsRole();
     this.fetchRolePermissionData();
+    this.configMultiDropdown();
+    console.log(this.role);
+  }
 
+  configMultiDropdown = () => {
     this.dropdownSettings = {
       singleSelection: false,
       idField: '_id',
@@ -66,19 +70,13 @@ export class RoleAddComponent implements OnInit {
       userRole.roleCode = this.addRoleForm.value.roleCode;
       userRole.roleName = this.addRoleForm.value.roleCode;
       userRole.roleDescription = this.addRoleForm.value.roleDescription;
-      this.addRoleForm.value.rolePermission.forEach((permissionId: any) => {
-        userRole.permissions.concat(permissionId._id);
-      });
-
-      
+      userRole.permissions = [].concat((this.addRoleForm.get("rolePermission")?.value).map((x: any) => x._id));
 
       if (this.isEditMode) {
         this.role.roleCode = this.addRoleForm.value.roleCode;;
         this.role.roleName = this.addRoleForm.value.roleCode;
         this.role.roleDescription = this.addRoleForm.value.roleDescription;
-        this.addRoleForm.value.rolePermission.forEach((permissionId: any) => {
-          this.role.permissions.concat(permissionId._id);
-        });
+        this.role.permissions = [].concat((this.addRoleForm.get("rolePermission")?.value).map((x: any) => x._id));
 
         this.userManagementService.updateRole(this.role).subscribe(res => {
           if (res) {
