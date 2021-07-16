@@ -11,4 +11,5 @@ export class UserModel {
     passportId!: string;
     profileImage!: string;
     countryCode!: string;
+    roles!: Array<string>;
 }

@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserManagementService } from '../../../shared/services/user-management.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-user-add',
@@ -20,6 +21,9 @@ export class UserAddComponent implements OnInit {
   existingUser = new UserModel();
   saveButtonText: string = 'Submit';
   headerText: string = 'Register User';
+  selectedItems = [];
+  dropdownList = [];
+  dropdownSettings: IDropdownSettings = {};
 
   constructor(private userManagementService: UserManagementService,
     private authService: AuthService,
@@ -29,6 +33,7 @@ export class UserAddComponent implements OnInit {
   ngOnInit(): void {
     this.initAddUserForm();
     this.configValues();
+    this.fetchUserRoles();
   }
 
   initAddUserForm = () => {
@@ -52,8 +57,7 @@ export class UserAddComponent implements OnInit {
       userAddress: new FormControl(null, Validators.compose([Validators.required])),
       nic: new FormControl(null, Validators.compose([Validators.required])),
       passpordId: new FormControl(null),
-      password: new FormControl(null, Validators.compose([Validators.required])),
-      rePassword: new FormControl(null, Validators.compose([Validators.required]))
+      role: new FormControl(null, Validators.compose([Validators.required]))
     });
   }
 
@@ -63,6 +67,16 @@ export class UserAddComponent implements OnInit {
       this.headerText = "Update User";
       this.fetchUserData();
     }
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: '_id',
+      textField: 'roleName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
 
   fetchUserData = () => {
@@ -87,6 +101,7 @@ export class UserAddComponent implements OnInit {
     userModelData.userAddress = user.userAddress;
     userModelData.nic = user.nic;
     userModelData.passportId = user.passpordId;
+    // userModelData.roles = user.role;
     this.addUserForm.patchValue(user);
   }
 
@@ -96,7 +111,7 @@ export class UserAddComponent implements OnInit {
         let userModelData = new UserModel();
         userModelData.userName = (this.addUserForm.value.userName).trim();
         userModelData.userEmail = this.addUserForm.value.userEmail;
-        userModelData.password = this.existingUser.password;
+        // userModelData.password = this.existingUser.password;
         userModelData.firstName = this.addUserForm.value.firstName;
         userModelData.middleName = this.addUserForm.value.middleName;
         userModelData.lastName = this.addUserForm.value.lastName;
@@ -105,7 +120,8 @@ export class UserAddComponent implements OnInit {
         userModelData.nic = this.addUserForm.value.nic;
         userModelData.passportId = this.addUserForm.value.passpordId;
         userModelData.profileImage = "";
-        userModelData.countryCode = "SRI-LANKAN"
+        userModelData.countryCode = "SRI-LANKAN";
+        userModelData.roles = [].concat((this.addUserForm.get("role")?.value).map((x: any) => x._id));
 
         if (this.isEditMode) {
           this.userManagementService.updateUser(userModelData).subscribe(res => {
@@ -147,13 +163,22 @@ export class UserAddComponent implements OnInit {
   fetchUserRoles = () => {
     this.userManagementService.fetchRoleList().subscribe(res => {
       if (res && res.result) {
+        this.dropdownList = res.result;
         res.result.forEach((role: any) => {
           this.roleList.push(role);
+
         });
       }
     }, error => {
       this.toastrService.error("Failed to load users", "Error");
     });
+  }
+
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
   }
 
   clearAddUserForm = () => {

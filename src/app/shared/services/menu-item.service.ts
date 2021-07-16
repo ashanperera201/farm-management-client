@@ -21,20 +21,20 @@ export class MenuItemService {
         isMenuOpened: false,
         subItems: []
       },
+      // {
+      //   id: 2,
+      //   displayName: 'MANAGEMENT LEVEL SECTION',
+      //   route: '',
+      //   svgIconPath: '',
+      //   classes: 'menu-section',
+      //   activeClass: '',
+      //   selected: false,
+      //   isMenuHeading: true,
+      //   isMenuOpened: false,
+      //   subItems: []
+      // },
       {
         id: 2,
-        displayName: 'MANAGEMENT LEVEL SECTION',
-        route: '',
-        svgIconPath: '',
-        classes: 'menu-section',
-        activeClass: '',
-        selected: false,
-        isMenuHeading: true,
-        isMenuOpened: false,
-        subItems: []
-      },
-      {
-        id: 3,
         displayName: 'Club Management',
         route: '/dashboard/club-member/view-all',
         svgIconPath: './assets/media/svg/icons/Tools/Angle Grinder.svg',

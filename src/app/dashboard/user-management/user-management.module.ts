@@ -11,6 +11,7 @@ import { UserRolesComponent } from './user-roles/user-roles.component';
 import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
 import { UserManagementRoutingModule } from './user-management.routing';
 import { RoleAddComponent } from './role-add/role-add.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { RoleAddComponent } from './role-add/role-add.component';
     InlineSVGModule,
     NgbPaginationModule,
     Ng2SearchPipeModule,
+    NgMultiSelectDropDownModule
   ]
 })
 export class UserManagementModule { }

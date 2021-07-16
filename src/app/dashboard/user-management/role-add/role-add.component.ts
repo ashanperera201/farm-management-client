@@ -3,7 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { UserRoleModel } from '../../../shared/models/user-role-model';
-import { UserManagementService } from '../../../../app/shared/services/user-management.service';
+import { UserManagementService } from 'src/app/shared/services/user-management.service';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { RolePermissionService } from 'src/app/shared/services/role-permission.service';
 
 @Component({
   selector: 'app-role-add',
@@ -17,20 +19,40 @@ export class RoleAddComponent implements OnInit {
   addRoleForm!: FormGroup;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Role';
+  dropdownList = [];
+  selectedItems = [];
+  dropdownSettings: IDropdownSettings = {};
 
   constructor(private userManagementService: UserManagementService,
     private toastrService: ToastrService,
-    private activeModal: NgbActiveModal) { }
+    private activeModal: NgbActiveModal,
+    private rolePermissionService: RolePermissionService) { }
 
   ngOnInit(): void {
     this.initRoleForm();
     this.patchExistsRole();
+    this.fetchRolePermissionData();
+    this.configMultiDropdown();
+    console.log(this.role);
+  }
+
+  configMultiDropdown = () => {
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: '_id',
+      textField: 'permissionName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
 
   initRoleForm = () => {
     this.addRoleForm = new FormGroup({
       roleCode: new FormControl(null, Validators.compose([Validators.required])),
       roleDescription: new FormControl(null),
+      rolePermission: new FormControl(null, Validators.compose([Validators.required]))
     });
   }
 
@@ -48,11 +70,13 @@ export class RoleAddComponent implements OnInit {
       userRole.roleCode = this.addRoleForm.value.roleCode;
       userRole.roleName = this.addRoleForm.value.roleCode;
       userRole.roleDescription = this.addRoleForm.value.roleDescription;
+      userRole.permissions = [].concat((this.addRoleForm.get("rolePermission")?.value).map((x: any) => x._id));
 
       if (this.isEditMode) {
         this.role.roleCode = this.addRoleForm.value.roleCode;;
         this.role.roleName = this.addRoleForm.value.roleCode;
         this.role.roleDescription = this.addRoleForm.value.roleDescription;
+        this.role.permissions = [].concat((this.addRoleForm.get("rolePermission")?.value).map((x: any) => x._id));
 
         this.userManagementService.updateRole(this.role).subscribe(res => {
           if (res) {
@@ -86,6 +110,23 @@ export class RoleAddComponent implements OnInit {
 
   closeModal = () => {
     this.activeModal.close();
+  }
+
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+
+  fetchRolePermissionData = () => {
+    this.rolePermissionService.fetchPermissionList().subscribe(res => {
+      if (res) {
+        this.dropdownList = res.result;
+      }
+    }, error => {
+      this.toastrService.error("Unable to load Role permission data", "Error");
+    });
   }
 
 }
