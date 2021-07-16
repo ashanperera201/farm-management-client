@@ -1,21 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ExportTypes } from '../../../shared/enums/export-type';
-import { UserManagementService } from 'src/app/shared/services/user-management.service';
+import { UserManagementService } from '../../../shared/services/user-management.service';
+import { FileService } from '../../../shared/services/file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RoleAddComponent } from '../role-add/role-add.component';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-user-roles',
   templateUrl: './user-roles.component.html',
   styleUrls: ['./user-roles.component.scss']
 })
-export class UserRolesComponent implements OnInit {
-  roleList : any[] = [];
-  
-  constructor(private userManagementService: UserManagementService,
+export class UserRolesComponent implements OnInit, OnDestroy {
+
+  exportTypes = ExportTypes;
+  roleList: any[] = [];
+  tempRoleList: any[] = [];
+  afterSaveRef!: Subscription;
+  searchParam!: string;
+
+  constructor(
+    private userManagementService: UserManagementService,
     private modalService: NgbModal,
-    private toastrService: ToastrService) { }
+    private toastrService: ToastrService,
+    private fileService: FileService
+  ) { }
 
   ngOnInit(): void {
     this.fetchUserRoles();
@@ -23,18 +34,16 @@ export class UserRolesComponent implements OnInit {
 
   fetchUserRoles = () => {
     this.userManagementService.fetchRoleList().subscribe(res => {
-      if(res && res.result){
-        res.result.forEach((role: any) => {
-          this.roleList.push(role);
-        });
+      if (res && res.result) {
+        this.roleList = res.result;
       }
-    },error => {
-      this.toastrService.error("Failed to load Roles","Error");
+    }, () => {
+      this.toastrService.error("Failed to load Roles", "Error");
     });
   }
 
   addNewRole = () => {
-    const addRoleModal = this.modalService.open(RoleAddComponent, {
+    this.modalService.open(RoleAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
@@ -44,38 +53,69 @@ export class UserRolesComponent implements OnInit {
 
   deleteRole = (roleId: any) => {
     this.userManagementService.deleteRole(roleId).subscribe(res => {
-      if(res){
-        this.toastrService.success("User role deleted","Success");
+      if (res) {
+        this.toastrService.success("User role deleted", "Success");
         this.roleList = [];
         this.fetchUserRoles();
       }
-    }, errpr => {
-      this.toastrService.error("Unable to delete user role","Error");
+    }, () => {
+      this.toastrService.error("Unable to delete user role", "Error");
     });
   }
 
-  updateRole = (roleId : any) => {
+  updateRole = (role: any) => {
     const addRoleModal = this.modalService.open(RoleAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addRoleModal.componentInstance.roleId = roleId;
+    addRoleModal.componentInstance.role = role;
     addRoleModal.componentInstance.isEditMode = true;
-    addRoleModal.componentInstance.afterSave = this.roleAfterSave();
-  }
-
-  roleAfterSave = () => {
-
+    if (addRoleModal.componentInstance.roleAfterSave) {
+      this.afterSaveRef = addRoleModal.componentInstance.roleAfterSave.subscribe((res: any) => {
+        if (res) {
+          this.fetchUserRoles();
+        }
+      })
+    }
   }
 
   exportRoleList = (type: any) => {
-    if(type == ExportTypes.CSV){
+    if (type === ExportTypes.CSV) {
+      const roleList: any[] = this.roleList.map(x => {
+        return {
+          role_code: x.roleCode,
+          role_description: x.roleDescription,
+          role_name: x.roleName,
+          created_by: x.createdBy,
+          created_date: x.createdOn,
+          modified_by: x.modifiedBy,
+          modified_on: x.modifiedOn
 
+        }
+      });
+      this.fileService.exportAsExcelFile(roleList, "roles-file");
     }
-    else{
+    else {
+      const roleList: any[] = this.roleList.map(x => {
+        return {
+          role_code: x.roleCode,
+          role_description: x.roleDescription,
+          role_name: x.roleName,
+          created_by: x.createdBy,
+          created_date: moment(x.createdOn).format('YYYY-MM-DD'),
+          modified_by: x.modifiedBy ? x.modifiedBy : '-',
+          modified_on: x.modifiedOn ? moment(x.modifiedOn).format('YYYY-MM-DD') : "-"
+        }
+      });
+      this.fileService.exportToPDF(roleList,'user_roles');
+    }
+  }
 
+  ngOnDestroy() {
+    if (this.afterSaveRef) {
+      this.afterSaveRef.unsubscribe();
     }
   }
 }

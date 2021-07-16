@@ -12,7 +12,7 @@ import { UserManagementService } from 'src/app/shared/services/user-management.s
 })
 export class RoleAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
-  @Input() roleId: any;
+  @Input() role: any;
   @Output() roleAfterSave: EventEmitter<any> = new EventEmitter<any>();
   addRoleForm!: FormGroup;
   saveButtonText: string = 'Submit';
@@ -24,7 +24,7 @@ export class RoleAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.initRoleForm();
-    this.configValues();
+    this.patchExistsRole();
   }
 
   initRoleForm = () => {
@@ -34,30 +34,12 @@ export class RoleAddComponent implements OnInit {
     });
   }
 
-  configValues = () => {
+  patchExistsRole = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Role"
-      this.fetchRoleData();
+      this.addRoleForm.patchValue(this.role);
     }
-  }
-
-  fetchRoleData = () => {
-    this.userManagementService.fetchRole(this.roleId).subscribe(res => {
-      if (res) {
-        this.bindRoleData(res.result);
-      }
-    }, error => {
-      this.toastrService.error("Unable to load Role data", "Error");
-    });
-  }
-
-  bindRoleData = (roleData: any) => {
-    const role = new UserRoleModel();
-    role.roleCode = roleData.roleCode;
-    role.roleName = roleData.roleName;
-    role.roleDescription = roleData.roleDescription;
-    this.addRoleForm.patchValue(role);
   }
 
   addRole = () => {
@@ -68,7 +50,11 @@ export class RoleAddComponent implements OnInit {
       userRole.roleDescription = this.addRoleForm.value.roleDescription;
 
       if (this.isEditMode) {
-        this.userManagementService.updateRole(userRole).subscribe(res => {
+        this.role.roleCode = this.addRoleForm.value.roleCode;;
+        this.role.roleName = this.addRoleForm.value.roleCode;
+        this.role.roleDescription = this.addRoleForm.value.roleDescription;
+
+        this.userManagementService.updateRole(this.role).subscribe(res => {
           if (res) {
             this.toastrService.success("Role updated successfully", "Success");
             this.clearRoleForm();

@@ -1,50 +1,37 @@
-<div class="card card-custom">
+<div class="card card-custom" id="htmlData">
     <div class="card-header">
         <div class="card-title">
             <h3 class="card-label">User Roles</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addNewRole()"><i class="fa fa-plus" aria-hidden="true"></i> Add Role</a>
+            <a type="button" class="btn btn-primary" (click)="addNewRole()"><i class="fa fa-plus"
+                    aria-hidden="true"></i> Add Role</a>
         </div>
     </div>
     <div class="card-body">
         <!-- begin: Filtration form -->
         <div class="form form-label-right">
             <div class="form-group row">
-                <div class="col-lg-4">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <select class="form-control" placeholder="Filter by Contition" name="condition">
-                                <option value="">All</option>
-                                <option value="1">A</option>
-                                <option value="2">B</option>
-                            </select><small class="form-text text-muted"><b>Records</b> per page</small>
-                        </div>
+                <div class="col-lg-6">
+                    <div class="col-lg-5">
+                        <input type="text" class="form-control" name="searchText" placeholder="Search"
+                            [(ngModel)]="searchParam" />
+                        <small class="form-text text-muted"><b>Search</b></small>
                     </div>
-                </div>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" name="searchText" placeholder="Search" value="" /><small
-                        class="form-text text-muted"><b>Search</b></small>
                 </div>
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportRoleList(1)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
+                            (click)="exportRoleList(this.exportTypes.PDF)">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportRoleList(2)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
+                            (click)="exportRoleList(this.exportTypes.CSV)">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
-                        <!-- <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-2">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                            <span>Delete</span>
-                        </button>
-                        <div class="form-label form-label-no-wrap">
-                            <label class="font-bold font-danger"><span>Selected records count:
-                                    <b>100</b></span></label>
-                        </div> -->
                     </div>
                     <!-- end: Grouping -->
                 </div>
@@ -64,7 +51,7 @@
                     <th> Action </th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let role of roleList">
+                    <tr *ngFor="let role of roleList | filter:searchParam">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single"><input type="checkbox" />
                                 <span></span>
@@ -73,12 +60,14 @@
                         <td>{{ role.roleName }}</td>
                         <td>{{ role.roleDescription }}</td>
                         <td class="d-flex justify-content-start">
-                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateRole(role.roleId)">
+                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
+                                (click)="updateRole(role)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteRole(role.roleId)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
+                                (click)="deleteRole(role.roleId)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>
