@@ -12,7 +12,7 @@ import { ClubMemberService } from '../../../shared/services/club-member.service'
 })
 export class ClubMemberAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
-  @Input() clubMemberId: any;
+  @Input() existingClubMember: any;
   @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Club Member';
@@ -35,12 +35,8 @@ export class ClubMemberAddComponent implements OnInit {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Club Member";
-      this.fetchClubMemberData();
+      this.addClubmembersForm.patchValue(this.existingClubMember);
     }
-  }
-
-  fetchClubMemberData = () => {
-
   }
 
   initAddClubMembersForm= () => {
@@ -62,25 +58,49 @@ export class ClubMemberAddComponent implements OnInit {
   }
 
   saveClubMember = () => {
-    if(this.addClubmembersForm.valid){
-      const clubMember = new clubMemberModel();
-      clubMember.firstName = this.addClubmembersForm.value.firstName;
-      clubMember.lastName = this.addClubmembersForm.value.lastName;
-      clubMember.email = this.addClubmembersForm.value.email;
-      clubMember.contact = this.addClubmembersForm.value.contact;
-      clubMember.address = this.addClubmembersForm.value.address;
-      clubMember.city = this.addClubmembersForm.value.city;
-      clubMember.userName = this.addClubmembersForm.value.userName;
-      clubMember.password = this.addClubmembersForm.value.password;
-
-      this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
-        if(res){
-          this.toastrService.success("Club member saved successfully.","Successfully Saved");
-        }
-      }, 
-      error => {
-        this.toastrService.error("Unable to save","Error")
-      });
+    if(this.isEditMode){
+      if(this.addClubmembersForm.valid){
+        const clubMember = new clubMemberModel();
+        clubMember.firstName = this.addClubmembersForm.value.firstName;
+        clubMember.lastName = this.addClubmembersForm.value.lastName;
+        clubMember.email = this.addClubmembersForm.value.email;
+        clubMember.contact = this.addClubmembersForm.value.contact;
+        clubMember.address = this.addClubmembersForm.value.address;
+        clubMember.city = this.addClubmembersForm.value.city;
+        clubMember.userName = this.addClubmembersForm.value.userName;
+        clubMember.password = this.addClubmembersForm.value.password;
+  
+        this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
+          if(res){
+            this.toastrService.success("Club Member saved successfully.","Successfully Saved");
+          }
+        }, 
+        error => {
+          this.toastrService.error("Unable to save","Error");
+        });
+      }
+    }
+    else{
+      if(this.addClubmembersForm.valid){
+        const clubMember = this.existingClubMember;
+        clubMember.firstName = this.addClubmembersForm.value.firstName;
+        clubMember.lastName = this.addClubmembersForm.value.lastName;
+        clubMember.email = this.addClubmembersForm.value.email;
+        clubMember.contact = this.addClubmembersForm.value.contact;
+        clubMember.address = this.addClubmembersForm.value.address;
+        clubMember.city = this.addClubmembersForm.value.city;
+        clubMember.userName = this.addClubmembersForm.value.userName;
+        clubMember.password = this.addClubmembersForm.value.password;
+  
+        this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
+          if(res){
+            this.toastrService.success("Club Member updated successfully.","Successfully Saved");
+          }
+        }, 
+        error => {
+          this.toastrService.error("Unable to update Club Member data","Error");
+        });
+      }
     }
   }
 

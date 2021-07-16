@@ -22,7 +22,13 @@ clubMemberList = [];
   }
 
   fetchClubMembers = () => {
-
+    this.clubMemberService.fetchClubMembers().subscribe(res=> {
+      if(res && res.result){
+        this.clubMemberList = res.result;
+      }
+    }, error => {
+      this.toastrService.error("Failed to load Club Members Data","Error");
+    });
   }
 
   addNewClubMember = () => {
@@ -34,14 +40,14 @@ clubMemberList = [];
     });
   }
 
-  updateClubMember = (clubMemberId: any) =>{
+  updateClubMember = (clubMember: any) =>{
     const addFeedBrandModal = this.modalService.open(ClubMemberAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addFeedBrandModal.componentInstance.roleId = clubMemberId;
+    addFeedBrandModal.componentInstance.existingClubMember = clubMember;
     addFeedBrandModal.componentInstance.isEditMode = true;
     addFeedBrandModal.componentInstance.afterSave = this.clubMemberfterSave();
   }
@@ -51,7 +57,14 @@ clubMemberList = [];
   }
 
   deleteClubMember = (clubMemberId: any) => {
-
+    this.clubMemberService.deleteClubMember(clubMemberId).subscribe(res => {
+      if(res){
+        this.toastrService.success("Club Member deleted","Success");
+        this.fetchClubMembers();
+      }
+    }, error => {
+      this.toastrService.error("Unable to delete Club Member","Error");
+    });
   }
 
   exportClubMemberList = (type: any) => {

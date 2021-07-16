@@ -23,7 +23,13 @@ export class FarmListComponent implements OnInit {
   }
 
   fetchFarmList = () => {
-
+    this.farmService.fetchFarms().subscribe(res => {
+    if(res && res.result){
+      this.farmList = res.result;
+    }
+    }, error => {
+      this.toastrService.error("Unable to load Farm data","Error");
+    });
   }
 
   addNewFarm = () => {
@@ -36,14 +42,14 @@ export class FarmListComponent implements OnInit {
   }
 
 
-  updateFarm = (farmId: any) => {
+  updateFarm = (farm: any) => {
     const addFeedBrandModal = this.modalService.open(FarmAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addFeedBrandModal.componentInstance.roleId = farmId;
+    addFeedBrandModal.componentInstance.existingFarm = farm;
     addFeedBrandModal.componentInstance.isEditMode = true;
     addFeedBrandModal.componentInstance.afterSave = this.farmAfterSave();
   }
