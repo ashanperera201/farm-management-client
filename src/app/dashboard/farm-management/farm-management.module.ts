@@ -7,6 +7,7 @@ import { FarmCardComponent } from './farm-card/farm-card.component';
 import { FarmManagementRoutingModule } from './farm-management.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { InlineSVGModule } from 'ng-inline-svg';
     FarmManagementRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    InlineSVGModule
+    InlineSVGModule,
+    Ng2SearchPipeModule
   ]
 })
 

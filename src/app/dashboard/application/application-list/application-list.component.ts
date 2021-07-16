@@ -13,6 +13,7 @@ import { ApplicationAddComponent } from '../application-add/application-add.comp
 export class ApplicationListComponent implements OnInit {
   
   applicationList : any[] = [];
+  filterParam!: string;
  
   constructor(private applicationService : ApplicationsService,
     private toastrService:ToastrService,

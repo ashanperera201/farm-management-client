@@ -13,6 +13,8 @@ import { ClubMemberAddComponent } from '../club-member-add/club-member-add.compo
 export class ClubMemberListComponent implements OnInit {
 selectedClubmembers = [];
 clubMemberList: any[] = [];
+filterParam!: string;
+
   constructor(private clubMemberService : ClubMemberService,
      private toastrService:ToastrService,
      private modalService: NgbModal) { }

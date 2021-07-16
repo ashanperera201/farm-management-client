@@ -7,6 +7,7 @@ import { PondCardComponent } from './pond-card/pond-card.component';
 import { PondRoutingModule } from './pond-management.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { InlineSVGModule } from 'ng-inline-svg';
     PondRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    InlineSVGModule
+    InlineSVGModule,
+    Ng2SearchPipeModule
   ]
 })
 export class PondManagementModule { }

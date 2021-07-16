@@ -14,15 +14,15 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class PondAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
-  @Input() pondId: any;
+  @Input() existingPond: any;
   @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Pond';
   feedBrandList: any[] = [];
   existingData = new pondModel();
   addPondForm!: FormGroup;
-  farmList!: [];
-  ownerList!: [];
+  farmList : any[] = [];
+  ownerList : any [] = [];
 
   constructor(private pondService : PondService,
     private clubMemberService : ClubMemberService,
@@ -34,28 +34,24 @@ export class PondAddComponent implements OnInit {
     this.initAddPondForm();
     this.configValues();
     this.fetchOwnersList();
+    this.fetchFarmList();
   } 
 
   configValues = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
-      this.headerText = "Update Application";
-      this.fetchPondData();
+      this.headerText = "Update Pond";
     }
-  }
-
-  fetchPondData = () => {
-
   }
 
   initAddPondForm = () => {
     this.addPondForm = new FormGroup({
-      pond : new FormControl(null,Validators.compose([Validators.required])),
-      farm : new FormControl(null,Validators.compose([Validators.required])),
-      pondNumber : new FormControl(null,Validators.compose([Validators.required])),
-      area : new FormControl(null,Validators.compose([Validators.required])),
-      grade: new FormControl(null,Validators.compose([Validators.required])),
-      cost: new FormControl(null,Validators.compose([Validators.required])),
+      farmId : new FormControl(null,Validators.compose([Validators.required])),
+      ownerId : new FormControl(null,Validators.compose([Validators.required])),
+      pondCount : new FormControl(null,Validators.compose([Validators.required])),
+      areaOfPond : new FormControl(null,Validators.compose([Validators.required])),
+      gradeOfPond: new FormControl(null,Validators.compose([Validators.required])),
+      fixedCost: new FormControl(null,Validators.compose([Validators.required])),
     });
   }
 
@@ -65,7 +61,19 @@ export class PondAddComponent implements OnInit {
 
   fetchOwnersList = () => {
     this.clubMemberService.fetchClubMembers().subscribe(res => {
-      this.ownerList = res;
+      if(res && res.result){
+        this.ownerList = res.result;
+      }
+    }, error => {
+      this.toastrService.error("Unable to load owners","Error");
+    });
+  }
+
+  fetchFarmList = () => {
+    this.farmService.fetchFarms().subscribe(res => {
+      if(res && res.result){
+        this.farmList = res.result;
+      }
     }, error => {
       this.toastrService.error("Unable to load owners","Error");
     });
@@ -73,8 +81,8 @@ export class PondAddComponent implements OnInit {
 
   fetchFarmsOwnerWise = (ownerId: number) => {
     this.farmService.fetchFarmByOwnerId(ownerId).subscribe(res => {
-      if(res){
-        this.farmList = res;
+      if(res && res.result){
+        this.farmList = res.result;
       }
     }, error => {
       this.toastrService.error("Unable to load Farms","Error");
@@ -82,22 +90,43 @@ export class PondAddComponent implements OnInit {
   }
 
   savePond = () => {
-    if(this.addPondForm.valid){
-      const pond = new pondModel();
-      pond.ownerId = this.addPondForm.value.owner;
-      pond.farmId = this.addPondForm.value.farm;
-      pond.pondNumber = this.addPondForm.value.pondNumber;
-      pond.pondArea = this.addPondForm.value.area;
-      pond.pondGrade = this.addPondForm.value.grade;
-      pond.fixedCost = this.addPondForm.value.cost;
-
-      this.pondService.savePond(pond).subscribe(res => {
-        if(res){
-          this.toastrService.success("Pond data saved successfully.","Successfully Saved");
-        }
-      }, error => {
-        this.toastrService.error("Unable to save pond data","Error");
-      });
+    if(this.isEditMode){
+      if(this.addPondForm.valid){
+        const pond = this.existingPond;
+        pond.ownerId = this.addPondForm.value.ownerId;
+        pond.farmId = this.addPondForm.value.farmId;
+        pond.pondCount = this.addPondForm.value.pondCount;
+        pond.areaOfPond = this.addPondForm.value.areaOfPond;
+        pond.gradeOfPond = this.addPondForm.value.gradeOfPond;
+        pond.fixedCost = this.addPondForm.value.fixedCost;
+  
+        this.pondService.updatePond(pond).subscribe(res => {
+          if(res){
+            this.toastrService.success("Pond data updated successfully.","Successfully Saved");
+          }
+        }, error => {
+          this.toastrService.error("Unable to update pond data","Error");
+        });
+      }
+    }
+    else{
+      if(this.addPondForm.valid){
+        const pond = new pondModel();
+        pond.ownerId = this.addPondForm.value.ownerId;
+        pond.farmId = this.addPondForm.value.farmId;
+        pond.pondCount = this.addPondForm.value.pondCount;
+        pond.areaOfPond = this.addPondForm.value.areaOfPond;
+        pond.gradeOfPond = this.addPondForm.value.gradeOfPond;
+        pond.fixedCost = this.addPondForm.value.fixedCost;
+  
+        this.pondService.savePond(pond).subscribe(res => {
+          if(res){
+            this.toastrService.success("Pond data saved successfully.","Successfully Saved");
+          }
+        }, error => {
+          this.toastrService.error("Unable to save pond data","Error");
+        });
+      }
     }
   }
 
