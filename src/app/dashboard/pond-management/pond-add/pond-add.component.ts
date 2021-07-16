@@ -19,7 +19,6 @@ export class PondAddComponent implements OnInit {
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Pond';
   feedBrandList: any[] = [];
-  existingData = new pondModel();
   addPondForm!: FormGroup;
   farmList : any[] = [];
   ownerList : any [] = [];
@@ -41,6 +40,7 @@ export class PondAddComponent implements OnInit {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Pond";
+      this.addPondForm.patchValue(this.existingPond);
     }
   }
 

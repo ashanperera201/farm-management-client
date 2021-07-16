@@ -59,23 +59,19 @@
                                 <span></span>
                             </label>
                         </td>
-                        <!-- <td>{{ pond.feedBrandName }}</td>
-                        <td>{{ pond.feedBrandGrade }}</td>
-                        <td>{{ pond.feedBrandPrice }}</td>
-                        <td>{{ pond.feedBrandWeight }}</td> -->
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
+                        <td>{{ pond.ownerId }}</td>
+                        <td>{{ pond.farmId }}</td>
+                        <td>{{ pond.pondCount }}</td>
+                        <td>{{ pond.areaOfPond }}</td>
+                        <td>{{ pond.gradeOfPond }}</td>
+                        <td>{{ pond.fixedCost }}</td>
                         <td class="d-flex justify-content-start">
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updatePond(pond)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deletePond(pond)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deletePond(pond._id)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>
