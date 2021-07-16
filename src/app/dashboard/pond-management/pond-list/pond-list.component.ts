@@ -12,7 +12,7 @@ import { PondAddComponent } from '../pond-add/pond-add.component';
 })
 export class PondListComponent implements OnInit {
 
-  pondList = [];
+  pondList: any[] = [];
 
   constructor(private pondService: PondService,
     private toastrService: ToastrService,
@@ -23,7 +23,13 @@ export class PondListComponent implements OnInit {
   }
 
   fetchPondsList = () => {
-
+    this.pondService.fetchPonds().subscribe(res=> {
+      if(res && res.result){
+        this.pondList = res.result;
+      }
+    }, error => {
+      this.toastrService.error("Unable ot load Pond data","Error");
+    });
   }
 
   addNewPond = () => {

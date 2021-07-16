@@ -66,21 +66,17 @@
                                 <span></span>
                             </label>
                         </td>
-                        <!-- <td>{{ feedBrand.feedBrandName }}</td>
-                        <td>{{ feedBrand.feedBrandGrade }}</td>
-                        <td>{{ feedBrand.feedBrandPrice }}</td>
-                        <td>{{ feedBrand.feedBrandWeight }}</td> -->
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
+                        <td>{{ feedBrand.brandName }}</td>
+                        <td>{{ feedBrand.grades }}</td>
+                        <td>{{ feedBrand.shrimpWeight }}</td>
+                        <td>{{ feedBrand.price }}</td>
                         <td class="d-flex justify-content-start">
-                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateFeedBrand(1)">
+                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateFeedBrand(feedBrand)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteFeedBrand(1)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteFeedBrand(feedBrand.feedBrandUniqueId)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

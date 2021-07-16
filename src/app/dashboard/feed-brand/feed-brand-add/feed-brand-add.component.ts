@@ -12,11 +12,11 @@ import { FeedBrandService } from 'src/app/shared/services/feed-brand.service';
 })
 export class FeedBrandAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
-  @Input() userId: any;
+  @Input() existingFeedBrand: any;
   @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
   addFeedBrandForm!: FormGroup;
   saveButtonText: string = 'Submit';
-  headerText: string = 'Register User';
+  headerText: string = 'Add Feed Brand';
   feedBrandList: any[] = [];
   existingData = new feedBrandModel();
 
@@ -25,7 +25,7 @@ export class FeedBrandAddComponent implements OnInit {
     private activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
-    this.initAddPondForm();
+    this.initAddFeedBrandForm();
     this.configValues();
   } 
 
@@ -33,19 +33,17 @@ export class FeedBrandAddComponent implements OnInit {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Feed Brand";
-      this.fetchFeedBrandData();
+      this.addFeedBrandForm.patchValue(this.existingFeedBrand);
     }
   }
 
-  fetchFeedBrandData = () => {
 
-  }
 
-  initAddPondForm = () => {
+  initAddFeedBrandForm = () => {
     this.addFeedBrandForm = new FormGroup({
       brandName : new FormControl(null,Validators.compose([Validators.required])),
-      grade : new FormControl(null,Validators.compose([Validators.required])),
-      weight : new FormControl(null,Validators.compose([Validators.required])),
+      grades : new FormControl(null,Validators.compose([Validators.required])),
+      shrimpWeight : new FormControl(null,Validators.compose([Validators.required])),
       price : new FormControl(null,Validators.compose([Validators.required])),
     });
   }
@@ -55,20 +53,43 @@ export class FeedBrandAddComponent implements OnInit {
   }
 
   saveFeedBrand = () => {
-    if(this.addFeedBrandForm.valid){
-      const feedBrand = new feedBrandModel();
-      feedBrand.brand = this.addFeedBrandForm.value.brandName;
-      feedBrand.grade = this.addFeedBrandForm.value.grade;
-      feedBrand.weight = this.addFeedBrandForm.value.weight;
-      feedBrand.price = this.addFeedBrandForm.value.price;
-
-      this.feedBrandService.saveFeedBand(feedBrand).subscribe(res => {
-        if(res){
-          this.toastrService.success("Feed Brand data saved successfully","Successfully Saved")
-        }
-      }, error => {
-        this.toastrService.error("Unable to save feed brand data","Error");
-      });
+    if(this.isEditMode){
+      if(this.addFeedBrandForm.valid){
+        const feedBrand = this.existingFeedBrand;
+        feedBrand.brandName = this.addFeedBrandForm.value.brandName;
+        feedBrand.grades = this.addFeedBrandForm.value.grades;
+        feedBrand.shrimpWeight = this.addFeedBrandForm.value.shrimpWeight;
+        feedBrand.price = this.addFeedBrandForm.value.price;
+  
+        this.feedBrandService.updateFeedBand(feedBrand).subscribe(res => {
+          if(res){
+            this.closeModal();
+            this.feedAfterSave.emit(res);
+            this.toastrService.success("Feed Brand data updated successfully","Successfully Saved");
+          }
+        }, error => {
+          this.toastrService.error("Unable to update Feed Brand data","Error");
+        });
+      }
+    }
+    else{
+      if(this.addFeedBrandForm.valid){
+        const feedBrand = new feedBrandModel();
+        feedBrand.brandName = this.addFeedBrandForm.value.brandName;
+        feedBrand.grades = this.addFeedBrandForm.value.grades;
+        feedBrand.shrimpWeight = this.addFeedBrandForm.value.shrimpWeight;
+        feedBrand.price = this.addFeedBrandForm.value.price;
+  
+        this.feedBrandService.saveFeedBand(feedBrand).subscribe(res => {
+          if(res){
+            this.closeModal();
+            this.feedAfterSave.emit(res);
+            this.toastrService.success("Feed Brand data saved successfully","Successfully Saved");
+          }
+        }, error => {
+          this.toastrService.error("Unable to save Feed Brand data","Error");
+        });
+      }
     }
   }
 

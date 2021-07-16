@@ -14,17 +14,27 @@ export class ApplicationsService {
   constructor(private http: HttpClient) { }
 
   fetchApplications(): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+    const url: string = `${this.baseUrl}/api/v1/applications/details`;
     return this.http.get(url);
   }
-
+  
+  fetchApplicationById(applicationId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/applications/${applicationId}`;
+    return this.http.get(url)
+  }
+  
   saveApplication(applicationData: ApplicationModel): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+    const url: string = `${this.baseUrl}/api/v1/applications/create`;
     return this.http.post(url, applicationData)
   }
 
-  deleteApplications(applicationData: ApplicationModel): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
-    return this.http.post(url, applicationData)
+  updateApplication(applicationData: ApplicationModel): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/applications/update`;
+    return this.http.put(url, applicationData)
+  }
+
+  deleteApplication(applicationId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/applications/delete/${applicationId}/${true}`;
+    return this.http.delete(url)
   }
 }

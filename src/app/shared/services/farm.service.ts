@@ -15,22 +15,32 @@ export class FarmService {
   constructor(private http: HttpClient) { }
 
   fetchFarms(): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+    const url: string = `${this.baseUrl}/api/v1/farm-management/details`;
+    return this.http.get(url);
+  }
+
+  fetchFarmByFarmId(farmId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/farm-management/${farmId}`;
     return this.http.get(url);
   }
 
   fetchFarmByOwnerId(ownerId: number): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`+ ownerId;
+    const url: string = `${this.baseUrl}/api/v1/farm-management`+ ownerId;
     return this.http.get(url);
   }
 
   saveFarm(farmData: farmModel): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+    const url: string = `${this.baseUrl}/api/v1/farm-management/create`;
     return this.http.post(url, farmData)
   }
 
-  deleteFarms(farmIds: number): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+  updateFarm(farmData: farmModel): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/farm-management/update`;
+    return this.http.put(url, farmData)
+  }
+
+  deleteFarms(farmId: number): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/farm-management/delete`;
     return this.http.delete(url)
   }
 }

@@ -31,7 +31,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         userResult.result.forEach((user: any) => {
           this.userList.push(user);
         });
-
       }
     }, error => {
       this.toastrService.error("Failed to load users","Error");

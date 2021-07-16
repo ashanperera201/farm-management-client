@@ -14,17 +14,27 @@ export class PondService {
   constructor(private http: HttpClient) { }
 
   fetchPonds(): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+    const url: string = `${this.baseUrl}/api/v1/pond-management/details`;
+    return this.http.get(url);
+  }
+
+  fetchPondDataById(pondId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/pond-management/${pondId}`;
     return this.http.get(url);
   }
 
   savePond(pondData: pondModel): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
+    const url: string = `${this.baseUrl}/api/v1/pond-management/create`;
     return this.http.post(url, pondData)
   }
 
-  deletePonds(pondData: pondModel): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/`;
-    return this.http.post(url, pondData)
+  updatePond(pondData: pondModel): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/pond-management/update`;
+    return this.http.put(url, pondData)
+  }
+
+  deletePonds(pondId: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/pond-management/delete/${pondId}/${true}`;
+    return this.http.delete(url)
   }
 }
