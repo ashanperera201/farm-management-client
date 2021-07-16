@@ -7,6 +7,7 @@ import { ApplicationAddComponent } from './application-add/application-add.compo
 import { ApplicationRoutingModule } from './application.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { InlineSVGModule } from 'ng-inline-svg';
     ApplicationRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    InlineSVGModule
+    InlineSVGModule,
+    Ng2SearchPipeModule
   ]
 })
 export class ApplicationModule { }

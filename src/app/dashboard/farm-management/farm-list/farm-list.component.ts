@@ -13,7 +13,8 @@ import { FarmAddComponent } from '../farm-add/farm-add.component';
 export class FarmListComponent implements OnInit {
 
   farmList = [];
-
+  filterParam!: string;
+  
   constructor(private farmService: FarmService,
     private toastrService: ToastrService,
     private modalService: NgbModal) { }

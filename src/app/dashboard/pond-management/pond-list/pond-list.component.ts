@@ -13,7 +13,8 @@ import { PondAddComponent } from '../pond-add/pond-add.component';
 export class PondListComponent implements OnInit {
 
   pondList: any[] = [];
-
+  filterParam!: string;
+  
   constructor(private pondService: PondService,
     private toastrService: ToastrService,
     private modalService: NgbModal) { }
@@ -45,14 +46,14 @@ export class PondListComponent implements OnInit {
 
   }
 
-  updatePond = (pondId: any) => {
+  updatePond = (pond: any) => {
     const addFeedBrandModal = this.modalService.open(PondAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addFeedBrandModal.componentInstance.roleId = pondId;
+    addFeedBrandModal.componentInstance.existingPond = pond;
     addFeedBrandModal.componentInstance.isEditMode = true;
     addFeedBrandModal.componentInstance.afterSave = this.pondAfterSave();
   }

@@ -28,7 +28,7 @@ export class FeedBrandService {
     return this.http.put(url, feedBandData);
   }
 
-  deleteFeedBands(feedBandIds: any): Observable<any> {
+  deleteFeedBands(feedBandIds: FormData): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/feed-brand/delete`;
     return this.http.post(url, feedBandIds);
   }

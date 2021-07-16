@@ -12,39 +12,37 @@
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Owner</label>
-                <select name="owner" id="owner" formControlName="owner">
+                <select name="owner" id="owner" formControlName="ownerId" class="form-control">
                     <option value=null disabled selected>Select Owner</option>
-                    <option value="1">Owner 1</option>
-                    <option value="2">Owner 2</option>
+                    <option *ngFor="let o of ownerList" [value]="o._id">{{o.firstName}}</option>
                   </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Farm</label>
-                <select name="farm" id="farm" formControlName="farm">
+                <select name="farm" id="farm" formControlName="farmId" class="form-control">
                     <option value=null disabled selected>Select Farm</option>
-                    <option value="1">Farm 1</option>
-                    <option value="2">Farm 2</option>
+                    <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
                   </select>
             </div>
         </div>
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Pond Number</label>
-                <input type="text" class="form-control" placeholder="Pond Number" formControlName="pondNumber">
+                <input type="text" class="form-control" placeholder="Pond Number" formControlName="pondCount">
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Area of the pond</label>
-                <input type="text" class="form-control" placeholder="Area of the pond" formControlName="area">
+                <input type="text" class="form-control" placeholder="Area of the pond" formControlName="areaOfPond">
             </div>
         </div>
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Grade of the pond</label>
-                <input type="text" class="form-control" placeholder="Grade of the pond" formControlName="grade">
+                <input type="text" class="form-control" placeholder="Grade of the pond" formControlName="gradeOfPond">
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Other fixed cost per Kg</label>
-                <input type="text" class="form-control" placeholder="Fixed cost per Kg" formControlName="cost">
+                <input type="text" class="form-control" placeholder="Fixed cost per Kg" formControlName="fixedCost">
             </div>
         </div>
     </div>

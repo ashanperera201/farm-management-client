@@ -1,6 +1,7 @@
 export class farmModel {
-    owner!: string;
+    ownerId!: string;
     farmName!: string;
-    contact!: string;
-    ponds!: number;
+    contactNo!: string;
+    address!: string;
+    pondCount!: number;
 }
