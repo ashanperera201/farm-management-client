@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { InlineSVGModule } from 'ng-inline-svg';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { UserManagementComponent } from './user-management.component';
 import { UserAddComponent } from './user-add/user-add.component';
 import { UserListComponent } from './user-list/user-list.component';
@@ -30,6 +31,7 @@ import { UserPermissionAddComponent } from './user-permission-add/user-permissio
     FormsModule,
     ReactiveFormsModule,
     InlineSVGModule,
+    NgbModule,
     NgbPaginationModule,
     Ng2SearchPipeModule,
     NgMultiSelectDropDownModule

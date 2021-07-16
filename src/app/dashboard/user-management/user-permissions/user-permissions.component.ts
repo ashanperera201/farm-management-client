@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import * as moment from 'moment';
 import { FileService } from '../../../shared/services/file.service';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { UserManagementService } from '../../../shared/services/user-management.service';
@@ -13,27 +16,37 @@ import { UserPermissionAddComponent } from '../user-permission-add/user-permissi
 })
 export class UserPermissionsComponent implements OnInit, OnDestroy {
 
+  @BlockUI() blockUI!: NgBlockUI;
+
   searchParam!: string;
   userPermissionList!: any[];
   exportTypes = ExportTypes;
+  isAllChecked: boolean = false;
   userPermissionSubscriptions: Subscription[] = [];
+
+  pageSize: number = 10;
+  page: any = 1;
 
   constructor(
     private userManagementService: UserManagementService,
     private modalService: NgbModal,
-    private fileService: FileService) { }
+    private fileService: FileService,
+    private toastrService: ToastrService) { }
 
   ngOnInit(): void {
     this.fetchUserPermission();
   }
 
   fetchUserPermission = () => {
+    this.blockUI.start('Fetching Data...');
     this.userPermissionSubscriptions.push(this.userManagementService.fetchUserPermission().subscribe(userPermissionResult => {
       if (userPermissionResult && userPermissionResult.validity) {
         this.userPermissionList = userPermissionResult.result;
       }
+      this.blockUI.stop();
     }, () => {
       console.log("Failed to load user permission.");
+      this.blockUI.stop();
     }))
   }
 
@@ -56,21 +69,25 @@ export class UserPermissionsComponent implements OnInit, OnDestroy {
 
   exportData = (fileType: number) => {
     if (fileType === ExportTypes.CSV) {
+      this.blockUI.start('Exporting Excel...');
       this.fileService.exportAsExcelFile(this.userPermissionList, "user-permissions");
+      this.blockUI.stop();
     } else {
-      // const roleList: any[] = this.roleList.map(x => {
-      //   return {
-      //     role_code: x.roleCode,
-      //     role_description: x.roleDescription,
-      //     role_name: x.roleName,
-      //     created_by: x.createdBy,
-      //     created_date: moment(x.createdOn).format('YYYY-MM-DD'),
-      //     modified_by: x.modifiedBy ? x.modifiedBy : '-',
-      //     modified_on: x.modifiedOn ? moment(x.modifiedOn).format('YYYY-MM-DD') : "-"
-      //   }
-      // });
-      // const headers: any[] = ['role_code', 'role_description', 'role_name', 'created_by', 'created_date', 'modified_by', 'modified_on'];
-      // this.fileService.exportToPDF("User Permissions",)
+      this.blockUI.start('Exporting Pdf...');
+      const permissionList: any[] = this.userPermissionList.map(x => {
+        return {
+          permissionCode: x.permissionCode,
+          permissionName: x.permissionName,
+          permissionDescription: x.permissionDescription,
+          createdBy: x.createdBy,
+          createdOn: moment(x.createdOn).format('YYYY-MM-DD'),
+          modifiedBy: x.modifiedBy ? x.modifiedBy : '-',
+          modifiedOn: x.modifiedOn ? moment(x.modifiedOn).format('YYYY-MM-DD') : "-"
+        }
+      });
+      const headers: any[] = ['permissionCode', 'permissionName', 'permissionDescription', 'createdBy', 'createdOn', 'modifiedBy', 'modifiedOn'];
+      this.fileService.exportToPDF("User Permissions", headers, permissionList, "permission-list");
+      this.blockUI.stop();
     }
   }
 
@@ -94,8 +111,53 @@ export class UserPermissionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  deletePermission = (permissionId: any) => {
+  deleteSelected = () => {
+    this.blockUI.start('Deleting....');
+    const permissionIds: string[] = (this.userPermissionList.filter(x => x.isChecked)).map(x => x._id);
+    if (permissionIds && permissionIds.length > 0) {
+      this.proceedDelete(permissionIds);
+    } else {
+      this.toastrService.error("Please select permissions to delete.", "Error");
+      this.blockUI.stop();
+    }
+  }
 
+  deletePermission = (permissionId: any) => {
+    this.blockUI.start('Deleting....');
+    this.proceedDelete([].concat(permissionId));
+  }
+
+  proceedDelete = (permissionIds: string[]) => {
+    let form = new FormData();
+    form.append("permissionIds", JSON.stringify(permissionIds));
+
+    this.userPermissionSubscriptions.push(this.userManagementService.deleteUserPermission(form).subscribe((deletedResult: any) => {
+      if (deletedResult) {
+        permissionIds.forEach(e => {
+          const index: number = this.userPermissionList.findIndex((up: any) => up._id === e);
+          this.userPermissionList.splice(index, 1);
+        })
+
+        this.toastrService.success('Successfully deleted.', 'Success');
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error('Failed to delete', 'Error');
+      this.blockUI.stop();
+    }));
+  }
+
+  onSelectionChange = () => {
+    if (this.isAllChecked) {
+      this.userPermissionList = this.userPermissionList.map(p => { return { ...p, isChecked: true }; });
+    } else {
+      this.userPermissionList = this.userPermissionList.map(up => { return { ...up, isChecked: false }; });
+    }
+  }
+
+  singleSelectionChange = (index: number) => {
+    this.isAllChecked = false;
+    this.userPermissionList[index].isChecked = !this.userPermissionList[index].isChecked;
   }
 
   ngOnDestroy() {

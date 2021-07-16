@@ -23,7 +23,8 @@ export class RoleAddComponent implements OnInit {
   selectedItems = [];
   dropdownSettings: IDropdownSettings = {};
 
-  constructor(private userManagementService: UserManagementService,
+  constructor(
+    private userManagementService: UserManagementService,
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal,
     private rolePermissionService: RolePermissionService) { }
@@ -85,7 +86,7 @@ export class RoleAddComponent implements OnInit {
             this.closeModal();
             this.roleAfterSave.emit(res);
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to update Role", "Error");
         });
       }
@@ -97,7 +98,7 @@ export class RoleAddComponent implements OnInit {
             this.closeModal();
             this.roleAfterSave.emit(res);
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to save Role", "Error");
         });
       }

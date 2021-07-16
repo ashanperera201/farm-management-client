@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { UserManagementService } from '../../../shared/services/user-management.service';
@@ -15,6 +16,8 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
   @Input() isEditMode!: boolean;
   @Input() existingRecord!: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+
+  @BlockUI() blockUI!: NgBlockUI;
 
   permissionFormGroup!: FormGroup;
   headerText: string = 'Add Permission';
@@ -43,6 +46,7 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
   }
 
   proceedSaveUpdate = () => {
+    this.blockUI.start("Processing...")
     if (this.permissionFormGroup.valid) {
       const userPermission = this.permissionFormGroup.value;
       if (this.existingRecord) {
@@ -56,6 +60,7 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
             this.closeModal();
             this.afterSave.emit(this.existingRecord);
           }
+          this.blockUI.stop();
         }));
       } else {
         this.permissionSubscriptions.push(this.userManagementService.saveUserPermission(userPermission).subscribe(savedResult => {
@@ -64,10 +69,14 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
             this.closeModal();
             this.afterSave.emit(savedResult);
           }
+          this.blockUI.stop();
         }, () => {
           this.toastrService.error('Failed to save.', 'Error');
+          this.blockUI.stop();
         }));
       }
+    } else { 
+      this.blockUI.stop();
     }
   }
 

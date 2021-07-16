@@ -59,6 +59,11 @@ export class UserManagementService {
     return this.http.put(url, permission);
   }
 
+  deleteUserPermission = (permissionIds: any) => {
+    const url: string = `${this.baseUrl}/api/v1/permission/delete`;
+    return this.http.post(url, permissionIds);
+  }
+
   deleteRole(roleId: any): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/role/${roleId}/${true}`;
     return this.http.delete(url)

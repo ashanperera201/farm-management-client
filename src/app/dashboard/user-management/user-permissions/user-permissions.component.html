@@ -4,8 +4,14 @@
             <h3 class="card-label">User Permission</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addPermission()"><i class="fa fa-plus"
-                    aria-hidden="true"></i> Add Permission</a>
+            <a type="button" class="btn btn-primary" (click)="addPermission()">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Add Permission
+            </a>
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Delete Permission
+            </a>
         </div>
     </div>
     <div class="card-body">
@@ -41,47 +47,59 @@
 
         <!-- begin:Table -->
         <div class="table-responsive angular-bootstrap-table">
-            <table class="table table-head-custom table-vertical-center overflow-hidden">
-                <thead>
-                    <th class="selection-cell-header" data-row-selection="true">
-                        <label class="checkbox checkbox-single"><input type="checkbox" /><span></span></label>
-                    </th>
-                    <th> Permission Code </th>
-                    <th> Permission Description </th>
-                    <th> Permission Name </th>
-                    <th> Active </th>
-                    <th> Created On </th>
-                    <th> Action </th>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let userPermission of userPermissionList | filter:searchParam">
-                        <td class="selection-cell">
-                            <label class="checkbox checkbox-single"><input type="checkbox" />
-                                <span></span>
+            <div style="margin:20px;">
+                <table class="table table-head-custom table-vertical-center overflow-hidden">
+                    <thead>
+                        <th class="selection-cell-header" data-row-selection="true">
+                            <label class="checkbox checkbox-single">
+                                <input type="checkbox" [(ngModel)]="isAllChecked"
+                                    (ngModelChange)="onSelectionChange()" /><span></span>
                             </label>
-                        </td>
-                        <td>{{ userPermission?.permissionCode }}</td>
-                        <td>{{ userPermission?.permissionDescription }}</td>
-                        <td>{{ userPermission?.permissionName }}</td>
-                        <td>{{ userPermission?.isActive }}</td>
-                        <td>{{ userPermission?.createdOn }}</td>
-                        <td class="d-flex justify-content-start">
-                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
-                                (click)="updatePermission(userPermission)">
-                                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
-                                    class="svg-icon svg-icon-md svg-icon-primary">
-                                </span>
-                            </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
-                                (click)="deletePermission(userPermission._id)">
-                                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
-                                    class="svg-icon svg-icon-md svg-icon-danger">
-                                </span>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        </th>
+                        <th> Permission Code </th>
+                        <th> Permission Description </th>
+                        <th> Permission Name </th>
+                        <th> Active </th>
+                        <th> Created On </th>
+                        <th> Action </th>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let userPermission of (userPermissionList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:searchParam;let i = index">
+                            <td class="selection-cell">
+                                <label class="checkbox checkbox-single">
+                                    <input type="checkbox" [checked]="userPermission.isChecked"
+                                        [value]="userPermission.isChecked" (change)="singleSelectionChange(i)" />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td>{{ userPermission?.permissionCode }}</td>
+                            <td>{{ userPermission?.permissionDescription }}</td>
+                            <td>{{ userPermission?.permissionName }}</td>
+                            <td>{{ userPermission?.isActive }}</td>
+                            <td>{{ userPermission?.createdOn }}</td>
+                            <td>
+                                <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
+                                    (click)="updatePermission(userPermission)">
+                                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                        class="svg-icon svg-icon-md svg-icon-primary">
+                                    </span>
+                                </a>
+                                <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
+                                    (click)="deletePermission(userPermission._id)">
+                                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                        class="svg-icon svg-icon-md svg-icon-danger">
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ngb-pagination
+                    [collectionSize]="userPermissionList && userPermissionList.length ? userPermissionList.length: 0"
+                    [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+                </ngb-pagination>
+            </div>
         </div>
     </div>
 </div>
