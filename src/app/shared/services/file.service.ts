@@ -29,10 +29,10 @@ export class FileService {
     FileSaver.saveAs(data, `${fileName}${EXCEL_EXTENSION}`);
   }
 
-  exportToPDF(headers: any[], data: any, fileName: string) {
+  exportToPDF(title: string, headers: any[], data: any, fileName: string) {
     const header = this.createHeaders(headers);
     let doc = new jsPDF();
-    doc.text("User Role Table", 9, 10);
+    doc.text(title, 9, 10);
     doc.table(12, 25, data, header, {});
     doc.save(fileName);
   }

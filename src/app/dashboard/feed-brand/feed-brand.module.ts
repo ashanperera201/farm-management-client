@@ -7,6 +7,7 @@ import { FeedBrandAddComponent } from './feed-brand-add/feed-brand-add.component
 import { FeedBrandRoutingModule } from './feed-brand.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { InlineSVGModule } from 'ng-inline-svg';
     FeedBrandRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    InlineSVGModule
+    InlineSVGModule,
+    Ng2SearchPipeModule
   ]
 })
 export class FeedBrandModule { }

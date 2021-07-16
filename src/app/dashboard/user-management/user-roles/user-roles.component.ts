@@ -110,7 +110,7 @@ export class UserRolesComponent implements OnInit, OnDestroy {
         }
       });
       const headers: any[] = ['role_code', 'role_description', 'role_name', 'created_by', 'created_date', 'modified_by', 'modified_on'];
-      this.fileService.exportToPDF(headers, roleList, 'user_roles');
+      this.fileService.exportToPDF("Feed Brand", headers, roleList, 'user_roles');
     }
   }
 

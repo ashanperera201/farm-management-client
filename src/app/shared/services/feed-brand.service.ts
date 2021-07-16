@@ -10,7 +10,7 @@ import { feedBrandModel } from '../models/feed-brand-model';
 export class FeedBrandService {
 
   baseUrl: string = environment.baseUrl;
-  
+
   constructor(private http: HttpClient) { }
 
   fetchFeedBands(): Observable<any> {
@@ -28,9 +28,9 @@ export class FeedBrandService {
     return this.http.put(url, feedBandData);
   }
 
-  deleteFeedBands(feedBandIds: any[]): Observable<any> {
+  deleteFeedBands(feedBandIds: any): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/feed-brand/delete`;
-    return this.http.delete(url);
+    return this.http.post(url, feedBandIds);
   }
-  
+
 }

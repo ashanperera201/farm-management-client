@@ -20,14 +20,14 @@ export class FeedBrandAddComponent implements OnInit {
   feedBrandList: any[] = [];
   existingData = new feedBrandModel();
 
-  constructor(private feedBrandService : FeedBrandService,
-    private toastrService:ToastrService,
+  constructor(private feedBrandService: FeedBrandService,
+    private toastrService: ToastrService,
     private activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.initAddFeedBrandForm();
     this.configValues();
-  } 
+  }
 
   configValues = () => {
     if (this.isEditMode) {
@@ -37,14 +37,12 @@ export class FeedBrandAddComponent implements OnInit {
     }
   }
 
-
-
   initAddFeedBrandForm = () => {
     this.addFeedBrandForm = new FormGroup({
-      brandName : new FormControl(null,Validators.compose([Validators.required])),
-      grades : new FormControl(null,Validators.compose([Validators.required])),
-      shrimpWeight : new FormControl(null,Validators.compose([Validators.required])),
-      price : new FormControl(null,Validators.compose([Validators.required])),
+      brandName: new FormControl(null, Validators.compose([Validators.required])),
+      grades: new FormControl(null, Validators.compose([Validators.required])),
+      shrimpWeight: new FormControl(null, Validators.compose([Validators.required])),
+      price: new FormControl(null, Validators.compose([Validators.required])),
     });
   }
 
@@ -53,41 +51,41 @@ export class FeedBrandAddComponent implements OnInit {
   }
 
   saveFeedBrand = () => {
-    if(this.isEditMode){
-      if(this.addFeedBrandForm.valid){
+    if (this.isEditMode) {
+      if (this.addFeedBrandForm.valid) {
         const feedBrand = this.existingFeedBrand;
         feedBrand.brandName = this.addFeedBrandForm.value.brandName;
         feedBrand.grades = this.addFeedBrandForm.value.grades;
         feedBrand.shrimpWeight = this.addFeedBrandForm.value.shrimpWeight;
         feedBrand.price = this.addFeedBrandForm.value.price;
-  
+
         this.feedBrandService.updateFeedBand(feedBrand).subscribe(res => {
-          if(res){
+          if (res) {
             this.closeModal();
             this.feedAfterSave.emit(res);
-            this.toastrService.success("Feed Brand data updated successfully","Successfully Saved");
+            this.toastrService.success("Feed Brand data updated successfully", "Successfully Saved");
           }
         }, error => {
-          this.toastrService.error("Unable to update Feed Brand data","Error");
+          this.toastrService.error("Unable to update Feed Brand data", "Error");
         });
       }
     }
-    else{
-      if(this.addFeedBrandForm.valid){
+    else {
+      if (this.addFeedBrandForm.valid) {
         const feedBrand = new feedBrandModel();
         feedBrand.brandName = this.addFeedBrandForm.value.brandName;
         feedBrand.grades = this.addFeedBrandForm.value.grades;
         feedBrand.shrimpWeight = this.addFeedBrandForm.value.shrimpWeight;
         feedBrand.price = this.addFeedBrandForm.value.price;
-  
+
         this.feedBrandService.saveFeedBand(feedBrand).subscribe(res => {
-          if(res){
+          if (res) {
             this.closeModal();
             this.feedAfterSave.emit(res);
-            this.toastrService.success("Feed Brand data saved successfully","Successfully Saved");
+            this.toastrService.success("Feed Brand data saved successfully", "Successfully Saved");
           }
         }, error => {
-          this.toastrService.error("Unable to save Feed Brand data","Error");
+          this.toastrService.error("Unable to save Feed Brand data", "Error");
         });
       }
     }
