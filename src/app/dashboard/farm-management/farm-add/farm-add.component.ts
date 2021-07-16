@@ -14,7 +14,7 @@ import { FarmService } from 'src/app/shared/services/farm.service';
 export class FarmAddComponent implements OnInit {
 
   @Input() isEditMode: boolean = false;
-  @Input() farmId: any;
+  @Input() existingFarm: any;
   @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Farm';

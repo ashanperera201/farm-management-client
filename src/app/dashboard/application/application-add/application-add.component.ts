@@ -83,7 +83,7 @@ export class ApplicationAddComponent implements OnInit {
             this.toastrService.success("Application saved successfully","Success");
           }
         }, error => {
-          this.toastrService.error("Unable to save Application","Error")
+          this.toastrService.error("Unable to save Application","Error");
         });
       }
     }
