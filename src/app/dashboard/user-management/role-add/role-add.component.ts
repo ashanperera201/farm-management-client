@@ -35,8 +35,8 @@ export class RoleAddComponent implements OnInit {
 
     this.dropdownSettings = {
       singleSelection: false,
-      idField: 'item_id',
-      textField: 'item_text',
+      idField: '_id',
+      textField: 'permissionName',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 3,
@@ -48,6 +48,7 @@ export class RoleAddComponent implements OnInit {
     this.addRoleForm = new FormGroup({
       roleCode: new FormControl(null, Validators.compose([Validators.required])),
       roleDescription: new FormControl(null),
+      rolePermission: new FormControl(null, Validators.compose([Validators.required]))
     });
   }
 
@@ -65,11 +66,19 @@ export class RoleAddComponent implements OnInit {
       userRole.roleCode = this.addRoleForm.value.roleCode;
       userRole.roleName = this.addRoleForm.value.roleCode;
       userRole.roleDescription = this.addRoleForm.value.roleDescription;
+      this.addRoleForm.value.rolePermission.forEach((permissionId: any) => {
+        userRole.permissions.concat(permissionId._id);
+      });
+
+      
 
       if (this.isEditMode) {
         this.role.roleCode = this.addRoleForm.value.roleCode;;
         this.role.roleName = this.addRoleForm.value.roleCode;
         this.role.roleDescription = this.addRoleForm.value.roleDescription;
+        this.addRoleForm.value.rolePermission.forEach((permissionId: any) => {
+          this.role.permissions.concat(permissionId._id);
+        });
 
         this.userManagementService.updateRole(this.role).subscribe(res => {
           if (res) {
