@@ -4,8 +4,9 @@ export class clubMemberModel {
     firstName!: string;
     lastName!: string;
     email!: string;
-    contact!: string;
+    contactNumber!: string;
     address!: string
     city!: string;
+    nic!: string;
     countryCode!: string;
 }

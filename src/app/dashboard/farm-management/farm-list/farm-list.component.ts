@@ -59,7 +59,13 @@ export class FarmListComponent implements OnInit {
   }
 
   deleteFarm = (farmId: any) => {
-
+    this.farmService.deleteFarms(farmId).subscribe(res => {
+      if(res){
+        this.toastrService.success("Farm deleted successfully","Success");
+      }
+    }, error => {
+      this.toastrService.error("Unable to delete Farm","Error");
+    });
   }
 
 
