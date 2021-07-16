@@ -100,12 +100,12 @@ export class UserRolesComponent implements OnInit, OnDestroy {
     else {
       const roleList: any[] = this.roleList.map(x => {
         return {
-          role_code: x.roleCode,
-          role_description: x.roleDescription,
-          role_name: x.roleName,
-          created_by: x.createdBy,
+          role_code: x.roleCode.toLowerCase(),
+          role_description: x.roleDescription.toLowerCase(),
+          role_name: x.roleName.toLowerCase(),
+          created_by: x.createdBy.toLowerCase(),
           created_date: moment(x.createdOn).format('YYYY-MM-DD'),
-          modified_by: x.modifiedBy ? x.modifiedBy : '-',
+          modified_by: x.modifiedBy ? x.modifiedBy.toLowerCase() : '-',
           modified_on: x.modifiedOn ? moment(x.modifiedOn).format('YYYY-MM-DD') : "-"
         }
       });

@@ -48,6 +48,8 @@
                     </th>
                     <th> Name </th>
                     <th> Description </th>
+                    <th> Active </th>
+                    <th> Created On </th>
                     <th> Action </th>
                 </thead>
                 <tbody>
@@ -57,9 +59,11 @@
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{ role.roleName }}</td>
-                        <td>{{ role.roleDescription }}</td>
-                       <td>
+                        <td>{{ role?.roleName }}</td>
+                        <td>{{ role?.roleDescription }}</td>
+                        <td>{{ role?.isActive }}</td>
+                        <td>{{ role?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
+                        <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
                                 (click)="updateRole(role)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"

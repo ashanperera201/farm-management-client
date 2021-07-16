@@ -76,9 +76,9 @@ export class UserPermissionsComponent implements OnInit, OnDestroy {
       this.blockUI.start('Exporting Pdf...');
       const permissionList: any[] = this.userPermissionList.map(x => {
         return {
-          permissionCode: x.permissionCode,
-          permissionName: x.permissionName,
-          permissionDescription: x.permissionDescription,
+          permissionCode: x.permissionCode.toLowerCase(),
+          permissionName: x.permissionName.toLowerCase(),
+          permissionDescription: x.permissionDescription.toLowerCase(),
           createdBy: x.createdBy,
           createdOn: moment(x.createdOn).format('YYYY-MM-DD'),
           modifiedBy: x.modifiedBy ? x.modifiedBy : '-',

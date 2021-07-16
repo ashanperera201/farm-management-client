@@ -77,7 +77,7 @@
                             <td>{{ userPermission?.permissionDescription }}</td>
                             <td>{{ userPermission?.permissionName }}</td>
                             <td>{{ userPermission?.isActive }}</td>
-                            <td>{{ userPermission?.createdOn }}</td>
+                            <td>{{ userPermission?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
                             <td>
                                 <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
                                     (click)="updatePermission(userPermission)">
