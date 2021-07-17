@@ -40,28 +40,28 @@ page: any = 1;
   }
 
   addNewClubMember = () => {
-    const addFeedBrandModal = this.modalService.open(ClubMemberAddComponent, {
+    const addClubMemberModal = this.modalService.open(ClubMemberAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
+    });
+    addClubMemberModal.componentInstance.afterSave.subscribe((res: any) => {
+      if (res && res.clubMember) {
+        this.clubMemberList.unshift(res.clubMember);
+      }
     });
   }
 
   updateClubMember = (clubMember: any) =>{
-    const addFeedBrandModal = this.modalService.open(ClubMemberAddComponent, {
+    const addClubMemberModal = this.modalService.open(ClubMemberAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addFeedBrandModal.componentInstance.existingClubMember = clubMember;
-    addFeedBrandModal.componentInstance.isEditMode = true;
-    addFeedBrandModal.componentInstance.afterSave.subscribe((res: any) => {
-      if(res){
-        this.fetchClubMembers();
-      }
-    });
+    addClubMemberModal.componentInstance.existingClubMember = clubMember;
+    addClubMemberModal.componentInstance.isEditMode = true;
   }
 
   deleteClubMember = (clubMemberId: any) => {

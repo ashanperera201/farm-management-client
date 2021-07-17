@@ -105,7 +105,6 @@ export class PondAddComponent implements OnInit {
           if(res){
             this.closeModal();
             this.toastrService.success("Pond data updated successfully.","Successfully Saved");
-            this.afterSave.emit(res);
           }
         }, () => {
           this.toastrService.error("Unable to update pond data","Error");
@@ -123,10 +122,10 @@ export class PondAddComponent implements OnInit {
         pond.fixedCost = this.addPondForm.value.fixedCost;
   
         this.pondService.savePond(pond).subscribe(res => {
-          if(res){
+          if(res && res.result){
+            this.afterSave.emit(res.result);
             this.closeModal();
             this.toastrService.success("Pond data saved successfully.","Successfully Saved");
-            this.afterSave.emit(res);
           }
         }, () => {
           this.toastrService.error("Unable to save pond data","Error");

@@ -73,7 +73,6 @@ export class ClubMemberAddComponent implements OnInit {
 
         this.clubMemberService.updateClubMember(clubMember).subscribe(res=>{
           if(res){
-            this.afterSave.emit(res);
             this.closeModal();
             this.toastrService.success("Club Member updated successfully.","Successfully Saved");
           }
@@ -97,8 +96,8 @@ export class ClubMemberAddComponent implements OnInit {
         clubMember.nic = '00';
   
         this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
-          if(res){
-            this.afterSave.emit(res);
+          if(res && res.result){
+            this.afterSave.emit(res.result);
             this.closeModal();
             this.toastrService.success("Club Member saved successfully.","Successfully Saved");
           }

@@ -41,29 +41,31 @@ export class FarmListComponent implements OnInit {
   }
 
   addNewFarm = () => {
-    const addFeedBrandModal = this.modalService.open(FarmAddComponent, {
+    const addFarmModal = this.modalService.open(FarmAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
+    if (addFarmModal.componentInstance.afterSave) {
+      addFarmModal.componentInstance.afterSave.subscribe((res: any) => {
+        if (res && res.farmDetail) {
+          this.farmList.unshift(res.farmDetail);
+        }
+      });
+    }
   }
 
 
   updateFarm = (farm: any) => {
-    const addFeedBrandModal = this.modalService.open(FarmAddComponent, {
+    const addFarmModal = this.modalService.open(FarmAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addFeedBrandModal.componentInstance.existingFarm = farm;
-    addFeedBrandModal.componentInstance.isEditMode = true;
-    addFeedBrandModal.componentInstance.afterSave.subscribe((res: any) => {
-      if(res){
-        this.fetchFarmList();
-      }
-    });
+    addFarmModal.componentInstance.existingFarm = farm;
+    addFarmModal.componentInstance.isEditMode = true;
   }
   deleteFarm = (farmIds: any) => {
     const farmDetailIds = JSON.stringify([].concat(farmIds));
