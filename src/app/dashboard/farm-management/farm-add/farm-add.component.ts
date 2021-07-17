@@ -23,7 +23,8 @@ export class FarmAddComponent implements OnInit {
   ownerList:any[] = [];
   addFarmForm!: FormGroup;
 
-  constructor(private clubMemberService: ClubMemberService,
+  constructor(
+    private clubMemberService: ClubMemberService,
     private farmService: FarmService,
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal) { }

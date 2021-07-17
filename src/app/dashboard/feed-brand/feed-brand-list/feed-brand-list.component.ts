@@ -18,6 +18,8 @@ export class FeedBrandListComponent implements OnInit {
   feedBrandIdList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
+  pageSize: number = 10;
+  page: any = 1;
 
   constructor(
     private feedbandService: FeedBrandService,

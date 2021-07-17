@@ -8,6 +8,7 @@ import { ApplicationRoutingModule } from './application.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,9 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     FormsModule,
     ReactiveFormsModule,
     InlineSVGModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    NgbModule,
+    NgbPaginationModule
   ]
 })
 export class ApplicationModule { }

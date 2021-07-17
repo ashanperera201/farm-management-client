@@ -53,7 +53,7 @@
                     <th> Action </th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let pond of pondList | filter:filterParam">
+                    <tr *ngFor="let pond of (pondList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:filterParam;let i = index">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single"><input type="checkbox" />
                                 <span></span>
@@ -80,6 +80,10 @@
                     </tr>
                 </tbody>
             </table>
+            <ngb-pagination
+            [collectionSize]="pondList && pondList.length ? pondList.length: 0"
+            [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+        </ngb-pagination>
         </div>
     </div>
 </div>

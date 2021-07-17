@@ -20,7 +20,8 @@ export class FeedBrandAddComponent implements OnInit {
   feedBrandList: any[] = [];
   existingData = new feedBrandModel();
 
-  constructor(private feedBrandService: FeedBrandService,
+  constructor(
+    private feedBrandService: FeedBrandService,
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal) { }
 

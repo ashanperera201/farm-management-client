@@ -52,7 +52,7 @@
                     <th> Action </th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let farm of farmList | filter:filterParam">
+                    <tr *ngFor="let farm of (farmList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:filterParam;let i = index">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single"><input type="checkbox" />
                                 <span></span>
@@ -78,6 +78,10 @@
                     </tr>
                 </tbody>
             </table>
+            <ngb-pagination
+            [collectionSize]="farmList && farmList.length ? farmList.length: 0"
+            [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+        </ngb-pagination>
         </div>
     </div>
 </div>
