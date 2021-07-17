@@ -73,7 +73,6 @@ export class FarmAddComponent implements OnInit {
       farm.ownerId = this.addFarmForm.value.ownerId;
       this.farmService.updateFarm(farm).subscribe(res => {
         if (res) {
-          this.afterSave.emit(res);
           this.closeModal();
           this.toastrService.success("Farm updated successfully", "Success");
         }
@@ -90,8 +89,8 @@ export class FarmAddComponent implements OnInit {
         farm.pondCount = this.addFarmForm.value.pondCount;
         farm.ownerId = this.addFarmForm.value.ownerId;
         this.farmService.saveFarm(farm).subscribe(res => {
-          if (res) {
-            this.afterSave.emit(res);
+          if (res && res.result) {
+            this.afterSave.emit(res.result);
             this.closeModal();
             this.toastrService.success("Farm saved successfully", "Success");
           }

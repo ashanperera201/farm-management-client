@@ -53,7 +53,7 @@ export class FeedBrandListComponent implements OnInit {
         if (res && res.feedBrand) {
           this.feedBrandList.unshift(res.feedBrand);
         }
-      })
+      });
     }
   }
 

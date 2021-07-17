@@ -63,11 +63,13 @@ export class PondListComponent implements OnInit {
     });
     addPondModal.componentInstance.existingPond = pond;
     addPondModal.componentInstance.isEditMode = true;
-    addPondModal.componentInstance.afterSave.subscribe((res: any) => {
-      if(res){
-        this.fetchPondsList();
-      }
-    });
+    if (addPondModal.componentInstance.afterSave) {
+      addPondModal.componentInstance.afterSave.subscribe((res: any) => {
+        if (res && res.pond) {
+          this.pondList.unshift(res.pond);
+        }
+      });
+    }
   }
 
 
