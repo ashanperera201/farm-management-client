@@ -23,10 +23,9 @@
         </div>
         <div class="form-row mb-4">
           <div class="col">
-              <label class="font-size-h7  text-dark required">Role Permissions</label>
               <ng-multiselect-dropdown
                 [placeholder]="'Permissions'"
-                formControlName="rolePermission"
+                formControlName="permissions"
                 [settings]="dropdownSettings"
                 [data]="dropdownList"
                 [(ngModel)]="selectedItems"

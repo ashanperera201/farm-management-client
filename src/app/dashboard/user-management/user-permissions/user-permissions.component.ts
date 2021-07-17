@@ -61,11 +61,16 @@ export class UserPermissionsComponent implements OnInit, OnDestroy {
     if (userPermissionAdd.componentInstance.afterSave) {
       this.userPermissionSubscriptions.push(userPermissionAdd.componentInstance.afterSave.subscribe((serviceResponse: any) => {
         if (serviceResponse && serviceResponse.result) {
-          this.userPermissionList = [...this.userPermissionList, serviceResponse.result];
+          this.userPermissionList = [...this.userPermissionList, serviceResponse.result].sort((a, b) => this.getTime(new Date(b.createdOn)) - this.getTime(new Date(a.createdOn)));
         }
       }));
     }
   }
+
+  private getTime = (date?: Date) => {
+    return date ? date.getTime() : 0;
+  }
+
 
   exportData = (fileType: number) => {
     if (fileType === ExportTypes.CSV) {

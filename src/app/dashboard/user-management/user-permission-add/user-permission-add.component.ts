@@ -21,7 +21,7 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
 
   permissionFormGroup!: FormGroup;
   headerText: string = 'Add Permission';
-  saveButtonText: string = 'Save Permission';
+  saveButtonText: string = 'Save';
   permissionSubscriptions: Subscription[] = [];
 
   constructor(private activeModal: NgbActiveModal, private userManagementService: UserManagementService, private toastrService: ToastrService) { }
@@ -41,6 +41,8 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
 
   fetchExistingRecord = () => {
     if (this.existingRecord) {
+      this.headerText = "Update Permission";
+      this.saveButtonText = "Update";
       this.permissionFormGroup.patchValue(this.existingRecord);
     }
   }
@@ -61,6 +63,9 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
             this.afterSave.emit(this.existingRecord);
           }
           this.blockUI.stop();
+        }, ({ error }) => {
+          this.blockUI.stop();
+          this.toastrService.error(error.error, 'Error');
         }));
       } else {
         this.permissionSubscriptions.push(this.userManagementService.saveUserPermission(userPermission).subscribe(savedResult => {
@@ -75,7 +80,7 @@ export class UserPermissionAddComponent implements OnInit, OnDestroy {
           this.blockUI.stop();
         }));
       }
-    } else { 
+    } else {
       this.blockUI.stop();
     }
   }

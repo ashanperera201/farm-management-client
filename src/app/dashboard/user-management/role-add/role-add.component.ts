@@ -2,9 +2,10 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { UserRoleModel } from '../../../shared/models/user-role-model';
 import { UserManagementService } from 'src/app/shared/services/user-management.service';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { RolePermissionService } from 'src/app/shared/services/role-permission.service';
 
 @Component({
@@ -16,6 +17,9 @@ export class RoleAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
   @Input() role: any;
   @Output() roleAfterSave: EventEmitter<any> = new EventEmitter<any>();
+
+  @BlockUI() blockUI!: NgBlockUI;
+
   addRoleForm!: FormGroup;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Role';
@@ -31,10 +35,8 @@ export class RoleAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.initRoleForm();
-    this.patchExistsRole();
-    this.fetchRolePermissionData();
     this.configMultiDropdown();
-    console.log(this.role);
+    this.fetchRolePermissionData();
   }
 
   configMultiDropdown = () => {
@@ -53,55 +55,76 @@ export class RoleAddComponent implements OnInit {
     this.addRoleForm = new FormGroup({
       roleCode: new FormControl(null, Validators.compose([Validators.required])),
       roleDescription: new FormControl(null),
-      rolePermission: new FormControl(null, Validators.compose([Validators.required]))
+      permissions: new FormControl(null)
     });
   }
 
   patchExistsRole = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
-      this.headerText = "Update Role"
-      this.addRoleForm.patchValue(this.role);
+      this.headerText = "Update Role";
+
+      let selectedPermissions: any[] = [];
+
+      this.role.permissions.forEach((p: any) => {
+        const permission: any = this.dropdownList.find((dp: any) => dp._id === p);
+        if (permission) {
+          selectedPermissions.push({ _id: permission._id, permissionName: permission.permissionName });
+        }
+      });
+      const rolePatchForm = {
+        roleCode: this.role.roleCode,
+        roleDescription: this.role.roleDescription,
+        permissions: selectedPermissions,
+      }
+
+      this.addRoleForm.patchValue(rolePatchForm);
     }
   }
 
   addRole = () => {
+    this.blockUI.start('Prcessing.....');
     if (this.addRoleForm.valid) {
-      const userRole = new UserRoleModel();
-      userRole.roleCode = this.addRoleForm.value.roleCode;
-      userRole.roleName = this.addRoleForm.value.roleCode;
-      userRole.roleDescription = this.addRoleForm.value.roleDescription;
-      userRole.permissions = [].concat((this.addRoleForm.get("rolePermission")?.value).map((x: any) => x._id));
-
       if (this.isEditMode) {
         this.role.roleCode = this.addRoleForm.value.roleCode;;
         this.role.roleName = this.addRoleForm.value.roleCode;
         this.role.roleDescription = this.addRoleForm.value.roleDescription;
-        this.role.permissions = [].concat((this.addRoleForm.get("rolePermission")?.value).map((x: any) => x._id));
-
+        this.role.permissions = [].concat((this.addRoleForm.get("permissions")?.value).map((x: any) => x._id));
         this.userManagementService.updateRole(this.role).subscribe(res => {
           if (res) {
             this.toastrService.success("Role updated successfully", "Success");
             this.clearRoleForm();
             this.closeModal();
-            this.roleAfterSave.emit(res);
+            this.roleAfterSave.emit(this.role);
           }
-        }, () => {
-          this.toastrService.error("Unable to update Role", "Error");
+          this.blockUI.stop();
+        }, ({ error }) => {
+          this.toastrService.error(error.error, "Error");
+          this.blockUI.stop();
         });
       }
       else {
+        const userRole = new UserRoleModel();
+        userRole.roleCode = this.addRoleForm.value.roleCode;
+        userRole.roleName = this.addRoleForm.value.roleCode;
+        userRole.roleDescription = this.addRoleForm.value.roleDescription;
+        userRole.permissions = [].concat((this.addRoleForm.get("permissions")?.value).map((x: any) => x._id));
+
         this.userManagementService.addRole(userRole).subscribe(res => {
-          if (res) {
+          if (res && res.validity) {
             this.toastrService.success("Role saved successfully", "Success");
             this.clearRoleForm();
             this.closeModal();
             this.roleAfterSave.emit(res);
           }
+          this.blockUI.stop();
         }, () => {
           this.toastrService.error("Unable to save Role", "Error");
+          this.blockUI.stop();
         });
       }
+    } else {
+      this.blockUI.stop();
     }
   }
 
@@ -121,12 +144,19 @@ export class RoleAddComponent implements OnInit {
   }
 
   fetchRolePermissionData = () => {
+    this.blockUI.start('Fetching...');
     this.rolePermissionService.fetchPermissionList().subscribe(res => {
       if (res) {
         this.dropdownList = res.result;
+        this.patchExistsRole();
       }
+      const servTimer = setTimeout(() => {
+        this.blockUI.stop();
+        clearTimeout(servTimer);
+      }, 500);
     }, () => {
-      this.toastrService.error("Unable to load Role permission data", "Error");
+      console.log("Unable to load Role permission data");
+      this.blockUI.stop();
     });
   }
 

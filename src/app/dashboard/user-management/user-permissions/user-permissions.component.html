@@ -9,7 +9,7 @@
                 Add Permission
             </a>
             <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()">
-                <i class="fa fa-plus" aria-hidden="true"></i>
+                <i class="fa fa-trash" aria-hidden="true"></i>
                 Delete Permission
             </a>
         </div>
@@ -59,13 +59,13 @@
                         <th> Permission Code </th>
                         <th> Permission Description </th>
                         <th> Permission Name </th>
-                        <th> Active </th>
+                        <th> Status </th>
                         <th> Created On </th>
                         <th> Action </th>
                     </thead>
                     <tbody>
                         <tr
-                            *ngFor="let userPermission of (userPermissionList | slice: 10) | filter:searchParam;let i = index">
+                            *ngFor="let userPermission of (userPermissionList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:searchParam;let i = index">
                             <td class="selection-cell">
                                 <label class="checkbox checkbox-single">
                                     <input type="checkbox" [checked]="userPermission.isChecked"
@@ -76,7 +76,9 @@
                             <td>{{ userPermission?.permissionCode }}</td>
                             <td>{{ userPermission?.permissionDescription }}</td>
                             <td>{{ userPermission?.permissionName }}</td>
-                            <td>{{ userPermission?.isActive }}</td>
+                            <td>
+                                <span [ngClass]="userPermission?.isActive ? 'active' : 'inactive'"></span>
+                            </td>
                             <td>{{ userPermission?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
                             <td>
                                 <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"

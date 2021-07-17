@@ -31,6 +31,13 @@ export class AuthInterceptorService {
         //   Authorization: `Bearer ${token}`
         // }
       });
+    } else {
+      request = request.clone({
+        headers: request.headers
+          //TODO : NEEDS TO GET THESE FROM LOG USER SERVICE.
+          .set('x-client', `ashan`)
+          .set('x-country', `ashan`),
+      });
     }
     return next.handle(request);
   }

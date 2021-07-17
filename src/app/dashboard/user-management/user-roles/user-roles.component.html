@@ -4,8 +4,14 @@
             <h3 class="card-label">User Roles</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addNewRole()"><i class="fa fa-plus"
-                    aria-hidden="true"></i> Add Role</a>
+            <a type="button" class="btn btn-primary" (click)="addNewRole()">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Add Role
+            </a>
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+                Delete Roles
+            </a>
         </div>
     </div>
     <div class="card-body">
@@ -44,24 +50,34 @@
             <table class="table table-head-custom table-vertical-center overflow-hidden">
                 <thead>
                     <th class="selection-cell-header" data-row-selection="true">
-                        <label class="checkbox checkbox-single"><input type="checkbox" /><span></span></label>
+                        <label class="checkbox checkbox-single">
+                            <input type="checkbox" [(ngModel)]="isAllChecked" (ngModelChange)="onSelectionChange()" />
+                            <span></span>
+                        </label>
                     </th>
                     <th> Name </th>
+                    <th> Role Code </th>
                     <th> Description </th>
                     <th> Active </th>
                     <th> Created On </th>
-                    <th> Action </th>
+                    <th> Status </th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let role of roleList | filter:searchParam">
+                    <tr
+                        *ngFor="let role of (roleList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:searchParam; let i = index">
                         <td class="selection-cell">
-                            <label class="checkbox checkbox-single"><input type="checkbox" />
+                            <label class="checkbox checkbox-single">
+                                <input type="checkbox" [checked]="role?.isChecked"
+                                    (change)="singleSelectionChange(i)" />
                                 <span></span>
                             </label>
                         </td>
                         <td>{{ role?.roleName }}</td>
+                        <td>{{ role?.roleCode }}</td>
                         <td>{{ role?.roleDescription }}</td>
-                        <td>{{ role?.isActive }}</td>
+                        <td>
+                            <span [ngClass]="role?.isActive ? 'active' : 'inactive'"></span>
+                        </td>
                         <td>{{ role?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
                         <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
@@ -71,7 +87,7 @@
                                 </span>
                             </a>
                             <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
-                                (click)="deleteRole(role.roleId)">
+                                (click)="deleteRole(role._id)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>
@@ -80,6 +96,9 @@
                     </tr>
                 </tbody>
             </table>
+            <ngb-pagination [collectionSize]="roleList&& roleList.length ? roleList.length: 0" [(page)]="page"
+                [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+            </ngb-pagination>
         </div>
     </div>
 </div>
