@@ -17,6 +17,8 @@ selectedClubmembers = [];
 clubMemberList: any[] = [];
 filterParam!: string;
 exportTypes = ExportTypes;
+pageSize: number = 10;
+page: any = 1;
 
   constructor(private clubMemberService : ClubMemberService,
      private toastrService:ToastrService,

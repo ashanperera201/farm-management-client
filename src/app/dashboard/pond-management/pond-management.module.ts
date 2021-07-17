@@ -8,6 +8,7 @@ import { PondRoutingModule } from './pond-management.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     FormsModule,
     ReactiveFormsModule,
     InlineSVGModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    NgbPaginationModule
   ]
 })
 export class PondManagementModule { }

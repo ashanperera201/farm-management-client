@@ -21,7 +21,8 @@ export class ApplicationAddComponent implements OnInit {
   feedBrandList: any[] = [];
   existingData = new ApplicationModel();
   
-  constructor(private applicationService : ApplicationsService,
+  constructor(
+    private applicationService : ApplicationsService,
     private toastrService:ToastrService,
     private activeModal: NgbActiveModal) { }
 

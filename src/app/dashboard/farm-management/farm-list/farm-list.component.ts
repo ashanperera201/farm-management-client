@@ -17,6 +17,8 @@ export class FarmListComponent implements OnInit {
   farmList :any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
+  pageSize: number = 10;
+  page: any = 1;
   
   constructor(
     private farmService: FarmService,

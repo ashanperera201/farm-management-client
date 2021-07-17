@@ -17,6 +17,8 @@ export class PondListComponent implements OnInit {
   pondList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
+  pageSize: number = 10;
+  page: any = 1;
   
   constructor(
     private pondService: PondService,

@@ -1,12 +1,13 @@
-
 <div class="card card-custom">
     <div class="card-header">
         <div class="card-title">
             <h3 class="card-label">Application Management</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addNewApplication()"><i class="fa fa-plus" aria-hidden="true"></i> Add Application</a>
-            <a type="button" class="btn btn-success m-1" (click)="importApplications()"><i class="fa fa-files-o" aria-hidden="true"></i> Import Applications</a>
+            <a type="button" class="btn btn-primary" (click)="addNewApplication()"><i class="fa fa-plus"
+                    aria-hidden="true"></i> Add Application</a>
+            <a type="button" class="btn btn-success m-1" (click)="importApplications()"><i class="fa fa-files-o"
+                    aria-hidden="true"></i> Import Applications</a>
         </div>
     </div>
     <div class="card-body">
@@ -22,11 +23,13 @@
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportApplicationList(exportTypes.PDF)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
+                            (click)="exportApplicationList(exportTypes.PDF)">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportApplicationList(exportTypes.CSV)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
+                            (click)="exportApplicationList(exportTypes.CSV)">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -51,23 +54,26 @@
                     <th> Action </th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let app of applicationList | filter:filterParam" >
+                    <tr
+                        *ngFor="let app of (applicationList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:filterParam;let i = index">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single"><input type="checkbox" />
                                 <span></span>
                             </label>
                         </td>
-                       <td>{{ app?.applicationType }}</td>
-                         <td>{{ app?.applicantName }}</td>
+                        <td>{{ app?.applicationType }}</td>
+                        <td>{{ app?.applicantName }}</td>
                         <td>{{ app?.unit }}</td>
                         <td>{{ app?.costPerUnit }}</td>
-                       <td>
-                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateApplication(app)">
+                        <td>
+                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
+                                (click)="updateApplication(app)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteApplication(app._id)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
+                                (click)="deleteApplication(app._id)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>
@@ -76,6 +82,10 @@
                     </tr>
                 </tbody>
             </table>
+            <ngb-pagination
+                [collectionSize]="applicationList && applicationList.length ? applicationList.length: 0"
+                [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+            </ngb-pagination>
         </div>
     </div>
 </div>
