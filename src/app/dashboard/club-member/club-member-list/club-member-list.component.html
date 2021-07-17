@@ -22,11 +22,11 @@
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportClubMemberList(1)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportClubMemberList(exportTypes.PDF)">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportClubMemberList(2)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportClubMemberList(exportTypes.CSV)">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -57,17 +57,17 @@
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{clubMember.firstName}} {{clubMember.lastName}}</td>
-                        <td>{{clubMember.email}}</td>
-                        <td>{{clubMember.contactNumber}}</td>
-                        <td>{{clubMember.address}}</td>
+                        <td>{{clubMember?.firstName}} {{clubMember.lastName}}</td>
+                        <td>{{clubMember?.email}}</td>
+                        <td>{{clubMember?.contactNumber}}</td>
+                        <td>{{clubMember?.address}}</td>
                        <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateClubMember(clubMember)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteClubMember(clubMember)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteClubMember(clubMember._id)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

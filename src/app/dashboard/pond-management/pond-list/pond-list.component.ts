@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { FileService } from '../../../shared/services/file.service';
 import { ExportTypes } from '../../../../app/shared/enums/export-type';
 import { PondService } from '../../../../app/shared/services/pond.service';
 import { PondAddComponent } from '../pond-add/pond-add.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-pond-list',
@@ -14,10 +16,13 @@ export class PondListComponent implements OnInit {
 
   pondList: any[] = [];
   filterParam!: string;
-
-  constructor(private pondService: PondService,
+  exportTypes = ExportTypes;
+  
+  constructor(
+    private pondService: PondService,
     private toastrService: ToastrService,
-    private modalService: NgbModal) { }
+    private modalService: NgbModal,
+    private fileService: FileService) { }
 
   ngOnInit(): void {
     this.fetchPondsList();
@@ -64,18 +69,57 @@ export class PondListComponent implements OnInit {
   }
 
 
-  deletePond = (pondId: any) => {
-    const pondIds = JSON.stringify([].concat(pondId));
+  deletePond = (pondIds: any) => {
+    const pondDetailIds = JSON.stringify([].concat(pondIds));
     let form = new FormData();
-    form.append("", pondIds);
+    form.append("pondDetailIds", pondDetailIds);
+  
+     this.pondService.deletePonds(form).subscribe(res => {
+       if(res && this.pondList.length > 0){
+        let deletedIndex =  this.pondList.indexOf(this.pondList.filter(a=> a._id == pondIds)[0]);
+        this.pondList.splice(deletedIndex, 1);
+        this.toastrService.success("Pond Data deleted.","Success");
+       }
+     }, () => {
+      this.toastrService.error("Unable to delete Pond data.","Error");
+     });
   }
 
   exportPondList = (type: any) => {
-    if (type == ExportTypes.CSV) {
-
+    if (type === ExportTypes.CSV) {
+      const csvData: any[] = this.pondList.map(x => {
+        return {
+          'Owner': x.ownerId,
+          'Farm': x.farmId,
+          'Client Tenent': x.clientTenentId,
+          'Country Code': x.countryCode,
+          'Created By': x.createdBy,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Pond Count': x.pondCount,
+          'Area Of Pond': x.areaOfPond,
+          'Grade of Pond': x.gradeOfPond,
+          'Fixed Cost': x.fixedCost
+        }
+      });
+      this.fileService.exportAsExcelFile(csvData, "Ponds_Data");
     }
     else {
-
+      const pdfData: any[] = this.pondList.map(x => {
+        return {
+          'Owner': x.ownerId,
+          'Farm': x.farmId,
+          'Client Tenent': x.clientTenentId,
+          'Country Code': x.countryCode,
+          'Created By': x.createdBy,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Pond Count': x.pondCount,
+          'Area Of Pond': x.areaOfPond,
+          'Grade of Pond': x.gradeOfPond,
+          'Fixed Cost': x.fixedCost
+        }
+      });
+      const headers: any[] = ['Owner', 'Farm', 'Client Tenent', 'Country Code', 'Created By', 'Created On', 'Pond Count','Area Of Pond', 'Grade of Pond','Fixed Cost' ];
+      this.fileService.exportToPDF("Ponds Data", headers, pdfData, 'Pond_Data');
     }
   }
 

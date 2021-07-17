@@ -33,8 +33,8 @@ export class ClubMemberService {
     return this.http.put(url, clubMemberData);
   }
 
-  deleteClubMember(memberIds: FormData): Observable<any> {
+  deleteClubMember(clubMemberIds: FormData): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/club-member/delete`;
-    return this.http.post(url,memberIds);
+    return this.http.post(url,clubMemberIds);
   }
 }

@@ -22,7 +22,8 @@ export class ClubMemberAddComponent implements OnInit {
   addClubmembersForm!: FormGroup;
   showAddUser: boolean = false;
 
-  constructor(private clubMemberService : ClubMemberService,
+  constructor(
+    private clubMemberService : ClubMemberService,
     private toastrService:ToastrService,
     private activeModal: NgbActiveModal) { }
 
@@ -77,7 +78,7 @@ export class ClubMemberAddComponent implements OnInit {
             this.toastrService.success("Club Member updated successfully.","Successfully Saved");
           }
         }, 
-        error => {
+        () => {
           this.toastrService.error("Unable to update Club Member data","Error");
         });
       }
@@ -102,7 +103,7 @@ export class ClubMemberAddComponent implements OnInit {
             this.toastrService.success("Club Member saved successfully.","Successfully Saved");
           }
         }, 
-        error => {
+        () => {
           this.toastrService.error("Unable to save Club Member data","Error");
         });
       }

@@ -60,10 +60,10 @@
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{ feedBrand.brandName }}</td>
-                        <td>{{ feedBrand.grades }}</td>
-                        <td>{{ feedBrand.shrimpWeight }}</td>
-                        <td>{{ feedBrand.price }}</td>
+                        <td>{{ feedBrand?.brandName }}</td>
+                        <td>{{ feedBrand?.grades }}</td>
+                        <td>{{ feedBrand?.shrimpWeight }}</td>
+                        <td>{{ feedBrand?.price }}</td>
                        <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
                                 (click)="updateFeedBrand(feedBrand)">

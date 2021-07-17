@@ -5,6 +5,7 @@ import { ExportTypes } from '../../../shared/enums/export-type';
 import { FeedBrandService } from '../../../shared/services/feed-brand.service';
 import { FeedBrandAddComponent } from '../feed-brand-add/feed-brand-add.component';
 import { FileService } from '../../../shared/services/file.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-feed-brand-list',
@@ -83,35 +84,35 @@ export class FeedBrandListComponent implements OnInit {
 
   exportFeedBrandList = (type: any) => {
     if (type === ExportTypes.CSV) {
-      const feedBrands: any[] = this.feedBrandList.map(x => {
+      const csvData: any[] = this.feedBrandList.map(x => {
         return {
-          brandName: x.brandName,
-          clientTenentId: x.clientTenentId,
-          countryCode: x.countryCode,
-          createdBy: x.createdBy,
-          createdOn: x.createdOn,
-          grades: x.grades,
-          price: x.price,
-          shrimpWeight: x.shrimpWeight
+          'Brand Name': x.brandName,
+          'Client Tenent': x.clientTenentId,
+          'Country Code': x.countryCode,
+          'Created By': x.createdBy,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Grades': x.grades,
+          'Price': x.price,
+          'Shrimp Weight': x.shrimpWeight
         }
       });
-      this.fileService.exportAsExcelFile(feedBrands, "feed-brand-file");
+      this.fileService.exportAsExcelFile(csvData, "feed_brands");
     }
     else {
-      const roleList: any[] = this.feedBrandList.map(x => {
+      const pdfData: any[] = this.feedBrandList.map(x => {
         return {
-          brandName: x.brandName,
-          clientTenentId: x.clientTenentId,
-          countryCode: x.countryCode,
-          createdBy: x.createdBy,
-          createdOn: x.createdOn,
-          grades: x.grades,
-          price: x.price,
-          shrimpWeight: x.shrimpWeight
+          'Brand Name': x.brandName,
+          'Client Tenent': x.clientTenentId,
+          'Country Code': x.countryCode,
+          'Created By': x.createdBy,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Grades': x.grades,
+          'Price': x.price,
+          'Shrimp Weight': x.shrimpWeight
         }
       });
-      const headers: any[] = ['brandName', 'clientTenentId', 'countryCode', 'createdBy', 'createdOn', 'grades', 'price', 'shrimpWeight'];
-      this.fileService.exportToPDF("Feed Brand", headers, roleList, 'feed_brands');
+      const headers: any[] = ['Brand Name', 'Client Tenent', 'Country Code', 'Created By', 'Created On', 'Grades', 'Price', 'Shrimp Weight'];
+      this.fileService.exportToPDF("Feed Brand Data", headers, pdfData, 'feed_brands');
     }
   }
 

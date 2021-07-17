@@ -39,8 +39,8 @@ export class FarmService {
     return this.http.put(url, farmData);
   }
 
-  deleteFarms(farmIds: FormData): Observable<any> {
+  deleteFarms(farmDetailIds: FormData): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/farm-management/delete`;
-    return this.http.post(url, farmIds);
+    return this.http.post(url, farmDetailIds);
   }
 }
