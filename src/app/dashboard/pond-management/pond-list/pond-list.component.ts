@@ -28,13 +28,8 @@ export class PondListComponent implements OnInit {
       if (res && res.result) {
         this.pondList = res.result;
       }
-<<<<<<< HEAD
-    }, error => {
-      this.toastrService.error("Unable ot load Pond data", "Error");
-=======
     }, () => {
-      this.toastrService.error("Unable ot load Pond data","Error");
->>>>>>> delete calls
+      this.toastrService.error("Unable to load Pond data","Error");
     });
   }
 
