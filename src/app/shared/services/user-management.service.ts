@@ -64,9 +64,9 @@ export class UserManagementService {
     return this.http.post(url, permissionIds);
   }
 
-  deleteRole(roleId: any): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/role/${roleId}/${true}`;
-    return this.http.delete(url)
+  deleteRoles(roleDeleteForm: FormData): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/role/delete`;
+    return this.http.post(url, roleDeleteForm);
   }
 
   updateRole(roleData: UserRoleModel): Observable<any> {
@@ -74,9 +74,9 @@ export class UserManagementService {
     return this.http.put(url, roleData)
   }
 
-  deleteUser(userId: any): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/user/${userId}/${true}`;
-    return this.http.delete(url)
+  deleteUser(userDelete: FormData): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/user/delete`;
+    return this.http.post(url, userDelete);
   }
 
   updateUser(userData: UserModel): Observable<any> {

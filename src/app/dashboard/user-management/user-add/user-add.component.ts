@@ -1,31 +1,37 @@
-import { UserModel } from './../../../shared/models/user-model';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { UserManagementService } from '../../../shared/services/user-management.service';
-import { AuthService } from '../../../shared/services/auth.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { Subscription } from 'rxjs';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { UserModel } from './../../../shared/models/user-model';
+import { UserManagementService } from '../../../shared/services/user-management.service';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-user-add',
   templateUrl: './user-add.component.html',
   styleUrls: ['./user-add.component.scss']
 })
-export class UserAddComponent implements OnInit {
+export class UserAddComponent implements OnInit, OnDestroy {
+
   @Input() isEditMode: boolean = false;
-  @Input() userId: any;
-  @Output() userAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  @Input() existingUser: any;
+  @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+
+  @BlockUI() blockUI!: NgBlockUI;
+
   addUserForm!: FormGroup;
-  roleList: any[] = [];
-  existingUser = new UserModel();
   saveButtonText: string = 'Submit';
   headerText: string = 'Register User';
   selectedItems = [];
   dropdownList = [];
   dropdownSettings: IDropdownSettings = {};
+  userSubscription: Subscription[] = [];
 
-  constructor(private userManagementService: UserManagementService,
+  constructor(
+    private userManagementService: UserManagementService,
     private authService: AuthService,
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal) { }
@@ -37,16 +43,6 @@ export class UserAddComponent implements OnInit {
   }
 
   initAddUserForm = () => {
-    //COMMENTED code will be REMOVED after discussion
-    // this.addUserForm = new FormGroup({
-    //   userName: new FormControl(null, Validators.compose([Validators.required])),
-    //   password: new FormControl(null, Validators.compose([Validators.required])),
-    //   role: new FormControl(null, Validators.compose([Validators.required])),
-    //   phoneNumber: new FormControl(null, Validators.compose([Validators.required])),
-    //   email: new FormControl(null, Validators.compose([Validators.required, Validators.email])),
-    //   isActive: new FormControl(0),
-    // });
-
     this.addUserForm = new FormGroup({
       userName: new FormControl(null, Validators.compose([Validators.required])),
       userEmail: new FormControl(null, Validators.compose([Validators.required, Validators.email])),
@@ -57,15 +53,21 @@ export class UserAddComponent implements OnInit {
       userAddress: new FormControl(null, Validators.compose([Validators.required])),
       nic: new FormControl(null, Validators.compose([Validators.required])),
       passpordId: new FormControl(null),
-      role: new FormControl(null, Validators.compose([Validators.required]))
+      role: new FormControl(null, Validators.compose([Validators.required])),
+      password: new FormControl(null),
+      confirmPassword: new FormControl(null)
     });
+
+    if (!this.isEditMode) {
+      this.addUserForm.get("password")?.setValidators(Validators.compose([Validators.required]));
+      this.addUserForm.get("confirmPassword")?.setValidators(Validators.compose([Validators.required]));
+    }
   }
 
   configValues = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update User";
-      this.fetchUserData();
     }
 
     this.dropdownSettings = {
@@ -79,99 +81,95 @@ export class UserAddComponent implements OnInit {
     };
   }
 
-  fetchUserData = () => {
-    this.userManagementService.fetchUser(this.userId).subscribe(res => {
-      if (res) {
-        this.existingUser = res.result[0];
-        this.bindUserData(this.existingUser);
-      }
-    }, () => {
-      this.toastrService.error("Unable to load user data", "Error");
-    });
+  setExistingUser = () => {
+    // this.dropdownList
+
+    this.addUserForm.patchValue(this.existingUser);
   }
 
-  bindUserData = (user: any) => {
-    let userModelData = new UserModel();
-    userModelData.userName = user.userName;
-    userModelData.userEmail = user.userEmail;
-    userModelData.firstName = user.firstName;
-    userModelData.middleName = user.middleName;
-    userModelData.lastName = user.lastName;
-    userModelData.contact = user.contact;
-    userModelData.userAddress = user.userAddress;
-    userModelData.nic = user.nic;
-    userModelData.passportId = user.passpordId;
-    // userModelData.roles = user.role;
-    this.addUserForm.patchValue(user);
-  }
-
-  addUser = () => {
+  userSaveUpdate = () => {
+    this.blockUI.start('Processing....');
     if (this.addUserForm.valid) {
-      if (this.checkPasswords(this.addUserForm.value)) {
-        let userModelData = new UserModel();
-        userModelData.userName = (this.addUserForm.value.userName).trim();
-        userModelData.userEmail = this.addUserForm.value.userEmail;
-        // userModelData.password = this.existingUser.password;
-        userModelData.firstName = this.addUserForm.value.firstName;
-        userModelData.middleName = this.addUserForm.value.middleName;
-        userModelData.lastName = this.addUserForm.value.lastName;
-        userModelData.contact = this.addUserForm.value.contact;
-        userModelData.userAddress = this.addUserForm.value.userAddress;
-        userModelData.nic = this.addUserForm.value.nic;
-        userModelData.passportId = this.addUserForm.value.passpordId;
-        userModelData.profileImage = "";
-        userModelData.countryCode = "SRI-LANKAN";
-        userModelData.roles = [].concat((this.addUserForm.get("role")?.value).map((x: any) => x._id));
+      if (this.isEditMode) {
+        this.existingUser.userName = (this.addUserForm.value.userName).trim();
+        this.existingUser.userEmail = (this.addUserForm.value.userEmail).trim();
+        this.existingUser.password = this.addUserForm.value.password ? (this.addUserForm.value.password).trim() : '';
+        this.existingUser.firstName = (this.addUserForm.value.firstName).trim();
+        this.existingUser.middleName = this.addUserForm.value.middleName ? (this.addUserForm.value.middleName).trim() : '';
+        this.existingUser.lastName = (this.addUserForm.value.lastName).trim();
+        this.existingUser.contact = (this.addUserForm.value.contact).trim();
+        this.existingUser.userAddress = (this.addUserForm.value.userAddress).trim();
+        this.existingUser.nic = this.addUserForm.value.nic.trim();
+        this.existingUser.passportId = this.addUserForm.value.passpordId ? (this.addUserForm.value.passpordId).trim() : '';
+        this.existingUser.profileImage = "";
+        this.existingUser.roles = [].concat((this.addUserForm.get("role")?.value).map((x: any) => x._id));
 
-        if (this.isEditMode) {
-          this.userManagementService.updateUser(userModelData).subscribe(res => {
-            if (res) {
-              this.toastrService.success("User updated successfully.", "Success");
-              this.clearAddUserForm();
-              this.closeModal();
-            }
-          },
-          error => {
-              this.toastrService.error(error.error.error, "Unable to update user");
-            });
-        }
-        else {
-          this.authService.registerUser(userModelData).subscribe(res => {
+        this.userSubscription.push(this.userManagementService.updateUser({ ...this.existingUser }).subscribe(res => {
+          if (res) {
+            this.toastrService.success("User updated successfully.", "Success");
+            this.clearAddUserForm();
+            this.closeModal();
+          }
+          this.blockUI.stop();
+        },
+          () => {
+            this.toastrService.error("Unable to update user", "Error");
+            this.blockUI.stop();
+          }));
+      } else {
+        if (this.checkPasswords(this.addUserForm.value)) {
+          let userModelData = new UserModel();
+          userModelData.userName = (this.addUserForm.value.userName).trim();
+          userModelData.userEmail = (this.addUserForm.value.userEmail).trim();
+          userModelData.password = (this.addUserForm.value.password).trim();
+          userModelData.firstName = (this.addUserForm.value.firstName).trim();
+          userModelData.middleName = this.addUserForm.value.middleName ? (this.addUserForm.value.middleName).trim() : '';
+          userModelData.lastName = (this.addUserForm.value.lastName).trim();
+          userModelData.contact = (this.addUserForm.value.contact).trim();
+          userModelData.userAddress = (this.addUserForm.value.userAddress).trim();
+          userModelData.nic = this.addUserForm.value.nic.trim();
+          userModelData.passportId = this.addUserForm.value.passpordId ? (this.addUserForm.value.passpordId).trim() : '';
+          userModelData.profileImage = "";
+          userModelData.roles = [].concat((this.addUserForm.get("role")?.value).map((x: any) => x._id));
+
+          this.userSubscription.push(this.authService.registerUser(userModelData).subscribe(res => {
             if (res) {
               this.toastrService.success("User registered successfully.", "Success");
               this.clearAddUserForm();
               this.closeModal();
             }
+            this.blockUI.stop();
           },
-          error => {
-              this.toastrService.error(error.error.error, "Unable to save user");
-            });
+            () => {
+              this.toastrService.error("Unable to save user", "Error");
+              this.blockUI.stop();
+            }));
+        }
+        else {
+          this.toastrService.error("Re-entered password do not match", "Error");
+          this.blockUI.stop();
         }
       }
-      else {
-        this.toastrService.error("Re-entered password do not match", "Error");
-      }
+    } else {
+      this.blockUI.stop();
     }
   }
 
-  checkPasswords = (formData: { password: any; rePassword: any; }) => {
+  checkPasswords = (formData: { password: any; confirmPassword: any; }) => {
     let result: boolean;
-    result = formData.password == formData.rePassword ? true : false;
+    result = formData.password == formData.confirmPassword ? true : false;
     return result;
   }
 
   fetchUserRoles = () => {
-    this.userManagementService.fetchRoleList().subscribe(res => {
+    this.userSubscription.push(this.userManagementService.fetchRoleList().subscribe(res => {
       if (res && res.result) {
         this.dropdownList = res.result;
-        res.result.forEach((role: any) => {
-          this.roleList.push(role);
-
-        });
+        this.setExistingUser();
       }
     }, () => {
       this.toastrService.error("Failed to load users", "Error");
-    });
+    }));
   }
 
   onItemSelect(item: any) {
@@ -189,7 +187,11 @@ export class UserAddComponent implements OnInit {
     this.activeModal.close();
   }
 
-  generatePassword = () => {
-
+  ngOnDestroy() {
+    if (this.userSubscription && this.userSubscription.length > 0) {
+      this.userSubscription.forEach(e => {
+        e.unsubscribe();
+      })
+    }
   }
 }
