@@ -51,11 +51,11 @@ filterParam!: string;
     });
     addFeedBrandModal.componentInstance.existingClubMember = clubMember;
     addFeedBrandModal.componentInstance.isEditMode = true;
-    addFeedBrandModal.componentInstance.afterSave = this.clubMemberfterSave();
-  }
-
-  clubMemberfterSave = () => {
-
+    addFeedBrandModal.componentInstance.afterSave.subscribe((res: any) => {
+      if(res){
+        this.fetchClubMembers();
+      }
+    });
   }
 
   deleteClubMember = (clubMemberId: any) => {

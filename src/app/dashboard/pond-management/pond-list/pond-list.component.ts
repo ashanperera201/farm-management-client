@@ -28,38 +28,44 @@ export class PondListComponent implements OnInit {
       if (res && res.result) {
         this.pondList = res.result;
       }
+<<<<<<< HEAD
     }, error => {
       this.toastrService.error("Unable ot load Pond data", "Error");
+=======
+    }, () => {
+      this.toastrService.error("Unable ot load Pond data","Error");
+>>>>>>> delete calls
     });
   }
 
   addNewPond = () => {
-    const addFeedBrandModal = this.modalService.open(PondAddComponent, {
+    const addPondModal = this.modalService.open(PondAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-  }
-
-  importPonds = () => {
-
+    addPondModal.componentInstance.afterSave.subscribe((res: any) => {
+      if(res){
+        this.fetchPondsList();
+      }
+    });
   }
 
   updatePond = (pond: any) => {
-    const addFeedBrandModal = this.modalService.open(PondAddComponent, {
+    const addPondModal = this.modalService.open(PondAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addFeedBrandModal.componentInstance.existingPond = pond;
-    addFeedBrandModal.componentInstance.isEditMode = true;
-    if (addFeedBrandModal.componentInstance.afterSave) {
-      addFeedBrandModal.componentInstance.afterSave.subscribe((result: any) => {
-
-      });
-    }
+    addPondModal.componentInstance.existingPond = pond;
+    addPondModal.componentInstance.isEditMode = true;
+    addPondModal.componentInstance.afterSave.subscribe((res: any) => {
+      if(res){
+        this.fetchPondsList();
+      }
+    });
   }
 
 
@@ -76,6 +82,10 @@ export class PondListComponent implements OnInit {
     else {
 
     }
+  }
+
+  importPonds = () => {
+
   }
 
 }

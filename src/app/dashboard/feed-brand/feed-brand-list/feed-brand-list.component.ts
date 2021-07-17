@@ -39,12 +39,19 @@ export class FeedBrandListComponent implements OnInit {
   }
 
   addNewFeedBrand = () => {
-    this.modalService.open(FeedBrandAddComponent, {
+    const addFeedBrandModal = this.modalService.open(FeedBrandAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
+    if (addFeedBrandModal.componentInstance.afterSave) {
+      addFeedBrandModal.componentInstance.afterSave.subscribe((res: any) => {
+        if (res && res.feedBrand) {
+          this.feedBrandList.unshift(res.feedBrand);
+        }
+      })
+    }
   }
 
   updateFeedBrand = (feedBrand: any) => {
@@ -56,13 +63,6 @@ export class FeedBrandListComponent implements OnInit {
     });
     addFeedBrandModal.componentInstance.existingFeedBrand = feedBrand;
     addFeedBrandModal.componentInstance.isEditMode = true;
-    if (addFeedBrandModal.componentInstance.afterSave) {
-      addFeedBrandModal.componentInstance.afterSave.subscribe((res: any) => {
-        if (res) {
-          this.fetchFeedBrandsList();
-        }
-      })
-    }
   }
 
   deleteFeedBrand = (feedBrandId: any) => {
@@ -71,12 +71,12 @@ export class FeedBrandListComponent implements OnInit {
     form.append("feedBrandIds", feedBrandIds);
 
     this.feedbandService.deleteFeedBands(form).subscribe(res => {
-      if (res) {
+      if (res && this.feedBrandList.length > 0) {
+        let deletedIndex =  this.feedBrandList.indexOf(this.feedBrandList.filter(a=> a._id == feedBrandId)[0]);
+        this.feedBrandList.splice(deletedIndex , 1);
         this.toastrService.success("Feed Brand deleted", "Success");
-        this.feedBrandList = [];
-        this.fetchFeedBrandsList();
       }
-    }, error => {
+    }, () => {
       this.toastrService.error("Unable to delete Feed Brand", "Error");
     });
   }
@@ -114,7 +114,6 @@ export class FeedBrandListComponent implements OnInit {
       this.fileService.exportToPDF("Feed Brand", headers, roleList, 'feed_brands');
     }
   }
-
 
   importFeedBands = () => {
 

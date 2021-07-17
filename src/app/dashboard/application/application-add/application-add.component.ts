@@ -63,9 +63,8 @@ export class ApplicationAddComponent implements OnInit {
           if(res){
             this.closeModal();
             this.toastrService.success("Application data updated successfully","Success");
-            this.afterSave.emit();
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to update Application","Error");
         });
       }
@@ -78,11 +77,12 @@ export class ApplicationAddComponent implements OnInit {
         application.unit = this.addApplicationForm.value.unit;
         application.costPerUnit = this.addApplicationForm.value.costPerUnit;
         this.applicationService.saveApplication(application).subscribe(res => {
-          if(res){
+          if(res && res.result){
             this.closeModal();
             this.toastrService.success("Application saved successfully","Success");
+            this.afterSave.emit(res.result);
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to save Application","Error");
         });
       }

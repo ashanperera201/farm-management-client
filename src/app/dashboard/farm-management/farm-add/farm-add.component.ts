@@ -15,7 +15,7 @@ export class FarmAddComponent implements OnInit {
 
   @Input() isEditMode: boolean = false;
   @Input() existingFarm: any;
-  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Farm';
   feedBrandList: any[] = [];
@@ -72,6 +72,7 @@ export class FarmAddComponent implements OnInit {
       farm.ownerId = this.addFarmForm.value.ownerId;
       this.farmService.updateFarm(farm).subscribe(res => {
         if (res) {
+          this.afterSave.emit(res);
           this.closeModal();
           this.toastrService.success("Farm updated successfully", "Success");
         }
@@ -89,6 +90,7 @@ export class FarmAddComponent implements OnInit {
         farm.ownerId = this.addFarmForm.value.ownerId;
         this.farmService.saveFarm(farm).subscribe(res => {
           if (res) {
+            this.afterSave.emit(res);
             this.closeModal();
             this.toastrService.success("Farm saved successfully", "Success");
           }

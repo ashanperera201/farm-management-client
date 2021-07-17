@@ -15,7 +15,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class PondAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
   @Input() existingPond: any;
-  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Pond';
   feedBrandList: any[] = [];
@@ -64,7 +64,7 @@ export class PondAddComponent implements OnInit {
       if(res && res.result){
         this.ownerList = res.result;
       }
-    }, error => {
+    }, () => {
       this.toastrService.error("Unable to load owners","Error");
     });
   }
@@ -74,7 +74,7 @@ export class PondAddComponent implements OnInit {
       if(res && res.result){
         this.farmList = res.result;
       }
-    }, error => {
+    }, () => {
       this.toastrService.error("Unable to load owners","Error");
     });
   }
@@ -84,7 +84,7 @@ export class PondAddComponent implements OnInit {
       if(res && res.result){
         this.farmList = res.result;
       }
-    }, error => {
+    }, () => {
       this.toastrService.error("Unable to load Farms","Error");
     });
   }
@@ -102,9 +102,11 @@ export class PondAddComponent implements OnInit {
   
         this.pondService.updatePond(pond).subscribe(res => {
           if(res){
+            this.closeModal();
             this.toastrService.success("Pond data updated successfully.","Successfully Saved");
+            this.afterSave.emit(res);
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to update pond data","Error");
         });
       }
@@ -121,9 +123,11 @@ export class PondAddComponent implements OnInit {
   
         this.pondService.savePond(pond).subscribe(res => {
           if(res){
+            this.closeModal();
             this.toastrService.success("Pond data saved successfully.","Successfully Saved");
+            this.afterSave.emit(res);
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to save pond data","Error");
         });
       }

@@ -25,16 +25,16 @@ export class ClubMemberService {
 
   saveClubMember(clubMemberData: clubMemberModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/club-member/create`;
-    return this.http.post(url, clubMemberData)
+    return this.http.post(url, clubMemberData);
   }
 
   updateClubMember(clubMemberData: clubMemberModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/club-member/update`;
-    return this.http.put(url, clubMemberData)
+    return this.http.put(url, clubMemberData);
   }
 
-  deleteClubMember(memberId: number): Observable<any> {
+  deleteClubMember(memberIds: FormData): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/club-member/delete`;
-    return this.http.delete(url)
+    return this.http.post(url,memberIds);
   }
 }
