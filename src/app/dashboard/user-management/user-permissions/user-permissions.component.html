@@ -65,7 +65,7 @@
                     </thead>
                     <tbody>
                         <tr
-                            *ngFor="let userPermission of (userPermissionList | slice: 10) | filter:searchParam;let i = index">
+                            *ngFor="let userPermission of (userPermissionList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:searchParam;let i = index">
                             <td class="selection-cell">
                                 <label class="checkbox checkbox-single">
                                     <input type="checkbox" [checked]="userPermission.isChecked"
