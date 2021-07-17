@@ -31,16 +31,16 @@ export class FarmService {
 
   saveFarm(farmData: farmModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/farm-management/create`;
-    return this.http.post(url, farmData)
+    return this.http.post(url, farmData);
   }
 
   updateFarm(farmData: farmModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/farm-management/update`;
-    return this.http.put(url, farmData)
+    return this.http.put(url, farmData);
   }
 
-  deleteFarms(farmId: number): Observable<any> {
+  deleteFarms(farmIds: FormData): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/farm-management/delete`;
-    return this.http.delete(url)
+    return this.http.post(url, farmIds);
   }
 }

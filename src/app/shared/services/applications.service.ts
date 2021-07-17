@@ -20,21 +20,21 @@ export class ApplicationsService {
   
   fetchApplicationById(applicationId: any): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/applications/${applicationId}`;
-    return this.http.get(url)
+    return this.http.get(url);
   }
   
   saveApplication(applicationData: ApplicationModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/applications/create`;
-    return this.http.post(url, applicationData)
+    return this.http.post(url, applicationData);
   }
 
   updateApplication(applicationData: ApplicationModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/applications/update`;
-    return this.http.put(url, applicationData)
+    return this.http.put(url, applicationData);
   }
 
-  deleteApplication(applicationId: any): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/applications/delete/${applicationId}/${true}`;
-    return this.http.delete(url)
+  deleteApplication(applicationIds: FormData): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/applications/delete`;
+    return this.http.post(url, applicationIds);
   }
 }

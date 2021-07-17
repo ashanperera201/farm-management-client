@@ -52,13 +52,12 @@ export class FarmListComponent implements OnInit {
     });
     addFeedBrandModal.componentInstance.existingFarm = farm;
     addFeedBrandModal.componentInstance.isEditMode = true;
-    addFeedBrandModal.componentInstance.afterSave = this.farmAfterSave();
+    addFeedBrandModal.componentInstance.afterSave.subscribe((res: any) => {
+      if(res){
+        this.fetchFarmList();
+      }
+    });
   }
-
-  farmAfterSave = () => {
-
-  }
-
   deleteFarm = (farmId: any) => {
     this.farmService.deleteFarms(farmId).subscribe(res => {
       if(res){

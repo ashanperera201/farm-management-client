@@ -13,7 +13,7 @@ import { FeedBrandService } from '../../../shared/services/feed-brand.service';
 export class FeedBrandAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
   @Input() existingFeedBrand: any;
-  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
   addFeedBrandForm!: FormGroup;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Feed Brand';
@@ -60,12 +60,11 @@ export class FeedBrandAddComponent implements OnInit {
         feedBrand.price = this.addFeedBrandForm.value.price;
 
         this.feedBrandService.updateFeedBand(feedBrand).subscribe(res => {
-          if (res) {
+          if (res && res.result) {
             this.closeModal();
-            this.feedAfterSave.emit(res);
             this.toastrService.success("Feed Brand data updated successfully", "Successfully Saved");
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to update Feed Brand data", "Error");
         });
       }
@@ -79,12 +78,12 @@ export class FeedBrandAddComponent implements OnInit {
         feedBrand.price = this.addFeedBrandForm.value.price;
 
         this.feedBrandService.saveFeedBand(feedBrand).subscribe(res => {
-          if (res) {
+          if (res && res.result) {
             this.closeModal();
-            this.feedAfterSave.emit(res);
+            this.afterSave.emit(res.result);
             this.toastrService.success("Feed Brand data saved successfully", "Successfully Saved");
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to save Feed Brand data", "Error");
         });
       }

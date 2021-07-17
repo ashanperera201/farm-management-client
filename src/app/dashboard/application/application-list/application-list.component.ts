@@ -28,18 +28,25 @@ fetchApplicationsList = () => {
     if(res && res.result){
       this.applicationList = res.result;
     }
-  }, error => {
+  }, () => {
     this.toastrService.error("Failed to load Application Data","Error");
   });
 }
 
  addNewApplication = () => {
-  const addFeedBrandModal = this.modalService.open(ApplicationAddComponent, {
+  const addApplicationModal = this.modalService.open(ApplicationAddComponent, {
     animation: true,
     keyboard: true,
     backdrop: true,
     modalDialogClass: 'modal-md',
   });
+  if (addApplicationModal.componentInstance.afterSave) {
+    addApplicationModal.componentInstance.afterSave.subscribe((res: any) => {
+      if (res && res.applications) {
+        this.applicationList.unshift(res.applications);
+      }
+    })
+  }
  }
 
  updateApplication = (application: any) => {
@@ -49,22 +56,22 @@ fetchApplicationsList = () => {
     backdrop: true,
     modalDialogClass: 'modal-md',
   });
-  addFeedBrandModal.componentInstance.existingApplication = application;
-  addFeedBrandModal.componentInstance.isEditMode = true;
-  addFeedBrandModal.componentInstance.afterSave = this.applicationAfterSave();
- }
-
- applicationAfterSave = () => {
-   
+   addFeedBrandModal.componentInstance.existingApplication = application;
+   addFeedBrandModal.componentInstance.isEditMode = true;
  }
 
  deleteApplication = (appId: any) => {
-   this.applicationService.deleteApplication(appId).subscribe(res => {
-     if(res){
+  const applicationIds = JSON.stringify([].concat(appId));
+  let form = new FormData();
+  form.append("applicationIds", applicationIds);
+
+   this.applicationService.deleteApplication(form).subscribe(res => {
+     if(res && this.applicationList.length > 0){
+      let deletedIndex =  this.applicationList.indexOf(this.applicationList.filter(a=> a._id == appId)[0]);
+      this.applicationList.splice(deletedIndex, 1);
       this.toastrService.success("Application deleted.","Success");
-      this.fetchApplicationsList();
      }
-   }, error => {
+   }, () => {
     this.toastrService.error("Unable to delete Application.","Error");
    });
  }

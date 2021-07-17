@@ -13,7 +13,7 @@ import { ClubMemberService } from '../../../shared/services/club-member.service'
 export class ClubMemberAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
   @Input() existingClubMember: any;
-  @Output() feedAfterSave: EventEmitter<any> = new EventEmitter<any>();
+  @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Club Member';
   feedBrandList: any[] = [];
@@ -72,6 +72,7 @@ export class ClubMemberAddComponent implements OnInit {
 
         this.clubMemberService.updateClubMember(clubMember).subscribe(res=>{
           if(res){
+            this.afterSave.emit(res);
             this.closeModal();
             this.toastrService.success("Club Member updated successfully.","Successfully Saved");
           }
@@ -96,8 +97,9 @@ export class ClubMemberAddComponent implements OnInit {
   
         this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
           if(res){
-            this.toastrService.success("Club Member saved successfully.","Successfully Saved");
+            this.afterSave.emit(res);
             this.closeModal();
+            this.toastrService.success("Club Member saved successfully.","Successfully Saved");
           }
         }, 
         error => {
