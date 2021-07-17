@@ -22,11 +22,11 @@
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportApplicationList(1)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportApplicationList(exportTypes.PDF)">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportApplicationList(2)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportApplicationList(exportTypes.CSV)">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -57,10 +57,10 @@
                                 <span></span>
                             </label>
                         </td>
-                       <td>{{ app.applicationType }}</td>
-                         <td>{{ app.applicantName }}</td>
-                        <td>{{ app.unit }}</td>
-                        <td>{{ app.costPerUnit }}</td>
+                       <td>{{ app?.applicationType }}</td>
+                         <td>{{ app?.applicantName }}</td>
+                        <td>{{ app?.unit }}</td>
+                        <td>{{ app?.costPerUnit }}</td>
                        <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateApplication(app)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"

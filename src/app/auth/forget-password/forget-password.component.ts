@@ -42,7 +42,7 @@ export class ForgetPasswordComponent implements OnInit {
           this.redirectToLogin();
         }
       },
-      error => {
+      () => {
         this.toastrService.error("Password Reset was Unsuccessfull.","Rest Failed");
       });
     }

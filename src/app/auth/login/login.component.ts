@@ -54,8 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.blockUI.stop();
         }
       },
-        error => {
-          console.log(error);
+        () => {
           this.toastrService.error("Login Failed", "Error");
           this.blockUI.stop();
         });

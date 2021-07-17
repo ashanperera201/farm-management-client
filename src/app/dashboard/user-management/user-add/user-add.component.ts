@@ -85,7 +85,7 @@ export class UserAddComponent implements OnInit {
         this.existingUser = res.result[0];
         this.bindUserData(this.existingUser);
       }
-    }, error => {
+    }, () => {
       this.toastrService.error("Unable to load user data", "Error");
     });
   }
@@ -131,7 +131,7 @@ export class UserAddComponent implements OnInit {
               this.closeModal();
             }
           },
-            error => {
+          error => {
               this.toastrService.error(error.error.error, "Unable to update user");
             });
         }
@@ -143,7 +143,7 @@ export class UserAddComponent implements OnInit {
               this.closeModal();
             }
           },
-            error => {
+          error => {
               this.toastrService.error(error.error.error, "Unable to save user");
             });
         }
@@ -169,7 +169,7 @@ export class UserAddComponent implements OnInit {
 
         });
       }
-    }, error => {
+    }, () => {
       this.toastrService.error("Failed to load users", "Error");
     });
   }

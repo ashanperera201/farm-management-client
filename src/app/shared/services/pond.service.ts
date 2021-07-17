@@ -33,8 +33,8 @@ export class PondService {
     return this.http.put(url, pondData)
   }
 
-  deletePonds(pondIds: FormData): Observable<any> {
+  deletePonds(pondDetailIds: FormData): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/pond-management/delete`;
-    return this.http.post(url,pondIds)
+    return this.http.post(url,pondDetailIds)
   }
 }

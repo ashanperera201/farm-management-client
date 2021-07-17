@@ -76,7 +76,7 @@ export class FarmAddComponent implements OnInit {
           this.closeModal();
           this.toastrService.success("Farm updated successfully", "Success");
         }
-      }, error => {
+      }, () => {
         this.toastrService.error("Unable to update Farm", "Error");
       });
     }
@@ -94,7 +94,7 @@ export class FarmAddComponent implements OnInit {
             this.closeModal();
             this.toastrService.success("Farm saved successfully", "Success");
           }
-        }, error => {
+        }, () => {
           this.toastrService.error("Unable to save Farm", "Error");
         });
       }

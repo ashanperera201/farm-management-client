@@ -32,7 +32,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           this.userList.push(user);
         });
       }
-    }, error => {
+    }, () => {
       this.toastrService.error("Failed to load users","Error");
     })
   }

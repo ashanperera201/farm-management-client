@@ -125,7 +125,7 @@ export class RoleAddComponent implements OnInit {
       if (res) {
         this.dropdownList = res.result;
       }
-    }, error => {
+    }, () => {
       this.toastrService.error("Unable to load Role permission data", "Error");
     });
   }
