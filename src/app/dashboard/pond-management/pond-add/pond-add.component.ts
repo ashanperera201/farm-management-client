@@ -47,10 +47,10 @@ export class PondAddComponent implements OnInit {
 
   initAddPondForm = () => {
     this.addPondForm = new FormGroup({
-      farmId : new FormControl(null,Validators.compose([Validators.required])),
-      ownerId : new FormControl(null,Validators.compose([Validators.required])),
-      pondCount : new FormControl(null,Validators.compose([Validators.required,Validators.min(0)])),
-      areaOfPond : new FormControl(null,Validators.compose([Validators.required,Validators.min(0)])),
+      farmer : new FormControl(null,Validators.compose([Validators.required])),
+      owner : new FormControl(null,Validators.compose([Validators.required])),
+      pondNo : new FormControl(null,Validators.compose([Validators.required])),
+      areaOfPond : new FormControl(null,Validators.compose([Validators.required])),
       gradeOfPond: new FormControl(null,Validators.compose([Validators.required])),
       fixedCost: new FormControl(null,Validators.compose([Validators.required,Validators.min(0)])),
     });
@@ -80,8 +80,8 @@ export class PondAddComponent implements OnInit {
     });
   }
 
-  fetchFarmsOwnerWise = (ownerId: number) => {
-    this.farmService.fetchFarmByOwnerId(ownerId).subscribe(res => {
+  fetchFarmsOwnerWise = (owner: number) => {
+    this.farmService.fetchFarmByowner(owner).subscribe(res => {
       if(res && res.result){
         this.farmList = res.result;
       }
@@ -94,9 +94,9 @@ export class PondAddComponent implements OnInit {
     if(this.isEditMode){
       if(this.addPondForm.valid){
         const pond = this.existingPond;
-        pond.ownerId = this.addPondForm.value.ownerId;
-        pond.farmId = this.addPondForm.value.farmId;
-        pond.pondCount = this.addPondForm.value.pondCount;
+        pond.owner = this.addPondForm.value.owner;
+        pond.farmer = this.addPondForm.value.farmer;
+        pond.pondNo = this.addPondForm.value.pondNo;
         pond.areaOfPond = this.addPondForm.value.areaOfPond;
         pond.gradeOfPond = this.addPondForm.value.gradeOfPond;
         pond.fixedCost = this.addPondForm.value.fixedCost;
@@ -114,9 +114,9 @@ export class PondAddComponent implements OnInit {
     else{
       if(this.addPondForm.valid){
         const pond = new pondModel();
-        pond.ownerId = this.addPondForm.value.ownerId;
-        pond.farmId = this.addPondForm.value.farmId;
-        pond.pondCount = this.addPondForm.value.pondCount;
+        pond.owner = this.addPondForm.value.owner;
+        pond.farmer = this.addPondForm.value.farmer;
+        pond.pondNo = this.addPondForm.value.pondNo;
         pond.areaOfPond = this.addPondForm.value.areaOfPond;
         pond.gradeOfPond = this.addPondForm.value.gradeOfPond;
         pond.fixedCost = this.addPondForm.value.fixedCost;

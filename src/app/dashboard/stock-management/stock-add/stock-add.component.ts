@@ -80,7 +80,7 @@ export class StockAddComponent implements OnInit, DoCheck {
   initAddStockForm = () => {
     this.addStockForm = new FormGroup({
       farmId: new FormControl(null, Validators.compose([Validators.required])),
-      ownerId: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
       pondId: new FormControl(null, Validators.compose([Validators.required])),
       plCount: new FormControl(null, Validators.compose([Validators.required])),
       plAge: new FormControl(null, Validators.compose([Validators.required])),
@@ -117,8 +117,8 @@ export class StockAddComponent implements OnInit, DoCheck {
     });
   }
 
-  fetchFarmsOwnerWise = (ownerId: number) => {
-    this.farmService.fetchFarmByOwnerId(ownerId).subscribe(res => {
+  fetchFarmsOwnerWise = (owner: number) => {
+    this.farmService.fetchFarmByowner(owner).subscribe(res => {
       if (res && res.result) {
         this.farmList = res.result;
       }
@@ -141,7 +141,7 @@ export class StockAddComponent implements OnInit, DoCheck {
     if (this.isEditMode) {
       if (this.addStockForm.valid) {
         const stock = this.existingStock;
-        stock.ownerId = this.addStockForm.value.ownerId;
+        stock.owner = this.addStockForm.value.owner;
         stock.farmId = this.addStockForm.value.farmId;
         stock.pondId = this.addStockForm.value.pondId;
         stock.plCount = this.addStockForm.value.plCount;
@@ -164,7 +164,7 @@ export class StockAddComponent implements OnInit, DoCheck {
     else {
       if (this.addStockForm.valid) {
         const stock = new StockModel();
-        stock.ownerId = this.addStockForm.value.ownerId;
+        stock.owner = this.addStockForm.value.owner;
         stock.farmId = this.addStockForm.value.farmId;
         stock.pondId = this.addStockForm.value.pondId;
         stock.plCount = this.addStockForm.value.plCount;

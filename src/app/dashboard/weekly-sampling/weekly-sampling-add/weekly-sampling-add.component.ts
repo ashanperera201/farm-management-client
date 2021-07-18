@@ -73,7 +73,7 @@ export class WeeklySamplingAddComponent implements OnInit {
     this.addWeeklySamplingForm = new FormGroup({
       samplingDate: new FormControl(null, Validators.compose([Validators.required])),
       farmId: new FormControl(null, Validators.compose([Validators.required])),
-      ownerId: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
       pondId: new FormControl(null, Validators.compose([Validators.required])),
       dateOfCulture: new FormControl(null, Validators.compose([Validators.required])),
       totalWeight: new FormControl(null, Validators.compose([Validators.required])),

@@ -45,7 +45,7 @@ export class FarmAddComponent implements OnInit {
 
   initAddFarmForm = () => {
     this.addFarmForm = new FormGroup({
-      ownerId: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
       farmName: new FormControl(null, Validators.compose([Validators.required])),
       contactNo: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(10), Validators.minLength(10),Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
       address: new FormControl(null, Validators.compose([Validators.required])),
@@ -70,7 +70,7 @@ export class FarmAddComponent implements OnInit {
       farm.contactNo = this.addFarmForm.value.contactNo;
       farm.address = this.addFarmForm.value.address;
       farm.pondCount = this.addFarmForm.value.pondCount;
-      farm.ownerId = this.addFarmForm.value.ownerId;
+      farm.owner = this.addFarmForm.value.owner;
       this.farmService.updateFarm(farm).subscribe(res => {
         if (res) {
           this.closeModal();
@@ -87,7 +87,7 @@ export class FarmAddComponent implements OnInit {
         farm.contactNo = this.addFarmForm.value.contactNo;
         farm.address = this.addFarmForm.value.address;
         farm.pondCount = this.addFarmForm.value.pondCount;
-        farm.ownerId = this.addFarmForm.value.ownerId;
+        farm.owner = this.addFarmForm.value.owner;
         this.farmService.saveFarm(farm).subscribe(res => {
           if (res && res.result) {
             this.afterSave.emit(res.result);

@@ -91,7 +91,7 @@ export class StockListComponent implements OnInit {
     if (type === ExportTypes.CSV) {
       const csvData: any[] = this.stockList.map(x => {
         return {
-          'Owner': x.ownerId,
+          'Owner': x.owner,
           'Farm': x.farmId,
           'Pond': x.pondId,
           'Number of PL`s': x.plCount,
@@ -109,7 +109,7 @@ export class StockListComponent implements OnInit {
     else {
       const pdfData: any[] = this.stockList.map(x => {
         return {
-          'Owner': x.ownerId,
+          'Owner': x.owner,
           'Farm': x.farmId,
           'Pond': x.pondId,
           'Number of PL`s': x.plCount,

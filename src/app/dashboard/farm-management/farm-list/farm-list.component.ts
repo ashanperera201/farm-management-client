@@ -88,7 +88,7 @@ export class FarmListComponent implements OnInit {
     if (type === ExportTypes.CSV) {
       const csvData: any[] = this.farmList.map(x => {
         return {
-          'Owner': x.ownerId,
+          'Owner': x.owner,
           'Farm': x.farmName,
           'Client Tenent': x.clientTenentId,
           'Country Code': x.countryCode,
@@ -104,7 +104,7 @@ export class FarmListComponent implements OnInit {
     else {
       const pdfData: any[] = this.farmList.map(x => {
         return {
-          'Owner': x.ownerId,
+          'Owner': x.owner,
           'Farm': x.farmName,
           'Client Tenent': x.clientTenentId,
           'Country Code': x.countryCode,

@@ -168,7 +168,11 @@ export class UserListComponent implements OnInit, OnDestroy {
     if (addRoleModal.componentInstance.afterSave) {
       this.userSubscriptions.push(addRoleModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
         if (afterSaveRes) {
-          this.userList = [...this.userList, afterSaveRes.result].sort((a, b) => this.getTime(new Date(b.createdOn)) - this.getTime(new Date(a.createdOn)));
+          this.userList.map((up: any) => up._id === afterSaveRes._id ?
+            {
+              ...up, firstName: afterSaveRes.firstName, lastName: afterSaveRes.lastName, userEmail: afterSaveRes.userEmail, contact: afterSaveRes.contact, passportId: afterSaveRes.passportId, middleName: afterSaveRes.middleName, createdOn: afterSaveRes.createdOn, modifiedOn: afterSaveRes.modifiedOn,
+            } :
+            up);
         }
       }));
     }

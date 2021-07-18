@@ -46,6 +46,7 @@ export class RoleAddComponent implements OnInit {
       textField: 'permissionName',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
       allowSearchFilter: true
     };
   }
@@ -133,13 +134,6 @@ export class RoleAddComponent implements OnInit {
 
   closeModal = () => {
     this.activeModal.close();
-  }
-
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
   }
 
   fetchRolePermissionData = () => {

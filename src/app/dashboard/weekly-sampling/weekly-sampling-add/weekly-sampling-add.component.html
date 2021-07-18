@@ -20,7 +20,7 @@
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Owner</label>
-        <select name="owner" id="owner" formControlName="ownerId" class="form-control">
+        <select name="owner" id="owner" formControlName="owner" class="form-control">
           <option value=null disabled selected>Select Owner</option>
           <option *ngFor="let o of ownerList" [value]="o._id">{{o.firstName}}</option>
         </select>

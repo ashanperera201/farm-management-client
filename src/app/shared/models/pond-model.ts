@@ -1,8 +1,8 @@
 export class pondModel {
-    ownerId!: string;
-    farmId!: string;
+    owner!: string;
+    farmer!: string;
     contact!: string;
-    pondCount!: number;
+    pondNo!: number;
     areaOfPond!: number;
     gradeOfPond!: string;
     fixedCost!: number

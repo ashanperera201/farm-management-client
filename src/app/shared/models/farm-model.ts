@@ -1,5 +1,5 @@
 export class farmModel {
-    ownerId!: string;
+    owner!: string;
     farmName!: string;
     contactNo!: string;
     address!: string;
