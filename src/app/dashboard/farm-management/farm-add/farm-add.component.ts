@@ -47,9 +47,9 @@ export class FarmAddComponent implements OnInit {
     this.addFarmForm = new FormGroup({
       ownerId: new FormControl(null, Validators.compose([Validators.required])),
       farmName: new FormControl(null, Validators.compose([Validators.required])),
-      contactNo: new FormControl(null, Validators.compose([Validators.required])),
+      contactNo: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(10), Validators.minLength(10),Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
       address: new FormControl(null, Validators.compose([Validators.required])),
-      pondCount: new FormControl(null, Validators.compose([Validators.required])),
+      pondCount: new FormControl(null, Validators.compose([Validators.required,Validators.min(0),Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
     });
   }
 

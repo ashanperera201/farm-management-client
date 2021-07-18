@@ -42,8 +42,8 @@ export class FeedBrandAddComponent implements OnInit {
     this.addFeedBrandForm = new FormGroup({
       brandName: new FormControl(null, Validators.compose([Validators.required])),
       grades: new FormControl(null, Validators.compose([Validators.required])),
-      shrimpWeight: new FormControl(null, Validators.compose([Validators.required])),
-      price: new FormControl(null, Validators.compose([Validators.required])),
+      shrimpWeight: new FormControl(null, Validators.compose([Validators.required, Validators.min(0)])),
+      price: new FormControl(null, Validators.compose([Validators.required,Validators.min(0)])),
     });
   }
 
