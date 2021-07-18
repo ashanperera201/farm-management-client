@@ -1,17 +1,16 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { InlineSVGModule } from 'ng-inline-svg';
-import { DashboardRoutingModule } from './dashboard.routing';
-import { HomeComponent } from './home/home.component';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ComponentsModule } from '../shared/components/components.module';
-
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { DashboardRoutingModule } from './dashboard.routing';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    DashboardComponent,
+    DashboardComponent
   ],
   imports: [
     CommonModule,

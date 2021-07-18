@@ -1,0 +1,79 @@
+<div class="modal-header">
+  <div class="row">
+      <div class="col-md-12">
+          <h4 class="modal-title mb-1">{{headerText}}</h4>
+          <p *ngIf="!isEditMode">The field labels marked with <span class="required"></span> are required input fields</p>
+      </div>
+  </div>
+</div>
+
+<div class="modal-body mb-0">
+  <div [formGroup]="addStockForm">
+      <div class="form-row mb-4">
+          <div class="col">
+              <label class="font-size-h7  text-dark required">Owner</label>
+              <select name="owner" id="owner" formControlName="ownerId" class="form-control">
+                  <option value=null disabled selected>Select Owner</option>
+                  <option *ngFor="let o of ownerList" [value]="o._id">{{o.firstName}}</option>
+                </select>
+          </div>
+          <div class="col">
+              <label class="font-size-h7  text-dark required">Farm</label>
+              <select name="farm" id="farm" formControlName="farmId" class="form-control">
+                  <option value=null disabled selected>Select Farm</option>
+                  <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
+                </select>
+          </div>
+      </div>
+      <div class="form-row mb-4">
+          <div class="col">
+              <label class="font-size-h7  text-dark required">Pond</label>
+              <select name="farm" id="farm" formControlName="pondId" class="form-control">
+                <option value=null disabled selected>Select Pond</option>
+                <option *ngFor="let pond of pondList" [value]="pond._id">{{pond.pondCount}}</option>
+              </select>
+          </div>
+          <div class="col">
+              <label class="font-size-h7  text-dark required">Number of PL's</label>
+              <input type="text" class="form-control" placeholder="Number of PL's" formControlName="plCount">
+          </div>
+      </div>
+      <div class="form-row mb-4">
+          <div class="col">
+              <label class="font-size-h7  text-dark required">PL age</label>
+              <input type="text" class="form-control" placeholder="PL age" formControlName="plAge">
+          </div>
+          <div class="col">
+              <label class="font-size-h7  text-dark required">Date of Stocking</label>
+              <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="dateOfStocking" 
+                placeholder="Date of Stocking" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker" [minDate]="model">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+              </div>
+          </div>
+      </div>
+      <div class="form-row mb-4">
+        <div class="col">
+            <label class="font-size-h7  text-dark required">Full Stocked</label>
+            <select name="farm" id="farm" formControlName="fullStocked" class="form-control">
+              <option [value]="true">Yes</option>
+              <option [value]="false">No</option>
+            </select>
+        </div>
+        <div class="col">
+            <label class="font-size-h7  text-dark required">PL Price</label>
+            <input type="text" class="form-control" placeholder="PL Price" formControlName="plPrice">
+        </div>
+    </div>
+    <div class="form-row mb-4">
+      <div class="col">
+          <label class="font-size-h7  text-dark">Actual PL's Remain</label>
+          <input type="text" class="form-control" placeholder="Actual PL's Remain" formControlName="actualPlRemains">
+      </div>
+  </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+  <button type="button" class="btn btn-primary" [disabled]="addStockForm.invalid" (click)="saveStock()">{{saveButtonText}}</button>
+</div>
