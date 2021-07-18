@@ -53,7 +53,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
       userAddress: new FormControl(null, Validators.compose([Validators.required])),
       nic: new FormControl(null, Validators.compose([Validators.required])),
       passpordId: new FormControl(null),
-      role: new FormControl(null, Validators.compose([Validators.required])),
+      roles: new FormControl(null, Validators.compose([Validators.required])),
       password: new FormControl(null),
       confirmPassword: new FormControl(null)
     });
@@ -82,9 +82,28 @@ export class UserAddComponent implements OnInit, OnDestroy {
   }
 
   setExistingUser = () => {
-    // this.dropdownList
+    let selectedPermissions: any[] = [];
+    this.existingUser.roles.forEach((p: any) => {
+      const role: any = this.dropdownList.find((dp: any) => dp._id === p);
+      if (role) {
+        selectedPermissions.push({ _id: role._id, roleName: role.roleName });
+      }
+    });
 
-    this.addUserForm.patchValue(this.existingUser);
+    const userForm = {
+      userName: this.existingUser.userName,
+      userEmail: this.existingUser.userEmail,
+      firstName: this.existingUser.firstName,
+      middleName: this.existingUser.middleName,
+      lastName: this.existingUser.lastName,
+      contact: this.existingUser.contact,
+      userAddress: this.existingUser.userAddress,
+      nic: this.existingUser.nic,
+      passpordId: this.existingUser.passpordId,
+      roles: this.existingUser.roles,
+    }
+
+    this.addUserForm.patchValue(userForm);
   }
 
   userSaveUpdate = () => {
@@ -102,13 +121,14 @@ export class UserAddComponent implements OnInit, OnDestroy {
         this.existingUser.nic = this.addUserForm.value.nic.trim();
         this.existingUser.passportId = this.addUserForm.value.passpordId ? (this.addUserForm.value.passpordId).trim() : '';
         this.existingUser.profileImage = "";
-        this.existingUser.roles = [].concat((this.addUserForm.get("role")?.value).map((x: any) => x._id));
+        this.existingUser.roles = [].concat((this.addUserForm.get("roles")?.value).map((x: any) => x._id));
 
         this.userSubscription.push(this.userManagementService.updateUser({ ...this.existingUser }).subscribe(res => {
           if (res) {
             this.toastrService.success("User updated successfully.", "Success");
             this.clearAddUserForm();
             this.closeModal();
+            this.afterSave.emit(this.existingUser);
           }
           this.blockUI.stop();
         },
@@ -130,13 +150,14 @@ export class UserAddComponent implements OnInit, OnDestroy {
           userModelData.nic = this.addUserForm.value.nic.trim();
           userModelData.passportId = this.addUserForm.value.passpordId ? (this.addUserForm.value.passpordId).trim() : '';
           userModelData.profileImage = "";
-          userModelData.roles = [].concat((this.addUserForm.get("role")?.value).map((x: any) => x._id));
+          userModelData.roles = [].concat((this.addUserForm.get("roles")?.value).map((x: any) => x._id));
 
           this.userSubscription.push(this.authService.registerUser(userModelData).subscribe(res => {
             if (res) {
               this.toastrService.success("User registered successfully.", "Success");
               this.clearAddUserForm();
               this.closeModal();
+              this.afterSave.emit(res);
             }
             this.blockUI.stop();
           },
