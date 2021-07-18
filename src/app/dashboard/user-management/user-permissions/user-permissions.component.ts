@@ -118,7 +118,7 @@ export class UserPermissionsComponent implements OnInit, OnDestroy {
 
   deleteSelected = () => {
     this.blockUI.start('Deleting....');
-    const permissionIds: string[] = (this.userPermissionList.filter(x => x.isChecked)).map(x => x._id);
+    const permissionIds: string[] = (this.userPermissionList.filter(x => x.isChecked === true)).map(x => x._id);
     if (permissionIds && permissionIds.length > 0) {
       this.proceedDelete(permissionIds);
     } else {

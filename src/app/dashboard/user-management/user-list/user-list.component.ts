@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import * as moment from 'moment';
 import { UserManagementService } from '../../../../app/shared/services/user-management.service';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { UserAddComponent } from '../user-add/user-add.component';
+import { FileService } from '../../../shared/services/file.service';
 
 @Component({
   selector: 'app-user-list',
@@ -28,7 +30,8 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private userManagementService: UserManagementService,
     private modalService: NgbModal,
-    private toastrService: ToastrService) { }
+    private toastrService: ToastrService,
+    private fileService: FileService) { }
 
   ngOnInit(): void {
     this.fetchAllUsers();
@@ -70,16 +73,46 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   exportUserList = (type: any) => {
     if (type == ExportTypes.CSV) {
+      this.blockUI.start('Exporting Excel...');
+      const userList: any[] = this.userList.map(x => {
+        return {
+          firstName: x.firstName.toLowerCase(),
+          lastName: x.lastName.toLowerCase(),
+          userEmail: x.userEmail.toLowerCase(),
+          contact: x.contact.toLowerCase(),
+          passportId: x.passportId ? x.passportId : '-',
+          middleName: x.middleName ? x.middleName : '-',
+          createdOn: moment(x.createdOn).format('YYYY-MM-DD'),
+          modifiedOn: x.modifiedOn ? moment(x.modifiedOn).format('YYYY-MM-DD') : "-"
+        }
+      });
 
+      this.fileService.exportAsExcelFile(userList, "user-permissions");
+      this.blockUI.stop();
     }
     else {
-
+      this.blockUI.start('Exporting Pdf...');
+      const userList: any[] = this.userList.map(x => {
+        return {
+          firstName: x.firstName.toLowerCase(),
+          lastName: x.lastName.toLowerCase(),
+          userEmail: x.userEmail.toLowerCase(),
+          contact: x.contact.toLowerCase(),
+          passportId: x.passportId ? x.passportId : '-',
+          middleName: x.middleName ? x.middleName : '-',
+          createdOn: moment(x.createdOn).format('YYYY-MM-DD'),
+          modifiedOn: x.modifiedOn ? moment(x.modifiedOn).format('YYYY-MM-DD') : "-"
+        }
+      });
+      const headers: any[] = ['firstName', 'lastName', 'userEmail', 'contact', 'passportId', 'middleName', 'createdOn', 'modifiedOn'];
+      this.fileService.exportToPDF("System Users", headers, userList, "user-list");
+      this.blockUI.stop();
     }
   }
 
   deleteSelected = () => {
     this.blockUI.start('Deleting....');
-    const userIds: string[] = (this.userList.filter(x => x.isChecked)).map(x => x._id);
+    const userIds: string[] = (this.userList.filter(x => x.isChecked === true)).map(x => x._id);
     if (userIds && userIds.length > 0) {
       this.proceedDelete(userIds);
     } else {
@@ -129,12 +162,12 @@ export class UserListComponent implements OnInit, OnDestroy {
       backdrop: true,
       modalDialogClass: 'modal-lg',
     });
-    
+
     addRoleModal.componentInstance.existingUser = user;
     addRoleModal.componentInstance.isEditMode = true;
     if (addRoleModal.componentInstance.afterSave) {
       this.userSubscriptions.push(addRoleModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
-        if (afterSaveRes) { 
+        if (afterSaveRes) {
           this.userList = [...this.userList, afterSaveRes.result].sort((a, b) => this.getTime(new Date(b.createdOn)) - this.getTime(new Date(a.createdOn)));
         }
       }));

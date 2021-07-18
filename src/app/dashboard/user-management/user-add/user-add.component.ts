@@ -5,9 +5,11 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Subscription } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+
 import { UserModel } from './../../../shared/models/user-model';
 import { UserManagementService } from '../../../shared/services/user-management.service';
 import { AuthService } from '../../../shared/services/auth.service';
+import { keyPressNumbers } from '../../../shared/utils';
 
 @Component({
   selector: 'app-user-add',
@@ -25,7 +27,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
   addUserForm!: FormGroup;
   saveButtonText: string = 'Submit';
   headerText: string = 'Register User';
-  selectedItems = [];
   dropdownList = [];
   dropdownSettings: IDropdownSettings = {};
   userSubscription: Subscription[] = [];
@@ -53,7 +54,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
       userAddress: new FormControl(null, Validators.compose([Validators.required])),
       nic: new FormControl(null, Validators.compose([Validators.required])),
       passpordId: new FormControl(null),
-      roles: new FormControl(null, Validators.compose([Validators.required])),
+      roles: new FormControl(null),
       password: new FormControl(null),
       confirmPassword: new FormControl(null)
     });
@@ -76,19 +77,20 @@ export class UserAddComponent implements OnInit, OnDestroy {
       textField: 'roleName',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
       allowSearchFilter: true
     };
   }
 
   setExistingUser = () => {
-    let selectedPermissions: any[] = [];
-    this.existingUser.roles.forEach((p: any) => {
-      const role: any = this.dropdownList.find((dp: any) => dp._id === p);
-      if (role) {
-        selectedPermissions.push({ _id: role._id, roleName: role.roleName });
-      }
-    });
+    let selectedRoles: any[] = [];
+    if (this.existingUser && this.existingUser.roles && this.existingUser.roles.length > 0) {
+      this.existingUser.roles.forEach((p: any) => {
+        const role: any = this.dropdownList.find((dp: any) => dp._id === p);
+        if (role) {
+          selectedRoles.push({ _id: role._id, roleName: role.roleName });
+        }
+      });
+    }
 
     const userForm = {
       userName: this.existingUser.userName,
@@ -100,7 +102,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
       userAddress: this.existingUser.userAddress,
       nic: this.existingUser.nic,
       passpordId: this.existingUser.passpordId,
-      roles: this.existingUser.roles,
+      roles: selectedRoles,
     }
 
     this.addUserForm.patchValue(userForm);
@@ -110,6 +112,8 @@ export class UserAddComponent implements OnInit, OnDestroy {
     this.blockUI.start('Processing....');
     if (this.addUserForm.valid) {
       if (this.isEditMode) {
+        const roles = this.addUserForm.get("roles")?.value;
+
         this.existingUser.userName = (this.addUserForm.value.userName).trim();
         this.existingUser.userEmail = (this.addUserForm.value.userEmail).trim();
         this.existingUser.password = this.addUserForm.value.password ? (this.addUserForm.value.password).trim() : '';
@@ -121,7 +125,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
         this.existingUser.nic = this.addUserForm.value.nic.trim();
         this.existingUser.passportId = this.addUserForm.value.passpordId ? (this.addUserForm.value.passpordId).trim() : '';
         this.existingUser.profileImage = "";
-        this.existingUser.roles = [].concat((this.addUserForm.get("roles")?.value).map((x: any) => x._id));
+        this.existingUser.roles = roles && roles.length > 0 ? [].concat((roles).map((x: any) => x._id)) : [];
 
         this.userSubscription.push(this.userManagementService.updateUser({ ...this.existingUser }).subscribe(res => {
           if (res) {
@@ -139,6 +143,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
       } else {
         if (this.checkPasswords(this.addUserForm.value)) {
           let userModelData = new UserModel();
+          const roles = this.addUserForm.get("roles")?.value;
           userModelData.userName = (this.addUserForm.value.userName).trim();
           userModelData.userEmail = (this.addUserForm.value.userEmail).trim();
           userModelData.password = (this.addUserForm.value.password).trim();
@@ -150,7 +155,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
           userModelData.nic = this.addUserForm.value.nic.trim();
           userModelData.passportId = this.addUserForm.value.passpordId ? (this.addUserForm.value.passpordId).trim() : '';
           userModelData.profileImage = "";
-          userModelData.roles = [].concat((this.addUserForm.get("roles")?.value).map((x: any) => x._id));
+          userModelData.roles = roles && roles.length > 0 ? [].concat((roles).map((x: any) => x._id)) : [];
 
           this.userSubscription.push(this.authService.registerUser(userModelData).subscribe(res => {
             if (res) {
@@ -206,6 +211,10 @@ export class UserAddComponent implements OnInit, OnDestroy {
 
   closeModal = () => {
     this.activeModal.close();
+  }
+
+  onKeyPressChanges = (event: any): boolean => {
+    return keyPressNumbers(event);
   }
 
   ngOnDestroy() {

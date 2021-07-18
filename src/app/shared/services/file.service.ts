@@ -33,7 +33,8 @@ export class FileService {
     const header = this.createHeaders(headers);
     let doc = new jsPDF();
     doc.text(title, 9, 10);
-    doc.table(12, 25, data, header, {});
+    doc.setFontSize(7);
+    doc.table(6, 25, data, header, { autoSize: true, fontSize: 8, printHeaders: true });
     doc.save(fileName);
   }
 
