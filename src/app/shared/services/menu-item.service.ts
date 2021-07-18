@@ -95,6 +95,18 @@ export class MenuItemService {
       },
       {
         id: 7,
+        displayName: 'Stock Management',
+        route: '/dashboard/stock-management/view-all',
+        svgIconPath: './assets/media/svg/icons/Layout/Layout-arrange.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
+      {
+        id: 8,
         displayName: 'User Management',
         route: '#',
         svgIconPath: './assets/media/svg/icons/General/User.svg',

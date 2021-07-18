@@ -16,6 +16,7 @@ const routes: Routes = [
             { path: 'pond-management', loadChildren: () => import(`./pond-management/pond-management.module`).then(m => m.PondManagementModule) },
             { path: 'feed-brand', loadChildren: () => import(`./feed-brand/feed-brand.module`).then(m => m.FeedBrandModule) },
             { path: 'applications', loadChildren: () => import(`./application/application.module`).then(m => m.ApplicationModule) },
+            { path: 'stock-management', loadChildren: () => import(`./stock-management/stock-management.module`).then(m => m.StockManagementModule) },
             { path: '**', redirectTo: 'home' }
         ]
     }
