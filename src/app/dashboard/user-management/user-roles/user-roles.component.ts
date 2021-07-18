@@ -75,7 +75,7 @@ export class UserRolesComponent implements OnInit, OnDestroy {
 
   deleteSelected = () => {
     this.blockUI.start('Deleting....');
-    const roleIds: string[] = (this.roleList.filter(x => x.isChecked)).map(x => x._id);
+    const roleIds: string[] = (this.roleList.filter(x => x.isChecked === true)).map(x => x._id);
     if (roleIds && roleIds.length > 0) {
       this.proceedDelete(roleIds);
     } else {

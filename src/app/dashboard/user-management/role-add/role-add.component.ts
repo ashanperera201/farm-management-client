@@ -46,7 +46,6 @@ export class RoleAddComponent implements OnInit {
       textField: 'permissionName',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
       allowSearchFilter: true
     };
   }
