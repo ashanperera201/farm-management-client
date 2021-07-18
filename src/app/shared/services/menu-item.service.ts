@@ -107,6 +107,18 @@ export class MenuItemService {
       },
       {
         id: 8,
+        displayName: 'Weekly Sampling',
+        route: '/dashboard/weekly-sampling/view-all',
+        svgIconPath: './assets/media/svg/icons/Layout/Layout-arrange.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
+      {
+        id: 9,
         displayName: 'User Management',
         route: '#',
         svgIconPath: './assets/media/svg/icons/General/User.svg',
