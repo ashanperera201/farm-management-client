@@ -47,7 +47,7 @@
                 <label class="font-size-h7  text-dark required">Email Address</label>
                 <input type="email" class="form-control mb-4" placeholder="E-mail" formControlName="userEmail">
                 <div *ngIf="registerForm.controls.userEmail.status == 'INVALID' && registerForm.controls.userEmail.touched " class="text-danger">
-                    invalid email
+                    invalid email format
                 </div>
             </div>
         </div>

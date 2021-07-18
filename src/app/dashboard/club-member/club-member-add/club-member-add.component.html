@@ -23,6 +23,9 @@
             <div class="col">
                 <label class="font-size-h7  text-dark">Email</label>
                 <input type="email" class="form-control mb-4" placeholder="E-mail" formControlName="email">
+                <div *ngIf="addClubmembersForm.controls.email.status == 'INVALID' && addClubmembersForm.controls.email.touched " class="text-danger">
+                    invalid email format
+                </div>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Contact Number</label>
@@ -61,5 +64,5 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-    <button type="button" class="btn btn-primary" (click)="saveClubMember()">{{saveButtonText}}</button>
+    <button type="button" class="btn btn-primary" [disabled]="addClubmembersForm.invalid" (click)="saveClubMember()">{{saveButtonText}}</button>
 </div>

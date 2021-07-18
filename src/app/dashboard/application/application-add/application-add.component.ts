@@ -44,7 +44,7 @@ export class ApplicationAddComponent implements OnInit {
       applicationType : new FormControl(null,Validators.compose([Validators.required])),
       applicantName : new FormControl(null,Validators.compose([Validators.required])),
       unit : new FormControl(null),
-      costPerUnit : new FormControl(null)
+      costPerUnit : new FormControl(null,Validators.compose([Validators.min(0)]))
     });
   }
 

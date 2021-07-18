@@ -49,10 +49,10 @@ export class PondAddComponent implements OnInit {
     this.addPondForm = new FormGroup({
       farmId : new FormControl(null,Validators.compose([Validators.required])),
       ownerId : new FormControl(null,Validators.compose([Validators.required])),
-      pondCount : new FormControl(null,Validators.compose([Validators.required])),
-      areaOfPond : new FormControl(null,Validators.compose([Validators.required])),
+      pondCount : new FormControl(null,Validators.compose([Validators.required,Validators.min(0)])),
+      areaOfPond : new FormControl(null,Validators.compose([Validators.required,Validators.min(0)])),
       gradeOfPond: new FormControl(null,Validators.compose([Validators.required])),
-      fixedCost: new FormControl(null,Validators.compose([Validators.required])),
+      fixedCost: new FormControl(null,Validators.compose([Validators.required,Validators.min(0)])),
     });
   }
 

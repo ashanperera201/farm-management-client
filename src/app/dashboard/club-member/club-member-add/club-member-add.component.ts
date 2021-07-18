@@ -45,7 +45,7 @@ export class ClubMemberAddComponent implements OnInit {
       firstName: new FormControl(null, Validators.compose([Validators.required])),
       lastName: new FormControl(null, Validators.compose([Validators.required])),
       email: new FormControl(null,  Validators.compose([Validators.email])),
-      contactNumber: new FormControl(null, Validators.compose([Validators.required])),
+      contactNumber: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(10), Validators.minLength(10),Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
       address: new FormControl(null, Validators.compose([Validators.required])),
       city: new FormControl(null, Validators.compose([Validators.required])),
       addUser: new FormControl(0),

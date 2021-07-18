@@ -50,9 +50,8 @@
             <div class="col">
                 <label class="font-size-h7  text-dark required">Email Address</label>
                 <input type="email" class="form-control mb-4" placeholder="E-mail" formControlName="userEmail">
-                <div *ngIf="addUserForm.controls.userEmail.status == 'INVALID' && addUserForm.controls.userEmail.touched "
-                    class="text-danger">
-                    invalid email
+                <div *ngIf="addUserForm.controls.userEmail.status == 'INVALID' && addUserForm.controls.userEmail.touched " class="text-danger">
+                    invalid email format
                 </div>
             </div>
         </div>
