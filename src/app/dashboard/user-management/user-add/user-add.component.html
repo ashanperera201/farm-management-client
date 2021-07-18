@@ -60,7 +60,7 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Role</label>
-                <ng-multiselect-dropdown [placeholder]="'roles'" formControlName="role" [settings]="dropdownSettings"
+                <ng-multiselect-dropdown [placeholder]="'roles'" formControlName="roles" [settings]="dropdownSettings"
                     [data]="dropdownList" [(ngModel)]="selectedItems" (onSelect)="onItemSelect($event)"
                     (onSelectAll)="onSelectAll($event)">
                 </ng-multiselect-dropdown>
