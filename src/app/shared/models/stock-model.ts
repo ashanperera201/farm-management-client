@@ -1,7 +1,7 @@
 export class StockModel {
   owner!: string;
-  farmId!: string;
-  pondId!: string;
+  farmer!: string;
+  pond!: string;
   plCount!: string;
   plAge!: string;
   dateOfStocking!: string;

@@ -67,14 +67,14 @@ export class FarmListComponent implements OnInit {
     addFarmModal.componentInstance.existingFarm = farm;
     addFarmModal.componentInstance.isEditMode = true;
   }
-  deleteFarm = (farmIds: any) => {
-    const farmDetailIds = JSON.stringify([].concat(farmIds));
+  deleteFarm = (farmers: any) => {
+    const farmDetailIds = JSON.stringify([].concat(farmers));
     let form = new FormData();
     form.append("farmDetailIds", farmDetailIds);
   
     this.farmService.deleteFarms(form).subscribe(res => {
        if(res && this.farmList.length > 0){
-        let deletedIndex =  this.farmList.indexOf(this.farmList.filter(a=> a._id == farmIds)[0]);
+        let deletedIndex =  this.farmList.indexOf(this.farmList.filter(a=> a._id == farmers)[0]);
         this.farmList.splice(deletedIndex, 1);
         this.toastrService.success("Farm deleted successfully","Success");
        }

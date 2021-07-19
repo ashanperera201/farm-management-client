@@ -29,7 +29,7 @@
     <div class="form-row mb-4">
       <div class="col">
         <label class="font-size-h7  text-dark required">Farm</label>
-        <select name="farm" id="farm" formControlName="farmId" class="form-control">
+        <select name="farm" id="farm" formControlName="farmer" class="form-control">
           <option value=null disabled selected>Select Farm</option>
           <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
         </select>

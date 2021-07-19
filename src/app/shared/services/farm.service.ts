@@ -19,8 +19,8 @@ export class FarmService {
     return this.http.get(url);
   }
 
-  fetchFarmByFarmId(farmId: any): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/farm-management/${farmId}`;
+  fetchFarmByfarmer(farmer: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/farm-management/${farmer}`;
     return this.http.get(url);
   }
 

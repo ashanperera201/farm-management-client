@@ -94,7 +94,7 @@ export class PondListComponent implements OnInit {
       const csvData: any[] = this.pondList.map(x => {
         return {
           'Owner': x.owner,
-          'Farm': x.farmId,
+          'Farm': x.farmer,
           'Client Tenent': x.clientTenentId,
           'Country Code': x.countryCode,
           'Created By': x.createdBy,
@@ -111,7 +111,7 @@ export class PondListComponent implements OnInit {
       const pdfData: any[] = this.pondList.map(x => {
         return {
           'Owner': x.owner,
-          'Farm': x.farmId,
+          'Farm': x.farmer,
           'Client Tenent': x.clientTenentId,
           'Country Code': x.countryCode,
           'Created By': x.createdBy,
