@@ -77,6 +77,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
       textField: 'roleName',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
       allowSearchFilter: true
     };
   }
@@ -197,14 +198,7 @@ export class UserAddComponent implements OnInit, OnDestroy {
       this.toastrService.error("Failed to load users", "Error");
     }));
   }
-
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
-  }
-
+  
   clearAddUserForm = () => {
     this.addUserForm.reset();
   }

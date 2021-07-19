@@ -10,7 +10,7 @@ import { pondModel } from '../models/pond-model';
 export class PondService {
 
   baseUrl: string = environment.baseUrl;
-  
+
   constructor(private http: HttpClient) { }
 
   fetchPonds(): Observable<any> {
@@ -35,6 +35,6 @@ export class PondService {
 
   deletePonds(pondDetailIds: FormData): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/pond-management/delete`;
-    return this.http.post(url,pondDetailIds)
+    return this.http.post(url, pondDetailIds)
   }
 }

@@ -59,9 +59,9 @@
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{ pond?.ownerId }}</td>
-                        <td>{{ pond?.farmId }}</td>
-                        <td>{{ pond?.pondCount }}</td>
+                        <td>{{ pond?.owner?.firstName +' '+ pond?.owner?.lastName }}</td>
+                        <td>{{ pond?.farmer?.farmName }}</td>
+                        <td>{{ pond?.pondNo }}</td>
                         <td>{{ pond?.areaOfPond }}</td>
                         <td>{{ pond?.gradeOfPond }}</td>
                         <td>{{ pond?.fixedCost }}</td>

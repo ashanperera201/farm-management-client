@@ -13,29 +13,29 @@ import * as moment from 'moment';
   styleUrls: ['./club-member-list.component.scss']
 })
 export class ClubMemberListComponent implements OnInit {
-selectedClubmembers = [];
-clubMemberList: any[] = [];
-filterParam!: string;
-exportTypes = ExportTypes;
-pageSize: number = 10;
-page: any = 1;
+  selectedClubmembers = [];
+  clubMemberList: any[] = [];
+  filterParam!: string;
+  exportTypes = ExportTypes;
+  pageSize: number = 10;
+  page: any = 1;
 
-  constructor(private clubMemberService : ClubMemberService,
-     private toastrService:ToastrService,
-     private modalService: NgbModal,
-     private fileService: FileService) { }
+  constructor(private clubMemberService: ClubMemberService,
+    private toastrService: ToastrService,
+    private modalService: NgbModal,
+    private fileService: FileService) { }
 
   ngOnInit(): void {
     this.fetchClubMembers();
   }
 
   fetchClubMembers = () => {
-    this.clubMemberService.fetchClubMembers().subscribe(res=> {
-      if(res && res.result){
+    this.clubMemberService.fetchClubMembers().subscribe(res => {
+      if (res && res.result) {
         this.clubMemberList = res.result;
       }
     }, () => {
-      this.toastrService.error("Failed to load Club Members Data","Error");
+      this.toastrService.error("Failed to load Club Members Data", "Error");
     });
   }
 
@@ -53,7 +53,7 @@ page: any = 1;
     });
   }
 
-  updateClubMember = (clubMember: any) =>{
+  updateClubMember = (clubMember: any) => {
     const addClubMemberModal = this.modalService.open(ClubMemberAddComponent, {
       animation: true,
       keyboard: true,
@@ -68,27 +68,23 @@ page: any = 1;
     const clubMemberIds = JSON.stringify([].concat(clubMemberId));
     let form = new FormData();
     form.append("clubMemberIds", clubMemberIds);
-  
+
     this.clubMemberService.deleteClubMember(form).subscribe(res => {
-       if(res && this.clubMemberList.length > 0){
-        let deletedIndex =  this.clubMemberList.indexOf(this.clubMemberList.filter(a=> a._id == clubMemberId)[0]);
+      if (res && this.clubMemberList.length > 0) {
+        let deletedIndex = this.clubMemberList.indexOf(this.clubMemberList.filter(a => a._id == clubMemberId)[0]);
         this.clubMemberList.splice(deletedIndex, 1);
-        this.toastrService.success("Club Member deleted","Success");
-       }
-     }, () => {
-      this.toastrService.error("Unable to delete Club Member","Error");
-     });
+        this.toastrService.success("Club Member deleted", "Success");
+      }
+    }, () => {
+      this.toastrService.error("Unable to delete Club Member", "Error");
+    });
   }
 
   exportClubMemberList = (type: any) => {
     if (type === ExportTypes.CSV) {
       const csvData: any[] = this.clubMemberList.map(x => {
         return {
-          //'User Name': x.userName,
-          'Client Tenent': x.clientTenentId,
-          'Country Code': x.countryCode,
-          'Created By': x.createdBy,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
           'First Name': x.firstName,
           'Last Name': x.lastName,
           'Email': x.email,
@@ -103,22 +99,15 @@ page: any = 1;
     else {
       const pdfData: any[] = this.clubMemberList.map(x => {
         return {
-          //'User Name': x.userName,
-          'Client Tenent': x.clientTenentId,
-          'Country Code': x.countryCode,
-          'Created By': x.createdBy,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
           'First Name': x.firstName,
           'Last Name': x.lastName,
           'Email': x.email,
           'Contact No': x.contactNumber,
-          'Address': x.address,
-          'City': x.city,
-          'Nic': x.nic
+          'Nic': x.nic,
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
         }
       });
-      const headers: any[] = ['Client Tenent', 'Country Code', 'Created By', 'Created On','First Name','Last Name',
-      'Email', 'Contact No','Address','City', 'Nic' ];
+      const headers: any[] = ['First Name', 'Last Name', 'Email', 'Contact No', 'Nic', 'Created On',];
       this.fileService.exportToPDF("Club Members Data", headers, pdfData, 'Club_Members_Data');
     }
   }

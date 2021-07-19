@@ -79,9 +79,9 @@ export class StockAddComponent implements OnInit, DoCheck {
 
   initAddStockForm = () => {
     this.addStockForm = new FormGroup({
-      farmId: new FormControl(null, Validators.compose([Validators.required])),
-      ownerId: new FormControl(null, Validators.compose([Validators.required])),
-      pondId: new FormControl(null, Validators.compose([Validators.required])),
+      farmer: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
+      pond: new FormControl(null, Validators.compose([Validators.required])),
       plCount: new FormControl(null, Validators.compose([Validators.required])),
       plAge: new FormControl(null, Validators.compose([Validators.required])),
       dateOfStocking: new FormControl(null, Validators.compose([Validators.required])),
@@ -117,8 +117,8 @@ export class StockAddComponent implements OnInit, DoCheck {
     });
   }
 
-  fetchFarmsOwnerWise = (ownerId: number) => {
-    this.farmService.fetchFarmByOwnerId(ownerId).subscribe(res => {
+  fetchFarmsOwnerWise = (owner: number) => {
+    this.farmService.fetchFarmByowner(owner).subscribe(res => {
       if (res && res.result) {
         this.farmList = res.result;
       }
@@ -141,9 +141,9 @@ export class StockAddComponent implements OnInit, DoCheck {
     if (this.isEditMode) {
       if (this.addStockForm.valid) {
         const stock = this.existingStock;
-        stock.ownerId = this.addStockForm.value.ownerId;
-        stock.farmId = this.addStockForm.value.farmId;
-        stock.pondId = this.addStockForm.value.pondId;
+        stock.owner = this.addStockForm.value.owner;
+        stock.farmer = this.addStockForm.value.farmer;
+        stock.pond = this.addStockForm.value.pond;
         stock.plCount = this.addStockForm.value.plCount;
         stock.plAge = this.addStockForm.value.plAge;
         stock.dateOfStocking = this.parserFormatter.format(this.addStockForm.value.dateOfStocking);
@@ -164,15 +164,16 @@ export class StockAddComponent implements OnInit, DoCheck {
     else {
       if (this.addStockForm.valid) {
         const stock = new StockModel();
-        stock.ownerId = this.addStockForm.value.ownerId;
-        stock.farmId = this.addStockForm.value.farmId;
-        stock.pondId = this.addStockForm.value.pondId;
-        stock.plCount = this.addStockForm.value.plCount;
-        stock.plAge = this.addStockForm.value.plAge;
-        stock.dateOfStocking = this.parserFormatter.format(this.addStockForm.value.dateOfStocking);
-        stock.fullStocked = this.addStockForm.value.fullStocked;
-        stock.plPrice = this.addStockForm.value.plPrice;
-        stock.actualPlRemains = this.addStockForm.value.actualPlRemains;
+        const stockForm = this.addStockForm.getRawValue();
+        stock.owner = stockForm.owner;
+        stock.farmer = stockForm.farmer;
+        stock.pond = stockForm.pond;
+        stock.plCount = stockForm.plCount;
+        stock.plAge = stockForm.plAge;
+        stock.dateOfStocking = this.parserFormatter.format(stockForm.dateOfStocking);
+        stock.fullStocked = stockForm.fullStocked;
+        stock.plPrice = stockForm.plPrice;
+        stock.actualPlRemains = stockForm.actualPlRemains;
 
         this.stockService.saveStock(stock).subscribe(res => {
           if (res && res.result) {

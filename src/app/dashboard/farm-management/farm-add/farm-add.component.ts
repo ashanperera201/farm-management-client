@@ -19,8 +19,8 @@ export class FarmAddComponent implements OnInit {
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Farm';
   feedBrandList: any[] = [];
-  farmList:any[] = [];
-  ownerList:any[] = [];
+  farmList: any[] = [];
+  ownerList: any[] = [];
   addFarmForm!: FormGroup;
 
   constructor(
@@ -45,11 +45,11 @@ export class FarmAddComponent implements OnInit {
 
   initAddFarmForm = () => {
     this.addFarmForm = new FormGroup({
-      ownerId: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
       farmName: new FormControl(null, Validators.compose([Validators.required])),
-      contactNo: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(10), Validators.minLength(10),Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
+      contactNo: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
       address: new FormControl(null, Validators.compose([Validators.required])),
-      pondCount: new FormControl(null, Validators.compose([Validators.required,Validators.min(0),Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
+      pondNo: new FormControl(null, Validators.compose([Validators.required, Validators.min(0), Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
     });
   }
 
@@ -69,8 +69,8 @@ export class FarmAddComponent implements OnInit {
       farm.farmName = this.addFarmForm.value.farmName;
       farm.contactNo = this.addFarmForm.value.contactNo;
       farm.address = this.addFarmForm.value.address;
-      farm.pondCount = this.addFarmForm.value.pondCount;
-      farm.ownerId = this.addFarmForm.value.ownerId;
+      farm.pondNo = this.addFarmForm.value.pondNo;
+      farm.owner = this.addFarmForm.value.owner;
       this.farmService.updateFarm(farm).subscribe(res => {
         if (res) {
           this.closeModal();
@@ -86,11 +86,14 @@ export class FarmAddComponent implements OnInit {
         farm.farmName = this.addFarmForm.value.farmName;
         farm.contactNo = this.addFarmForm.value.contactNo;
         farm.address = this.addFarmForm.value.address;
-        farm.pondCount = this.addFarmForm.value.pondCount;
-        farm.ownerId = this.addFarmForm.value.ownerId;
+        farm.pondNo = this.addFarmForm.value.pondNo;
+        farm.owner = this.addFarmForm.value.owner;
         this.farmService.saveFarm(farm).subscribe(res => {
-          if (res && res.result) {
-            this.afterSave.emit(res.result);
+          if (res && res.validity) {
+            const owner: any = this.ownerList.find(x => x._id === res.result.farmDetail.owner);
+            const farmer = { ...res.result.farmDetail, owner: owner };
+            debugger
+            this.afterSave.emit(farmer);
             this.closeModal();
             this.toastrService.success("Farm saved successfully", "Success");
           }

@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { clubMemberModel } from '../../../../app/shared/models/club-member-model';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
+import { keyPressNumbers } from '../../../shared/utils';
 
 @Component({
   selector: 'app-club-member-add',
@@ -23,29 +24,35 @@ export class ClubMemberAddComponent implements OnInit {
   showAddUser: boolean = false;
 
   constructor(
-    private clubMemberService : ClubMemberService,
-    private toastrService:ToastrService,
+    private clubMemberService: ClubMemberService,
+    private toastrService: ToastrService,
     private activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.initAddClubMembersForm();
     this.configValues();
+    this.patchForm();
   }
-  
+
   configValues = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Club Member";
+    }
+  }
+
+  patchForm = () => {
+    if (this.existingClubMember) {
       this.addClubmembersForm.patchValue(this.existingClubMember);
     }
   }
 
-  initAddClubMembersForm= () => {
+  initAddClubMembersForm = () => {
     this.addClubmembersForm = new FormGroup({
       firstName: new FormControl(null, Validators.compose([Validators.required])),
       lastName: new FormControl(null, Validators.compose([Validators.required])),
-      email: new FormControl(null,  Validators.compose([Validators.email])),
-      contactNumber: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(10), Validators.minLength(10),Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
+      email: new FormControl(null, Validators.compose([Validators.email])),
+      contactNumber: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
       address: new FormControl(null, Validators.compose([Validators.required])),
       city: new FormControl(null, Validators.compose([Validators.required])),
       addUser: new FormControl(0),
@@ -59,8 +66,8 @@ export class ClubMemberAddComponent implements OnInit {
   }
 
   saveClubMember = () => {
-    if(this.isEditMode){
-      if(this.addClubmembersForm.valid){
+    if (this.isEditMode) {
+      if (this.addClubmembersForm.valid) {
         const clubMember = this.existingClubMember;
         clubMember.firstName = this.addClubmembersForm.value.firstName;
         clubMember.lastName = this.addClubmembersForm.value.lastName;
@@ -71,19 +78,19 @@ export class ClubMemberAddComponent implements OnInit {
         clubMember.userName = this.addClubmembersForm.value.userName;
         clubMember.password = this.addClubmembersForm.value.password;
 
-        this.clubMemberService.updateClubMember(clubMember).subscribe(res=>{
-          if(res){
+        this.clubMemberService.updateClubMember(clubMember).subscribe(res => {
+          if (res) {
             this.closeModal();
-            this.toastrService.success("Club Member updated successfully.","Successfully Saved");
+            this.toastrService.success("Club Member updated successfully.", "Successfully Saved");
           }
-        }, 
-        () => {
-          this.toastrService.error("Unable to update Club Member data","Error");
-        });
+        },
+          () => {
+            this.toastrService.error("Unable to update Club Member data", "Error");
+          });
       }
     }
-    else{
-      if(this.addClubmembersForm.valid){
+    else {
+      if (this.addClubmembersForm.valid) {
         const clubMember = new clubMemberModel();
         clubMember.firstName = this.addClubmembersForm.value.firstName;
         clubMember.lastName = this.addClubmembersForm.value.lastName;
@@ -94,26 +101,30 @@ export class ClubMemberAddComponent implements OnInit {
         clubMember.userName = this.addClubmembersForm.value.userName;
         clubMember.password = this.addClubmembersForm.value.password;
         clubMember.nic = '00';
-  
-        this.clubMemberService.saveClubMember(clubMember).subscribe(res=>{
-          if(res && res.result){
+
+        this.clubMemberService.saveClubMember(clubMember).subscribe(res => {
+          if (res && res.result) {
             this.afterSave.emit(res.result);
             this.closeModal();
-            this.toastrService.success("Club Member saved successfully.","Successfully Saved");
+            this.toastrService.success("Club Member saved successfully.", "Successfully Saved");
           }
-        }, 
-        () => {
-          this.toastrService.error("Unable to save Club Member data","Error");
-        });
+        },
+          () => {
+            this.toastrService.error("Unable to save Club Member data", "Error");
+          });
       }
     }
   }
 
+  onKeyPressChanges = (event: any): boolean => {
+    return keyPressNumbers(event);
+  }
+
   onAddUserChange = (event: any) => {
-    if(event && this.showAddUser){
+    if (event && this.showAddUser) {
       this.showAddUser = false;
     }
-    else{
+    else {
       this.showAddUser = true;
     }
   }

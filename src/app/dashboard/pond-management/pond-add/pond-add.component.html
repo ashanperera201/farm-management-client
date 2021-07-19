@@ -12,14 +12,14 @@
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Owner</label>
-                <select name="owner" id="owner" formControlName="ownerId" class="form-control">
+                <select name="owner" id="owner" formControlName="owner" class="form-control">
                     <option value=null disabled selected>Select Owner</option>
                     <option *ngFor="let o of ownerList" [value]="o._id">{{o.firstName}}</option>
                   </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Farm</label>
-                <select name="farm" id="farm" formControlName="farmId" class="form-control">
+                <select name="farm" id="farm" formControlName="farmer" class="form-control">
                     <option value=null disabled selected>Select Farm</option>
                     <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
                   </select>
@@ -28,7 +28,7 @@
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Pond Number</label>
-                <input type="text" class="form-control" placeholder="Pond Number" formControlName="pondCount">
+                <input type="text" class="form-control" placeholder="Pond Number" formControlName="pondNo">
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Area of the pond</label>

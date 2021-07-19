@@ -19,13 +19,13 @@ export class FarmService {
     return this.http.get(url);
   }
 
-  fetchFarmByFarmId(farmId: any): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/farm-management/${farmId}`;
+  fetchFarmByfarmer(farmer: any): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/farm-management/${farmer}`;
     return this.http.get(url);
   }
 
-  fetchFarmByOwnerId(ownerId: number): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/farm-management`+ ownerId;
+  fetchFarmByowner(owner: number): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/farm-management`+ owner;
     return this.http.get(url);
   }
 
