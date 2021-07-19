@@ -18,6 +18,7 @@ const routes: Routes = [
             { path: 'applications', loadChildren: () => import(`./application/application.module`).then(m => m.ApplicationModule) },
             { path: 'stock-management', loadChildren: () => import(`./stock-management/stock-management.module`).then(m => m.StockManagementModule) },
             { path: 'weekly-sampling', loadChildren: () => import(`./weekly-sampling/weekly-sampling.module`).then(m => m.WeeklySamplingModule) },
+            { path: 'percentage-feeding', loadChildren: () => import(`./percentage-feeding/percentage-feeding.module`).then(m => m.PercentageFeedingModule) },
             { path: '**', redirectTo: 'home' }
         ]
     }

@@ -74,6 +74,7 @@ fetchApplicationsList = () => {
  }
 
  deleteApplication = (appId: any) => {
+  this.blockUI.start('Deleting...');
   const applicationIds = JSON.stringify([].concat(appId));
   let form = new FormData();
   form.append("applicationIds", applicationIds);
@@ -84,7 +85,9 @@ fetchApplicationsList = () => {
       this.applicationList.splice(deletedIndex, 1);
       this.toastrService.success("Application deleted.","Success");
      }
+     this.blockUI.stop();
    }, () => {
+    this.blockUI.stop();
     this.toastrService.error("Unable to delete Application.","Error");
    });
  }

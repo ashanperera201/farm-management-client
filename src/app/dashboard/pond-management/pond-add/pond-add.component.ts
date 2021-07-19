@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import { FarmService } from '../../../shared/services/farm.service';
@@ -17,6 +18,9 @@ export class PondAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
   @Input() existingPond: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+
+  @BlockUI() blockUI!: NgBlockUI;
+
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Pond';
   feedBrandList: any[] = [];
@@ -67,6 +71,7 @@ export class PondAddComponent implements OnInit {
   }
 
   fetchInitialData = () => {
+    this.blockUI.start('Fetching Data...');
     this.clubMemberService.fetchClubMembers().pipe(switchMap(ownerRes => {
       if (ownerRes && ownerRes.result) {
         this.ownerList = ownerRes.result;
@@ -77,20 +82,25 @@ export class PondAddComponent implements OnInit {
         this.farmList = farmRes.result;
         this.patchExistsRecord();
       }
-    })
+    });
+    this.blockUI.stop();
   }
 
   fetchFarmsOwnerWise = (owner: number) => {
+    this.blockUI.start('Fetching Data...');
     this.farmService.fetchFarmByowner(owner).subscribe(res => {
       if (res && res.result) {
         this.farmList = res.result;
       }
+      this.blockUI.stop();
     }, () => {
+      this.blockUI.stop();
       this.toastrService.error("Unable to load Farms", "Error");
     });
   }
 
   savePond = () => {
+    this.blockUI.start('Prcessing.....');
     if (this.isEditMode) {
       if (this.addPondForm.valid) {
         const pond = this.existingPond;
@@ -106,12 +116,15 @@ export class PondAddComponent implements OnInit {
             this.closeModal();
             this.toastrService.success("Pond data updated successfully.", "Successfully Saved");
           }
+          this.blockUI.stop();
         }, () => {
+          this.blockUI.stop();
           this.toastrService.error("Unable to update pond data", "Error");
         });
       }
     }
     else {
+      this.blockUI.start('Prcessing.....');
       if (this.addPondForm.valid) {
         const pond = new pondModel();
         pond.owner = this.addPondForm.value.owner;
@@ -127,7 +140,9 @@ export class PondAddComponent implements OnInit {
             this.closeModal();
             this.toastrService.success("Pond data saved successfully.", "Successfully Saved");
           }
+          this.blockUI.stop();
         }, () => {
+          this.blockUI.stop();
           this.toastrService.error("Unable to save pond data", "Error");
         });
       }

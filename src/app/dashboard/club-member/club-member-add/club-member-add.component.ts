@@ -35,11 +35,11 @@ export class ClubMemberAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.initAddClubMembersForm();
-    this.configValues();
+    this.setEditModeValues();
     this.patchForm();
   }
 
-  configValues = () => {
+  setEditModeValues = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Club Member";
@@ -57,9 +57,10 @@ export class ClubMemberAddComponent implements OnInit {
       firstName: new FormControl(null, Validators.compose([Validators.required])),
       lastName: new FormControl(null, Validators.compose([Validators.required])),
       email: new FormControl(null, Validators.compose([Validators.email])),
-      contactNumber: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(10), Validators.minLength(10), Validators.pattern(/^-?(0|[1-9]\d*)?$/)])),
+      contactNumber: new FormControl(null, Validators.compose([Validators.required, Validators.pattern(/^-?(0|[0-9]\d*)?$/)])),
       address: new FormControl(null, Validators.compose([Validators.required])),
       city: new FormControl(null, Validators.compose([Validators.required])),
+      nic: new FormControl(null, Validators.compose([Validators.required])),
       addUser: new FormControl(0),
       userName: new FormControl(null),
       password: new FormControl(null)
@@ -83,6 +84,7 @@ export class ClubMemberAddComponent implements OnInit {
         clubMember.city = this.addClubmembersForm.value.city;
         clubMember.userName = this.addClubmembersForm.value.userName;
         clubMember.password = this.addClubmembersForm.value.password;
+        clubMember.nic = this.addClubmembersForm.value.nic;
 
         this.clubMemberService.updateClubMember(clubMember).subscribe(res => {
           if (res) {
@@ -108,7 +110,7 @@ export class ClubMemberAddComponent implements OnInit {
         clubMember.city = this.addClubmembersForm.value.city;
         clubMember.userName = this.addClubmembersForm.value.userName;
         clubMember.password = this.addClubmembersForm.value.password;
-        clubMember.nic = '00';
+        clubMember.nic = this.addClubmembersForm.value.nic;
 
         this.clubMemberService.saveClubMember(clubMember).subscribe(res => {
           if (res && res.result) {
