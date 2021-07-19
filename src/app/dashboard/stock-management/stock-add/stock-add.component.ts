@@ -3,7 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { StockModel } from 'src/app/shared/models/stock-model';
+import { switchMap } from 'rxjs/operators';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Subscription } from 'rxjs';
+import { StockModel } from '../../../shared/models/stock-model';
 import { ClubMemberService } from 'src/app/shared/services/club-member.service';
 import { FarmService } from 'src/app/shared/services/farm.service';
 import { PondService } from 'src/app/shared/services/pond.service';
@@ -19,6 +22,9 @@ export class StockAddComponent implements OnInit, DoCheck {
   @Input() isEditMode: boolean = false;
   @Input() existingStock: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+
+  @BlockUI() blockUI!: NgBlockUI;
+
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Stocking';
   pondList: any[] = [];
@@ -26,6 +32,7 @@ export class StockAddComponent implements OnInit, DoCheck {
   farmList: any[] = [];
   ownerList: any[] = [];
   model: NgbDateStruct;
+  stockSubscriptions: Subscription[] = [];
 
   constructor(
     private pondService: PondService,
@@ -44,10 +51,8 @@ export class StockAddComponent implements OnInit, DoCheck {
 
   ngOnInit(): void {
     this.initAddStockForm();
+    this.fetchInitialData();
     this.configValues();
-    this.fetchOwnersList();
-    this.fetchFarmList();
-    this.fetchPondList();
   }
 
   ngDoCheck() {
@@ -58,12 +63,7 @@ export class StockAddComponent implements OnInit, DoCheck {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Stock";
-      let dateFormat = moment(this.existingStock.dateOfStocking).format('YYYY-MM-DD').split('-')
-      this.model.year = +dateFormat[0];
-      this.model.month = +dateFormat[1];
-      this.model.day = +dateFormat[2];
-      this.existingStock.dateOfStocking = this.model;
-      this.addStockForm.patchValue(this.existingStock);
+      this.patchExistsForm();
     } else {
       const current = new Date();
       this.model = {
@@ -71,10 +71,35 @@ export class StockAddComponent implements OnInit, DoCheck {
         month: current.getMonth() + 1,
         day: current.getDate()
       };
-
       this.addStockForm.get('dateOfStocking')?.patchValue(this.model);
-
     }
+  }
+
+  patchExistsForm = () => {
+    let dateFormat = moment(this.existingStock.dateOfStocking).format('YYYY-MM-DD').split('-')
+    this.model.year = +dateFormat[0];
+    this.model.month = +dateFormat[1];
+    this.model.day = +dateFormat[2];
+
+    const stockForm = this.existingStock;
+    stockForm.owner = stockForm.owner._id;
+    stockForm.pond = stockForm.pond._id;
+    stockForm.farmer = stockForm.farmer._id;
+    stockForm.dateOfStocking = this.model;
+
+    // TODO : CALCULATE ACTUAL PL'S REMAIINGS.
+
+    // DO THIS IN BACK END.
+    // TAKE DATE DATE
+    // TAKE CURRENT DATE
+    // MAKE DIFFERENCE BETWEEN CURRENT DATE AND TEH CREATED DATE
+    // CHECK 28 DAYS
+    // IF YES ? 
+    // * TAKE EXPECTED SURVIVAL PERCENTAGE FROM WEEKLY SAMPLING FORM
+    // * TAKE NO OF PL'S HARVEST FROM HARVEST MANAGEMENT FORM.
+    // AND FORMULATE : ( EXPECTED SURVIVAL PERCENTAGE * NO PL'S ) - NO OF PL'S HARVEST
+
+    this.addStockForm.patchValue(this.existingStock);
   }
 
   initAddStockForm = () => {
@@ -97,24 +122,27 @@ export class StockAddComponent implements OnInit, DoCheck {
     this.addStockForm.reset();
   }
 
-  fetchOwnersList = () => {
-    this.clubMemberService.fetchClubMembers().subscribe(res => {
-      if (res && res.result) {
-        this.ownerList = res.result;
+  fetchInitialData = () => {
+    this.blockUI.start('Fetching........');
+    this.stockSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((clubMemberResults: any) => {
+      if (clubMemberResults && clubMemberResults.result) {
+        this.ownerList = clubMemberResults.result;
       }
-    }, () => {
-      this.toastrService.error("Unable to load owners", "Error");
-    });
-  }
-
-  fetchFarmList = () => {
-    this.farmService.fetchFarms().subscribe(res => {
-      if (res && res.result) {
-        this.farmList = res.result;
+      return this.farmService.fetchFarms();
+    })).pipe(switchMap((farmResult: any) => {
+      if (farmResult && farmResult.result) {
+        this.farmList = farmResult.result;
       }
+      return this.pondService.fetchPonds();
+    })).subscribe((pondResult: any) => {
+      if (pondResult && pondResult.result) {
+        this.pondList = pondResult.result;
+      }
+      this.blockUI.stop();
     }, () => {
-      this.toastrService.error("Unable to load Farm", "Error");
-    });
+      console.log('Failed to load initial data.');
+      this.blockUI.stop();
+    }))
   }
 
   fetchFarmsOwnerWise = (owner: number) => {
@@ -127,19 +155,15 @@ export class StockAddComponent implements OnInit, DoCheck {
     });
   }
 
-  fetchPondList = () => {
-    this.pondService.fetchPonds().subscribe(res => {
-      if (res && res.result) {
-        this.pondList = res.result;
-      }
-    }, () => {
-      this.toastrService.error("Unable to load ponds", "Error");
-    });
-  }
-
   saveStock = () => {
-    if (this.isEditMode) {
-      if (this.addStockForm.valid) {
+
+    if (this.addStockForm.valid) {
+
+      const owner: any = this.ownerList.find(x => x._id === this.addStockForm.value.owner);
+      const farmer: any = this.farmList.find(x => x._id === this.addStockForm.value.farmer);
+      const pond: any = this.pondList.find(x => x._id === this.addStockForm.value.pond);
+
+      if (this.isEditMode) {
         const stock = this.existingStock;
         stock.owner = this.addStockForm.value.owner;
         stock.farmer = this.addStockForm.value.farmer;
@@ -153,18 +177,20 @@ export class StockAddComponent implements OnInit, DoCheck {
 
         this.stockService.updateStock(stock).subscribe(res => {
           if (res) {
-            this.closeModal();
+            stock.owner = owner;
+            stock.farmer = farmer;
+            stock.pond = pond;
+            this.afterSave.emit(stock);
             this.toastrService.success("Stock data updated successfully.", "Successfully Saved");
+            this.closeModal();
           }
         }, () => {
           this.toastrService.error("Unable to update stock data", "Error");
         });
-      }
-    }
-    else {
-      if (this.addStockForm.valid) {
+      } else {
         const stock = new StockModel();
         const stockForm = this.addStockForm.getRawValue();
+
         stock.owner = stockForm.owner;
         stock.farmer = stockForm.farmer;
         stock.pond = stockForm.pond;

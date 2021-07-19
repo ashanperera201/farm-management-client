@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { ExportTypes } from 'src/app/shared/enums/export-type';
-import { FileService } from 'src/app/shared/services/file.service';
-import { StockService } from 'src/app/shared/services/stock.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Subscription } from 'rxjs';
+import { ExportTypes } from '../../../shared/enums/export-type';
+import { FileService } from '../../../shared/services/file.service';
+import { StockService } from '../../../shared/services/stock.service';
 import { StockAddComponent } from '../stock-add/stock-add.component';
 
 @Component({
@@ -13,11 +15,17 @@ import { StockAddComponent } from '../stock-add/stock-add.component';
   styleUrls: ['./stock-list.component.scss']
 })
 export class StockListComponent implements OnInit {
+
+  @BlockUI() blockUI!: NgBlockUI;
+
+  isAllChecked!: boolean;
   stockList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
+  stockSubscriptions: Subscription[] = [];
+
   constructor(
     private stockService: StockService,
     private toastrService: ToastrService,
@@ -30,13 +38,13 @@ export class StockListComponent implements OnInit {
   }
 
   fetchStockList = () => {
-    this.stockService.fetchStock().subscribe(res => {
+    this.stockSubscriptions.push(this.stockService.fetchStock().subscribe(res => {
       if (res && res.result) {
         this.stockList = res.result;
       }
     }, () => {
       this.toastrService.error("Unable to load Stock data", "Error");
-    });
+    }));
   }
 
   addNewStock = () => {
@@ -46,11 +54,14 @@ export class StockListComponent implements OnInit {
       backdrop: true,
       modalDialogClass: 'modal-lg',
     });
-    addStockModal.componentInstance.afterSave.subscribe((res: any) => {
-      if (res) {
-        this.fetchStockList();
-      }
-    });
+
+    if (addStockModal.componentInstance.afterSave) {
+      this.stockSubscriptions.push(addStockModal.componentInstance.afterSave.subscribe((res: any) => {
+        if (res) {
+          this.fetchStockList();
+        }
+      }));
+    }
   }
 
   updateStock = (stock: any) => {
@@ -60,15 +71,69 @@ export class StockListComponent implements OnInit {
       backdrop: true,
       modalDialogClass: 'modal-lg',
     });
-    addStockModal.componentInstance.existingStock = stock;
+
+    addStockModal.componentInstance.existingStock = JSON.parse(JSON.stringify(stock));
     addStockModal.componentInstance.isEditMode = true;
+
     if (addStockModal.componentInstance.afterSave) {
-      addStockModal.componentInstance.afterSave.subscribe((res: any) => {
-        if (res && res.pond) {
-          this.stockList.unshift(res.pond);
+      addStockModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
+        if (afterSaveRes && afterSaveRes.pond) {
+          const index = this.stockList.findIndex((up: any) => up._id === afterSaveRes._id);
+          this.stockList[index].farmName = afterSaveRes.farmName;
+          this.stockList[index].contactNo = afterSaveRes.contactNo;
+          this.stockList[index].address = afterSaveRes.address;
+          this.stockList[index].pondNo = afterSaveRes.pondNo;
+          this.stockList[index].owner = afterSaveRes.owner;
         }
       });
     }
+  }
+
+
+  deleteSelected = () => {
+    this.blockUI.start('Deleting....');
+    const stockIds: string[] = (this.stockList.filter(x => x.isChecked === true)).map(x => x._id);
+    if (stockIds && stockIds.length > 0) {
+      this.proceedDelete(stockIds);
+    } else {
+      this.toastrService.error("Please select stocks to delete.", "Error");
+      this.blockUI.stop();
+    }
+  }
+
+  deleteFarmRecord = (stockId: any) => {
+    this.blockUI.start('Deleting....');
+    this.proceedDelete([].concat(stockId));
+  }
+
+  proceedDelete = (stockIds: string[]) => {
+    let form = new FormData();
+    form.append("stockDetailIds", JSON.stringify(stockIds));
+
+    this.stockSubscriptions.push(this.stockService.deleteStock(form).subscribe((deletedResult: any) => {
+      if (deletedResult) {
+        this.isAllChecked = false;
+        stockIds.forEach(e => { const index: number = this.stockList.findIndex((up: any) => up._id === e); this.stockList.splice(index, 1); });
+        this.toastrService.success('Successfully deleted.', 'Success');
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error('Failed to delete', 'Error');
+      this.blockUI.stop();
+    }));
+  }
+
+  onSelectionChange = () => {
+    if (this.isAllChecked) {
+      this.stockList = this.stockList.map(p => { return { ...p, isChecked: true }; });
+    } else {
+      this.stockList = this.stockList.map(up => { return { ...up, isChecked: false }; });
+    }
+  }
+
+  singleSelectionChange = (index: number) => {
+    this.isAllChecked = false;
+    this.stockList[index]['isChecked'] = !this.stockList[index]['isChecked'];
   }
 
   deleteStock = (stockIds: any) => {
