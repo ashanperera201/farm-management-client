@@ -55,7 +55,7 @@ export class PercentageFeedingListComponent implements OnInit {
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    updatePercentageFeedingrModal.componentInstance.existingpercentageFeeding = percentageFeeding;
+    updatePercentageFeedingrModal.componentInstance.existingPercentageFeed = percentageFeeding;
     updatePercentageFeedingrModal.componentInstance.isEditMode = true;
   }
 
