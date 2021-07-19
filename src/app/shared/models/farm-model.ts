@@ -3,5 +3,5 @@ export class farmModel {
     farmName!: string;
     contactNo!: string;
     address!: string;
-    pondNo!: number;
+    pondCount!: number;
 }

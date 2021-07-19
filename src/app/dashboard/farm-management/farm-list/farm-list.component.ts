@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { FileService } from '../../../shared/services/file.service';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { FarmService } from '../../../shared/services/farm.service';
@@ -12,14 +14,17 @@ import * as moment from 'moment';
   templateUrl: './farm-list.component.html',
   styleUrls: ['./farm-list.component.scss']
 })
-export class FarmListComponent implements OnInit {
+export class FarmListComponent implements OnInit, OnDestroy {
+  @BlockUI() blockUI!: NgBlockUI;
 
-  farmList :any[] = [];
+  isAllChecked!: boolean;
+  farmList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
-  
+  farmListSubscriptions: Subscription[] = [];
+
   constructor(
     private farmService: FarmService,
     private toastrService: ToastrService,
@@ -31,13 +36,16 @@ export class FarmListComponent implements OnInit {
   }
 
   fetchFarmList = () => {
-    this.farmService.fetchFarms().subscribe(res => {
-    if(res && res.result){
-      this.farmList = res.result;
-    }
+    this.blockUI.start("Fetching data....");
+    this.farmListSubscriptions.push(this.farmService.fetchFarms().subscribe(res => {
+      if (res && res.result) {
+        this.farmList = res.result;
+      }
+      this.blockUI.stop();
     }, () => {
-      this.toastrService.error("Unable to load Farm data","Error");
-    });
+      this.toastrService.error("Unable to load Farm data", "Error");
+      this.blockUI.stop();
+    }));
   }
 
   addNewFarm = () => {
@@ -48,40 +56,83 @@ export class FarmListComponent implements OnInit {
       modalDialogClass: 'modal-md',
     });
     if (addFarmModal.componentInstance.afterSave) {
-      addFarmModal.componentInstance.afterSave.subscribe((res: any) => {
+      this.farmListSubscriptions.push(addFarmModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
           this.farmList.unshift(res);
         }
-      });
+      }));
     }
   }
 
-
   updateFarm = (farm: any) => {
-    const addFarmModal = this.modalService.open(FarmAddComponent, {
+    const updateModal = this.modalService.open(FarmAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addFarmModal.componentInstance.existingFarm = farm;
-    addFarmModal.componentInstance.isEditMode = true;
+
+    updateModal.componentInstance.existingFarm = JSON.parse(JSON.stringify(farm));
+    updateModal.componentInstance.isEditMode = true;
+
+    if (updateModal.componentInstance.afterSave) {
+      updateModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
+        if (afterSaveRes) {
+          const index = this.farmList.findIndex((up: any) => up._id === afterSaveRes._id);
+          this.farmList[index].farmName = afterSaveRes.farmName;
+          this.farmList[index].contactNo = afterSaveRes.contactNo;
+          this.farmList[index].address = afterSaveRes.address;
+          this.farmList[index].pondNo = afterSaveRes.pondNo;
+          this.farmList[index].owner = afterSaveRes.owner;
+        }
+      });
+    }
   }
 
-  deleteFarm = (farmers: any) => {
-    const farmDetailIds = JSON.stringify([].concat(farmers));
+  deleteSelected = () => {
+    this.blockUI.start('Deleting....');
+    const farmIds: string[] = (this.farmList.filter(x => x.isChecked === true)).map(x => x._id);
+    if (farmIds && farmIds.length > 0) {
+      this.proceedDelete(farmIds);
+    } else {
+      this.toastrService.error("Please select farms to delete.", "Error");
+      this.blockUI.stop();
+    }
+  }
+
+  deleteFarmRecord = (farmerId: any) => {
+    this.blockUI.start('Deleting....');
+    this.proceedDelete([].concat(farmerId));
+  }
+
+  proceedDelete = (farmIds: string[]) => {
     let form = new FormData();
-    form.append("farmDetailIds", farmDetailIds);
-  
-    this.farmService.deleteFarms(form).subscribe(res => {
-       if(res && this.farmList.length > 0){
-        let deletedIndex =  this.farmList.indexOf(this.farmList.filter(a=> a._id == farmers)[0]);
-        this.farmList.splice(deletedIndex, 1);
-        this.toastrService.success("Farm deleted successfully","Success");
-       }
-     }, () => {
-      this.toastrService.error("Unable to delete Farm","Error");
-     });
+    form.append("farmDetailIds", JSON.stringify(farmIds));
+
+    this.farmListSubscriptions.push(this.farmService.deleteFarms(form).subscribe((deletedResult: any) => {
+      if (deletedResult) {
+        this.isAllChecked = false;
+        farmIds.forEach(e => { const index: number = this.farmList.findIndex((up: any) => up._id === e); this.farmList.splice(index, 1); });
+        this.toastrService.success('Successfully deleted.', 'Success');
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error('Failed to delete', 'Error');
+      this.blockUI.stop();
+    }));
+  }
+
+  onSelectionChange = () => {
+    if (this.isAllChecked) {
+      this.farmList = this.farmList.map(p => { return { ...p, isChecked: true }; });
+    } else {
+      this.farmList = this.farmList.map(up => { return { ...up, isChecked: false }; });
+    }
+  }
+
+  singleSelectionChange = (index: number) => {
+    this.isAllChecked = false;
+    this.farmList[index]['isChecked'] = !this.farmList[index]['isChecked'];
   }
 
   exportFarmList = (type: any) => {
@@ -93,7 +144,7 @@ export class FarmListComponent implements OnInit {
           'Client Tenent': x.clientTenentId,
           'Country Code': x.countryCode,
           'Created By': x.createdBy,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
           'Contact No': x.contactNo,
           'Address': x.address,
           'Pond Count': x.pondNo
@@ -104,23 +155,26 @@ export class FarmListComponent implements OnInit {
     else {
       const pdfData: any[] = this.farmList.map(x => {
         return {
-          'Owner': x.owner,
-          'Farm': x.farmName,
-          'Client Tenent': x.clientTenentId,
-          'Country Code': x.countryCode,
-          'Created By': x.createdBy,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
+          'Farm': `${x.farmName}`,
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
           'Contact No': x.contactNo,
-          'Address': x.address,
-          'Pond Count': x.pondNo
+          'Address': x.address
         }
       });
-      const headers: any[] = ['Owner', 'Farm', 'Client Tenent', 'Country Code', 'Created By', 'Created On', 'Contact No','Address','Pond Count' ];
+      const headers: any[] = ['Owner', 'Farm', 'Created On', 'Contact No', 'Address'];
       this.fileService.exportToPDF("Farms Data", headers, pdfData, 'Farms_Data');
     }
   }
 
   importFarms = () => {
+  }
 
+  ngOnDestroy() {
+    if (this.farmListSubscriptions && this.farmListSubscriptions.length > 0) {
+      this.farmListSubscriptions.forEach(res => {
+        res.unsubscribe();
+      })
+    }
   }
 }
