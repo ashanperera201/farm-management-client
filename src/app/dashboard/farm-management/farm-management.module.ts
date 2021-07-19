@@ -8,7 +8,7 @@ import { FarmManagementRoutingModule } from './farm-management.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,8 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     InlineSVGModule,
     Ng2SearchPipeModule,
-    NgbPaginationModule
+    NgbPaginationModule,
+    NgbModalModule
   ]
 })
 
