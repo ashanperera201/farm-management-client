@@ -5,6 +5,7 @@ import { ExportTypes } from '../../../shared/enums/export-type';
 import { ApplicationsService } from '../../../../app/shared/services/applications.service';
 import { ApplicationAddComponent } from '../application-add/application-add.component';
 import { FileService } from '../../../shared/services/file.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import * as moment from 'moment';
 
 @Component({
@@ -14,6 +15,8 @@ import * as moment from 'moment';
 })
 export class ApplicationListComponent implements OnInit {
   
+  @BlockUI() blockUI!: NgBlockUI;
+
   applicationList : any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
@@ -31,12 +34,15 @@ export class ApplicationListComponent implements OnInit {
 }
 
 fetchApplicationsList = () => {
+  this.blockUI.start('Fetching Applications......');
   this.applicationService.fetchApplications().subscribe(res=> {
     if(res && res.result){
       this.applicationList = res.result;
     }
+    this.blockUI.stop();
   }, () => {
     this.toastrService.error("Failed to load Application Data","Error");
+    this.blockUI.stop();
   });
 }
 
@@ -84,36 +90,34 @@ fetchApplicationsList = () => {
  }
 
  exportApplicationList = (type: any) => {
+  this.blockUI.start('Exporting Excel...');
   if(type === ExportTypes.CSV){
     const csvData: any[] = this.applicationList.map(x => {
       return {
         'Applicant Name': x.applicantName,
-        'Client Tenent': x.clientTenentId,
-        'Country Code': x.countryCode,
-        'Created By': x.createdBy,
-        'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
         'Application Type': x.applicationType,
         'Unit': x.unit,
-        'Cost Per Unit': x.costPerUnit
+        'Cost Per Unit': x.costPerUnit,
+        'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
       }
     });
     this.fileService.exportAsExcelFile(csvData, "Applications-file");
+    this.blockUI.stop();
   }
   else {
+    this.blockUI.start('Exporting Pdf...');
     const pdfData: any[] = this.applicationList.map(x => {
       return {
         'Applicant Name': x.applicantName,
-        'Client Tenent': x.clientTenentId,
-        'Country Code': x.countryCode,
-        'Created By': x.createdBy,
-        'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
         'Application Type': x.applicationType,
         'Unit': x.unit,
-        'Cost Per Unit': x.costPerUnit
+        'Cost Per Unit': x.costPerUnit,
+        'Created On':  moment(x.createdOn).format('YYYY-MM-DD')
       }
     });
-    const headers: any[] = ['Applicant Name', 'Client Tenent', 'Country Code', 'Created By', 'Created On', 'Application Type', 'Unit', 'Cost Per Unit'];
+    const headers: any[] = ['Application Type', 'Unit', 'Cost Per Unit', 'Created On'];
     this.fileService.exportToPDF("Applications", headers, pdfData, 'Applications');
+    this.blockUI.stop();
  }
 }
 

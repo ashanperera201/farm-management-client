@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { clubMemberModel } from '../../../../app/shared/models/club-member-model';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { keyPressNumbers } from '../../../shared/utils';
@@ -12,9 +13,13 @@ import { keyPressNumbers } from '../../../shared/utils';
   styleUrls: ['./club-member-add.component.scss']
 })
 export class ClubMemberAddComponent implements OnInit {
+
   @Input() isEditMode: boolean = false;
   @Input() existingClubMember: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+
+  @BlockUI() blockUI!: NgBlockUI;
+
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Club Member';
   feedBrandList: any[] = [];
@@ -66,6 +71,7 @@ export class ClubMemberAddComponent implements OnInit {
   }
 
   saveClubMember = () => {
+    this.blockUI.start('Prcessing.....');
     if (this.isEditMode) {
       if (this.addClubmembersForm.valid) {
         const clubMember = this.existingClubMember;
@@ -83,9 +89,11 @@ export class ClubMemberAddComponent implements OnInit {
             this.closeModal();
             this.toastrService.success("Club Member updated successfully.", "Successfully Saved");
           }
+          this.blockUI.stop();
         },
           () => {
             this.toastrService.error("Unable to update Club Member data", "Error");
+            this.blockUI.stop();
           });
       }
     }
@@ -108,9 +116,11 @@ export class ClubMemberAddComponent implements OnInit {
             this.closeModal();
             this.toastrService.success("Club Member saved successfully.", "Successfully Saved");
           }
+          this.blockUI.stop();
         },
           () => {
             this.toastrService.error("Unable to save Club Member data", "Error");
+            this.blockUI.stop();
           });
       }
     }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { FileService } from '../../../shared/services/file.service';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
@@ -20,7 +21,10 @@ export class ClubMemberListComponent implements OnInit {
   pageSize: number = 10;
   page: any = 1;
 
-  constructor(private clubMemberService: ClubMemberService,
+  @BlockUI() blockUI!: NgBlockUI;
+
+  constructor(
+    private clubMemberService: ClubMemberService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fileService: FileService) { }
@@ -30,11 +34,14 @@ export class ClubMemberListComponent implements OnInit {
   }
 
   fetchClubMembers = () => {
+    this.blockUI.start('Fetching Club Members......');
     this.clubMemberService.fetchClubMembers().subscribe(res => {
       if (res && res.result) {
         this.clubMemberList = res.result;
       }
+      this.blockUI.stop();
     }, () => {
+      this.blockUI.stop();
       this.toastrService.error("Failed to load Club Members Data", "Error");
     });
   }
@@ -65,6 +72,7 @@ export class ClubMemberListComponent implements OnInit {
   }
 
   deleteClubMember = (clubMemberId: any) => {
+    this.blockUI.start('Deleting...');
     const clubMemberIds = JSON.stringify([].concat(clubMemberId));
     let form = new FormData();
     form.append("clubMemberIds", clubMemberIds);
@@ -75,28 +83,33 @@ export class ClubMemberListComponent implements OnInit {
         this.clubMemberList.splice(deletedIndex, 1);
         this.toastrService.success("Club Member deleted", "Success");
       }
+      this.blockUI.stop();
     }, () => {
+      this.blockUI.stop();
       this.toastrService.error("Unable to delete Club Member", "Error");
     });
   }
 
   exportClubMemberList = (type: any) => {
     if (type === ExportTypes.CSV) {
+      this.blockUI.start('Exporting Excel...');
       const csvData: any[] = this.clubMemberList.map(x => {
         return {
-          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
           'First Name': x.firstName,
           'Last Name': x.lastName,
           'Email': x.email,
           'Contact No': x.contactNumber,
           'Address': x.address,
           'City': x.city,
-          'Nic': x.nic
+          'Nic': x.nic,
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
         }
       });
       this.fileService.exportAsExcelFile(csvData, "Club_Members_Data");
+      this.blockUI.stop();
     }
     else {
+      this.blockUI.start('Exporting Pdf...');
       const pdfData: any[] = this.clubMemberList.map(x => {
         return {
           'First Name': x.firstName,
@@ -109,6 +122,7 @@ export class ClubMemberListComponent implements OnInit {
       });
       const headers: any[] = ['First Name', 'Last Name', 'Email', 'Contact No', 'Nic', 'Created On',];
       this.fileService.exportToPDF("Club Members Data", headers, pdfData, 'Club_Members_Data');
+      this.blockUI.stop();
     }
   }
 

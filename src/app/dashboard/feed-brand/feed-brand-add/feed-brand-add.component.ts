@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { feedBrandModel } from '../../../shared/models/feed-brand-model';
 import { FeedBrandService } from '../../../shared/services/feed-brand.service';
 
@@ -14,6 +15,9 @@ export class FeedBrandAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
   @Input() existingFeedBrand: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+
+  @BlockUI() blockUI!: NgBlockUI;
+
   addFeedBrandForm!: FormGroup;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Feed Brand';
@@ -52,6 +56,7 @@ export class FeedBrandAddComponent implements OnInit {
   }
 
   saveFeedBrand = () => {
+    this.blockUI.start('Prcessing.....');
     if (this.isEditMode) {
       if (this.addFeedBrandForm.valid) {
         const feedBrand = this.existingFeedBrand;
@@ -65,7 +70,9 @@ export class FeedBrandAddComponent implements OnInit {
             this.closeModal();
             this.toastrService.success("Feed Brand data updated successfully", "Successfully Saved");
           }
+          this.blockUI.stop();
         }, () => {
+          this.blockUI.stop();
           this.toastrService.error("Unable to update Feed Brand data", "Error");
         });
       }
@@ -84,7 +91,9 @@ export class FeedBrandAddComponent implements OnInit {
             this.afterSave.emit(res.result);
             this.toastrService.success("Feed Brand data saved successfully", "Successfully Saved");
           }
+          this.blockUI.stop();
         }, () => {
+          this.blockUI.stop();
           this.toastrService.error("Unable to save Feed Brand data", "Error");
         });
       }
