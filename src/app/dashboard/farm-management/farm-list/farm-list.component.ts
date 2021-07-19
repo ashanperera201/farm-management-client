@@ -49,8 +49,8 @@ export class FarmListComponent implements OnInit {
     });
     if (addFarmModal.componentInstance.afterSave) {
       addFarmModal.componentInstance.afterSave.subscribe((res: any) => {
-        if (res && res.farmDetail) {
-          this.farmList.unshift(res.farmDetail);
+        if (res) {
+          this.farmList.unshift(res);
         }
       });
     }
@@ -67,6 +67,7 @@ export class FarmListComponent implements OnInit {
     addFarmModal.componentInstance.existingFarm = farm;
     addFarmModal.componentInstance.isEditMode = true;
   }
+
   deleteFarm = (farmers: any) => {
     const farmDetailIds = JSON.stringify([].concat(farmers));
     let form = new FormData();
@@ -83,7 +84,6 @@ export class FarmListComponent implements OnInit {
      });
   }
 
-
   exportFarmList = (type: any) => {
     if (type === ExportTypes.CSV) {
       const csvData: any[] = this.farmList.map(x => {
@@ -96,7 +96,7 @@ export class FarmListComponent implements OnInit {
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
           'Contact No': x.contactNo,
           'Address': x.address,
-          'Pond Count': x.pondCount
+          'Pond Count': x.pondNo
         }
       });
       this.fileService.exportAsExcelFile(csvData, "Farms_Data");
@@ -112,7 +112,7 @@ export class FarmListComponent implements OnInit {
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
           'Contact No': x.contactNo,
           'Address': x.address,
-          'Pond Count': x.pondCount
+          'Pond Count': x.pondNo
         }
       });
       const headers: any[] = ['Owner', 'Farm', 'Client Tenent', 'Country Code', 'Created By', 'Created On', 'Contact No','Address','Pond Count' ];

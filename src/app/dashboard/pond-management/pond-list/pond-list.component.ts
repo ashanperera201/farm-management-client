@@ -99,7 +99,7 @@ export class PondListComponent implements OnInit {
           'Country Code': x.countryCode,
           'Created By': x.createdBy,
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
-          'Pond Count': x.pondCount,
+          'Pond Count': x.pondNo,
           'Area Of Pond': x.areaOfPond,
           'Grade of Pond': x.gradeOfPond,
           'Fixed Cost': x.fixedCost
@@ -116,7 +116,7 @@ export class PondListComponent implements OnInit {
           'Country Code': x.countryCode,
           'Created By': x.createdBy,
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
-          'Pond Count': x.pondCount,
+          'Pond Count': x.pondNo,
           'Area Of Pond': x.areaOfPond,
           'Grade of Pond': x.gradeOfPond,
           'Fixed Cost': x.fixedCost

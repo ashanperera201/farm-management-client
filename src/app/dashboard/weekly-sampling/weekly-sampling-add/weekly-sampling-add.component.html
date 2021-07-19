@@ -38,7 +38,7 @@
         <label class="font-size-h7  text-dark required">Pond</label>
         <select name="farm" id="farm" formControlName="pondId" class="form-control">
           <option value=null disabled selected>Select Pond</option>
-          <option *ngFor="let pond of pondList" [value]="pond._id">{{pond.pondCount}}</option>
+          <option *ngFor="let pond of pondList" [value]="pond._id">{{pond.pondNo}}</option>
         </select>
       </div>
     </div>
