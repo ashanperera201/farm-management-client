@@ -9,7 +9,7 @@
 </div>
 
 <div class="modal-body mb-0">
-    <div [formGroup]="addPercentageFeedingForm">
+    <div [formGroup]="addDailyFeedForm">
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Club Member</label>
@@ -22,7 +22,7 @@
                 <label class="font-size-h7  text-dark required">Farm</label>
                 <select name="firstName" id="_id" class="form-control" formControlName="farm">
                     <option value=null disabled selected>Select Farm</option>
-                    <option value="1">Farm ABC</option>
+                    <option value="1">Farm A</option>
                 </select>
             </div>
         </div>
@@ -31,7 +31,7 @@
                 <label class="font-size-h7  text-dark">Pond</label>
                 <select name="firstName" id="_id" class="form-control" formControlName="pond">
                     <option value=null disabled selected>Select Pond</option>
-                    <option value="1">Pond ABC</option>
+                    <option value="1">Pond A</option>
                 </select>
             </div>
             <div class="col">
@@ -41,8 +41,8 @@
         </div>
         <div class="form-row mb-4">
             <div class="col">
-                <label class="font-size-h7  text-dark required">Feed Percentage</label>
-                <input type="text" class="form-control" placeholder="Feed Percentage" formControlName="feedPercentage">
+                <label class="font-size-h7  text-dark required">Actual No Of Killos</label>
+                <input type="text" class="form-control" placeholder="Actual No Of Killos" formControlName="actualNoOfKillos">
             </div>
             <div class="col">
             </div>
@@ -51,6 +51,6 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-    <button type="button" class="btn btn-primary" [disabled]="addPercentageFeedingForm.invalid"
-        (click)="savePercentageFeeding()">{{saveButtonText}}</button>
+    <button type="button" class="btn btn-primary" [disabled]="addDailyFeedForm.invalid"
+        (click)="saveDailyFeed()">{{saveButtonText}}</button>
 </div>
