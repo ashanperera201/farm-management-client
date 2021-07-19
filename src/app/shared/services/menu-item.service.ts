@@ -119,6 +119,42 @@ export class MenuItemService {
       },
       {
         id: 9,
+        displayName: 'Feed Chart',
+        route: '/dashboard/feed-chart/view-all',
+        svgIconPath: './assets/media/svg/icons/Layout/Layout-arrange.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
+      {
+        id: 10,
+        displayName: 'Percentage of feeding',
+        route: '/dashboard/percentage-feeding/view-all',
+        svgIconPath: './assets/media/svg/icons/Layout/Layout-arrange.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
+      {
+        id: 11,
+        displayName: 'Daily Feed',
+        route: '/dashboard/daily-feed/view-all',
+        svgIconPath: './assets/media/svg/icons/Layout/Layout-arrange.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
+      {
+        id: 12,
         displayName: 'User Management',
         route: '#',
         svgIconPath: './assets/media/svg/icons/General/User.svg',

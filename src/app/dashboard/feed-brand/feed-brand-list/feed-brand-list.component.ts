@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { FeedBrandService } from '../../../shared/services/feed-brand.service';
 import { FeedBrandAddComponent } from '../feed-brand-add/feed-brand-add.component';
@@ -13,6 +14,8 @@ import * as moment from 'moment';
   styleUrls: ['./feed-brand-list.component.scss']
 })
 export class FeedBrandListComponent implements OnInit {
+
+  @BlockUI() blockUI!: NgBlockUI;
 
   feedBrandList: any[] = [];
   feedBrandIdList: any[] = [];
@@ -32,11 +35,14 @@ export class FeedBrandListComponent implements OnInit {
   }
 
   fetchFeedBrandsList = () => {
+    this.blockUI.start('Fetching Feed Brands...');
     this.feedbandService.fetchFeedBands().subscribe(res => {
       if (res && res.result) {
         this.feedBrandList = res.result;
       }
+      this.blockUI.stop();
     }, () => {
+      this.blockUI.stop();
       this.toastrService.error("Failed to load Feed Brands", "Error");
     });
   }
@@ -69,6 +75,7 @@ export class FeedBrandListComponent implements OnInit {
   }
 
   deleteFeedBrand = (feedBrandId: any) => {
+    this.blockUI.start('Deleting...');
     const feedBrandIds = JSON.stringify([].concat(feedBrandId));
     let form = new FormData();
     form.append("feedBrandIds", feedBrandIds);
@@ -79,42 +86,42 @@ export class FeedBrandListComponent implements OnInit {
         this.feedBrandList.splice(deletedIndex , 1);
         this.toastrService.success("Feed Brand deleted", "Success");
       }
+      this.blockUI.stop();
     }, () => {
+      this.blockUI.stop();
       this.toastrService.error("Unable to delete Feed Brand", "Error");
     });
   }
 
   exportFeedBrandList = (type: any) => {
     if (type === ExportTypes.CSV) {
+      this.blockUI.start('Exporting Excel...');
       const csvData: any[] = this.feedBrandList.map(x => {
         return {
           'Brand Name': x.brandName,
-          'Client Tenent': x.clientTenentId,
-          'Country Code': x.countryCode,
-          'Created By': x.createdBy,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
           'Grades': x.grades,
           'Price': x.price,
-          'Shrimp Weight': x.shrimpWeight
+          'Shrimp Weight': x.shrimpWeight,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
         }
       });
       this.fileService.exportAsExcelFile(csvData, "feed_brands");
+      this.blockUI.stop();
     }
     else {
+      this.blockUI.start('Exporting Pdf...');
       const pdfData: any[] = this.feedBrandList.map(x => {
         return {
           'Brand Name': x.brandName,
-          'Client Tenent': x.clientTenentId,
-          'Country Code': x.countryCode,
-          'Created By': x.createdBy,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
           'Grades': x.grades,
           'Price': x.price,
-          'Shrimp Weight': x.shrimpWeight
+          'Shrimp Weight': x.shrimpWeight,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
         }
       });
-      const headers: any[] = ['Brand Name', 'Client Tenent', 'Country Code', 'Created By', 'Created On', 'Grades', 'Price', 'Shrimp Weight'];
+      const headers: any[] = ['Brand Name', 'Grades', 'Price', 'Shrimp Weight', 'Created On'];
       this.fileService.exportToPDF("Feed Brand Data", headers, pdfData, 'feed_brands');
+      this.blockUI.stop();
     }
   }
 

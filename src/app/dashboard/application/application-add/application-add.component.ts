@@ -1,9 +1,10 @@
-import { ApplicationModel } from './../../../shared/models/application-model';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { ApplicationsService } from '../../../shared/services/applications.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { ApplicationsService } from '../../../shared/services/applications.service';
+import { ApplicationModel } from './../../../shared/models/application-model';
 
 @Component({
   selector: 'app-application-add',
@@ -15,6 +16,9 @@ export class ApplicationAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
   @Input() existingApplication: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+
+  @BlockUI() blockUI!: NgBlockUI;
+
   addApplicationForm!: FormGroup;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Application';
@@ -28,13 +32,19 @@ export class ApplicationAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.initAddApplicationForm();
-    this.configValues();
+    this.setEditMode();
   }
   
-  configValues = () => {
+  setEditMode = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Application";
+      this.patchForm();
+    }
+  }
+
+  patchForm = () => {
+    if(this.existingApplication){
       this.addApplicationForm.patchValue(this.existingApplication);
     }
   }
@@ -53,6 +63,7 @@ export class ApplicationAddComponent implements OnInit {
   }
 
   saveApplication = () => {
+    this.blockUI.start('Prcessing.....');
     if(this.isEditMode){
       if(this.addApplicationForm.valid){
         const application = this.existingApplication;
@@ -65,8 +76,10 @@ export class ApplicationAddComponent implements OnInit {
             this.closeModal();
             this.toastrService.success("Application data updated successfully","Success");
           }
+          this.blockUI.stop();
         }, () => {
           this.toastrService.error("Unable to update Application","Error");
+          this.blockUI.stop();
         });
       }
     }
@@ -83,8 +96,10 @@ export class ApplicationAddComponent implements OnInit {
             this.toastrService.success("Application saved successfully","Success");
             this.afterSave.emit(res.result);
           }
+          this.blockUI.stop();
         }, () => {
           this.toastrService.error("Unable to save Application","Error");
+          this.blockUI.stop();
         });
       }
     }
