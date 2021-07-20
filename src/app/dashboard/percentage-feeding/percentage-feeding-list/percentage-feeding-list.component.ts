@@ -2,9 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { FileService } from '../../../shared/services/file.service';
 import { PercentageFeedingAddComponent } from '../percentage-feeding-add/percentage-feeding-add.component';
+import { PercentageFeedingService } from '../../../shared/services/percentage-feeding.service';
+import { PondService } from './../../../shared/services/pond.service';
+import { FarmService } from './../../../shared/services/farm.service';
+import { ClubMemberService } from '../../../shared/services/club-member.service';
 
 @Component({
   selector: 'app-percentage-feeding-list',
@@ -13,15 +19,24 @@ import { PercentageFeedingAddComponent } from '../percentage-feeding-add/percent
 })
 export class PercentageFeedingListComponent implements OnInit {
 
+  isAllChecked! : boolean;
   percentageFeedingList: any[] = [];
+  memberList: any[] = [];
+  farmList: any[] = [];
+  pondList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
+  percentageFeedSubscriptions: Subscription[] = [];
 
   @BlockUI() blockUI!: NgBlockUI;
 
   constructor(
+    private percentageFeedingService : PercentageFeedingService,
+    private clubMemberService : ClubMemberService,
+    private farmService : FarmService,
+    private pondService : PondService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fileService: FileService
@@ -29,9 +44,40 @@ export class PercentageFeedingListComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchPercentageFeeding();
+    this.fetchInitialData();
   }
 
   fetchPercentageFeeding = () => {
+    this.blockUI.start('Fetching Data......');
+    this.percentageFeedSubscriptions.push(this.percentageFeedingService.fetchPercentageFeedings().subscribe(res=> {
+      if(res && res.result){
+        this.percentageFeedingList = res.result;
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error("Failed to load Data","Error");
+      this.blockUI.stop();
+    }));
+  }
+
+  fetchInitialData = () => {
+    this.blockUI.start('Fetching Data...');
+    this.percentageFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
+      if (ownerRes && ownerRes.result) {
+        this.memberList = ownerRes.result;
+      }
+      return this.pondService.fetchPonds()
+    })).pipe(switchMap((resPonds: any) => {
+      if (resPonds && resPonds.result) {
+        this.pondList = resPonds.result;
+      }
+      return this.farmService.fetchFarms()
+    })).subscribe((farmRes: any) => {
+      if (farmRes && farmRes.result) {
+        this.farmList = farmRes.result;
+      }
+    }))
+    this.blockUI.stop();
   }
 
   addNewPercentageFeeding = () => {
@@ -59,8 +105,51 @@ export class PercentageFeedingListComponent implements OnInit {
     updatePercentageFeedingrModal.componentInstance.isEditMode = true;
   }
 
-  deletePercentageFeeding = (percentageFeedingID : any) => {
-    
+
+  deleteSelected = () => {
+    this.blockUI.start('Deleting....');
+    const pfIds: string[] = (this.percentageFeedingList.filter(x => x.isChecked === true)).map(x => x._id);
+    if (pfIds && pfIds.length > 0) {
+      this.proceedDelete(pfIds);
+    } else {
+      this.toastrService.error("Please select items to delete.", "Error");
+      this.blockUI.stop();
+    }
+  }
+  
+  deleteRecord = (pfId: any) => {
+    this.blockUI.start('Deleting....');
+    this.proceedDelete([].concat(pfId));
+  }
+  
+  proceedDelete = (pfIds: string[]) => {
+    let form = new FormData();
+    form.append("applicationIds", JSON.stringify(pfIds));
+  
+    this.percentageFeedSubscriptions.push(this.percentageFeedingService.deletePercentageFeeding(form).subscribe((deletedResult: any) => {
+      if (deletedResult) {
+        this.isAllChecked = false;
+        pfIds.forEach(e => { const index: number = this.percentageFeedingList.findIndex((up: any) => up._id === e); this.percentageFeedingList.splice(index, 1); });
+        this.toastrService.success('Successfully deleted.', 'Success');
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error('Failed to delete', 'Error');
+      this.blockUI.stop();
+    }));
+  }
+  
+  onSelectionChange = () => {
+    if (this.isAllChecked) {
+      this.percentageFeedingList = this.percentageFeedingList.map(p => { return { ...p, isChecked: true }; });
+    } else {
+      this.percentageFeedingList = this.percentageFeedingList.map(up => { return { ...up, isChecked: false }; });
+    }
+  }
+  
+  singleSelectionChange = (index: number) => {
+    this.isAllChecked = false;
+    this.percentageFeedingList[index]['isChecked'] = !this.percentageFeedingList[index]['isChecked'];
   }
 
   exportPercentageFeedingList = (type: any) => {
@@ -72,7 +161,4 @@ export class PercentageFeedingListComponent implements OnInit {
     }
   }
 
-  importPercentageFeeding = () => {
-
-  }
 }

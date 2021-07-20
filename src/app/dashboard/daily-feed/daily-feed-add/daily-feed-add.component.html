@@ -14,29 +14,29 @@
             <div class="col">
                 <label class="font-size-h7  text-dark required">Club Member</label>
                 <select name="firstName" id="_id" class="form-control" formControlName="clubMember">
-                    <option value=null disabled selected>Select Club Member</option>
-                    <option value="1">Ashan Perera</option>
+                    <option value=null disabled selected>Select Owner</option>
+                    <option *ngFor="let o of memberList" [value]="o._id">{{o.firstName}}</option>
                 </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Farm</label>
                 <select name="firstName" id="_id" class="form-control" formControlName="farm">
                     <option value=null disabled selected>Select Farm</option>
-                    <option value="1">Farm A</option>
+                    <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
                 </select>
             </div>
         </div>
         <div class="form-row mb-4">
+        <div class="col">
+            <label class="font-size-h7  text-dark required">Pond</label>
+            <select name="firstName" id="_id" class="form-control" formControlName="pond">
+                <option value=null disabled selected>Select Pond</option>
+                <option *ngFor="let p of pondList" [value]="p._id">{{p.pondNo}}</option>
+            </select>
+        </div>
             <div class="col">
-                <label class="font-size-h7  text-dark">Pond</label>
-                <select name="firstName" id="_id" class="form-control" formControlName="pond">
-                    <option value=null disabled selected>Select Pond</option>
-                    <option value="1">Pond A</option>
-                </select>
-            </div>
-            <div class="col">
-                <label class="font-size-h7  text-dark required">Average Body Weight</label>
-                <input type="text" class="form-control" placeholder="Average Body Weight" formControlName="averageBodyWeight">
+                <label class="font-size-h7  text-dark required">Calculated Daily Feed</label>
+                <input type="text" class="form-control" placeholder="Calculated Daily Feed" formControlName="calculatedDailyFeed">
             </div>
         </div>
         <div class="form-row mb-4">
