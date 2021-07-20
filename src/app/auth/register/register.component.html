@@ -25,7 +25,9 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Contact</label>
-                <input type="text" class="form-control" placeholder="Contact" formControlName="contact">
+                <input type="text" class="form-control" placeholder="Contact" formControlName="contact"
+                minlength="10" maxlength="10" onCopy="return false" onDrag="return false" onDrop="return false"
+                onPaste="return false" (keypress)="onKeyPressChanges($event)">
             </div>
         </div>
         <div class="form-row mb-4">
@@ -46,7 +48,7 @@
             <div class="col">
                 <label class="font-size-h7  text-dark required">Email Address</label>
                 <input type="email" class="form-control mb-4" placeholder="E-mail" formControlName="userEmail">
-                <div *ngIf="registerForm.controls.userEmail.status == 'INVALID' && registerForm.controls.userEmail.touched " class="text-danger">
+                <div *ngIf="registerForm.controls.userEmail.invalid && registerForm.controls.userEmail.touched " class="text-danger">
                     invalid email format
                 </div>
             </div>

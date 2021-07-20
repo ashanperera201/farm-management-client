@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ApplicationsService } from '../../../shared/services/applications.service';
 import { ApplicationModel } from './../../../shared/models/application-model';
+import { keyPressNumbers } from '../../../shared/utils';
 
 @Component({
   selector: 'app-application-add',
@@ -63,7 +64,7 @@ export class ApplicationAddComponent implements OnInit {
   }
 
   saveApplication = () => {
-    this.blockUI.start('Prcessing.....');
+    this.blockUI.start('Processing.....');
     if(this.isEditMode){
       if(this.addApplicationForm.valid){
         const application = this.existingApplication;
@@ -108,4 +109,5 @@ export class ApplicationAddComponent implements OnInit {
   closeModal = () => {
     this.activeModal.close();
   }
+
 }

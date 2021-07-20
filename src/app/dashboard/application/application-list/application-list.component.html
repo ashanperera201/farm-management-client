@@ -8,6 +8,7 @@
                     aria-hidden="true"></i> Add Application</a>
             <a type="button" class="btn btn-success m-1" (click)="importApplications()"><i class="fa fa-files-o"
                     aria-hidden="true"></i> Import Applications</a>
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"><i class="fa fa-trash" aria-hidden="true"></i>Delete Applications</a>
         </div>
     </div>
     <div class="card-body">
@@ -45,7 +46,11 @@
             <table class="table table-head-custom table-vertical-center overflow-hidden">
                 <thead>
                     <th class="selection-cell-header" data-row-selection="true">
-                        <label class="checkbox checkbox-single"><input type="checkbox" /><span></span></label>
+                        <label class="checkbox checkbox-single">
+                            <input type="checkbox" [checked]="isAllChecked" [(ngModel)]="isAllChecked"
+                                (ngModelChange)="onSelectionChange()" />
+                            <span></span>
+                        </label>
                     </th>
                     <th> Type of Application</th>
                     <th> Name </th>
@@ -57,7 +62,8 @@
                     <tr
                         *ngFor="let app of (applicationList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:filterParam;let i = index">
                         <td class="selection-cell">
-                            <label class="checkbox checkbox-single"><input type="checkbox" />
+                            <label class="checkbox checkbox-single">
+                                <input type="checkbox" [checked]="app.isChecked" (change)="singleSelectionChange(i)" />
                                 <span></span>
                             </label>
                         </td>
@@ -73,7 +79,7 @@
                                 </span>
                             </a>
                             <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
-                                (click)="deleteApplication(app._id)">
+                                (click)="deleteRecord(app._id)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

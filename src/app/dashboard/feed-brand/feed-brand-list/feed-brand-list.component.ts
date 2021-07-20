@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import * as moment from 'moment';
+import { Subscription } from 'rxjs';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { FeedBrandService } from '../../../shared/services/feed-brand.service';
 import { FeedBrandAddComponent } from '../feed-brand-add/feed-brand-add.component';
 import { FileService } from '../../../shared/services/file.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-feed-brand-list',
@@ -17,12 +18,14 @@ export class FeedBrandListComponent implements OnInit {
 
   @BlockUI() blockUI!: NgBlockUI;
 
+  isAllChecked! : boolean;
   feedBrandList: any[] = [];
   feedBrandIdList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
+  feedBrandListSubscriptions: Subscription[] = [];
 
   constructor(
     private feedbandService: FeedBrandService,
@@ -36,7 +39,7 @@ export class FeedBrandListComponent implements OnInit {
 
   fetchFeedBrandsList = () => {
     this.blockUI.start('Fetching Feed Brands...');
-    this.feedbandService.fetchFeedBands().subscribe(res => {
+    this.feedBrandListSubscriptions.push(this.feedbandService.fetchFeedBands().subscribe(res => {
       if (res && res.result) {
         this.feedBrandList = res.result;
       }
@@ -44,7 +47,7 @@ export class FeedBrandListComponent implements OnInit {
     }, () => {
       this.blockUI.stop();
       this.toastrService.error("Failed to load Feed Brands", "Error");
-    });
+    }));
   }
 
   addNewFeedBrand = () => {
@@ -74,23 +77,50 @@ export class FeedBrandListComponent implements OnInit {
     addFeedBrandModal.componentInstance.isEditMode = true;
   }
 
-  deleteFeedBrand = (feedBrandId: any) => {
-    this.blockUI.start('Deleting...');
-    const feedBrandIds = JSON.stringify([].concat(feedBrandId));
-    let form = new FormData();
-    form.append("feedBrandIds", feedBrandIds);
+  deleteSelected = () => {
+    this.blockUI.start('Deleting....');
+    const feedBrandIds: string[] = (this.feedBrandList.filter(x => x.isChecked === true)).map(x => x._id);
+    if (feedBrandIds && feedBrandIds.length > 0) {
+      this.proceedDelete(feedBrandIds);
+    } else {
+      this.toastrService.error("Please select items to delete.", "Error");
+      this.blockUI.stop();
+    }
+  }
 
-    this.feedbandService.deleteFeedBands(form).subscribe(res => {
-      if (res && this.feedBrandList.length > 0) {
-        let deletedIndex =  this.feedBrandList.indexOf(this.feedBrandList.filter(a=> a._id == feedBrandId)[0]);
-        this.feedBrandList.splice(deletedIndex , 1);
-        this.toastrService.success("Feed Brand deleted", "Success");
+  deleteRecord = (feedId: any) => {
+    this.blockUI.start('Deleting....');
+    this.proceedDelete([].concat(feedId));
+  }
+
+  proceedDelete = (feedBrandIds: string[]) => {
+    let form = new FormData();
+    form.append("feedBrandIds", JSON.stringify(feedBrandIds));
+
+    this.feedBrandListSubscriptions.push(this.feedbandService.deleteFeedBands(form).subscribe((deletedResult: any) => {
+      if (deletedResult) {
+        this.isAllChecked = false;
+        feedBrandIds.forEach(e => { const index: number = this.feedBrandList.findIndex((up: any) => up._id === e); this.feedBrandList.splice(index, 1); });
+        this.toastrService.success('Successfully deleted.', 'Success');
       }
       this.blockUI.stop();
     }, () => {
+      this.toastrService.error('Failed to delete', 'Error');
       this.blockUI.stop();
-      this.toastrService.error("Unable to delete Feed Brand", "Error");
-    });
+    }));
+  }
+
+  onSelectionChange = () => {
+    if (this.isAllChecked) {
+      this.feedBrandList = this.feedBrandList.map(p => { return { ...p, isChecked: true }; });
+    } else {
+      this.feedBrandList = this.feedBrandList.map(up => { return { ...up, isChecked: false }; });
+    }
+  }
+
+  singleSelectionChange = (index: number) => {
+    this.isAllChecked = false;
+    this.feedBrandList[index]['isChecked'] = !this.feedBrandList[index]['isChecked'];
   }
 
   exportFeedBrandList = (type: any) => {
@@ -127,5 +157,13 @@ export class FeedBrandListComponent implements OnInit {
 
   importFeedBands = () => {
 
+  }
+
+  ngOnDestroy() {
+    if (this.feedBrandListSubscriptions && this.feedBrandListSubscriptions.length > 0) {
+      this.feedBrandListSubscriptions.forEach(res => {
+        res.unsubscribe();
+      });
+    }
   }
 }

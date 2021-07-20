@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { keyPressNumbers } from '../../shared/utils';
 import { UserModel } from '../../shared/models/user-model';
 import { AuthService } from '../../shared/services/auth.service';
 
@@ -84,5 +85,10 @@ export class RegisterComponent implements OnInit {
   closeModal = () => {
     this.activeModal.close();
   }
+
+  onKeyPressChanges = (event: any): boolean => {
+    return keyPressNumbers(event);
+  }
+
 
 }

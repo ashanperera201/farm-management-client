@@ -65,6 +65,7 @@ export class FarmListComponent implements OnInit, OnDestroy {
   }
 
   updateFarm = (farm: any) => {
+    this.blockUI.start("Fetching data.....");
     const updateModal = this.modalService.open(FarmAddComponent, {
       animation: true,
       keyboard: true,
