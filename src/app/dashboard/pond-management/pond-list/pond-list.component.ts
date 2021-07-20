@@ -58,8 +58,8 @@ export class PondListComponent implements OnInit {
     });
     if (addPondModal.componentInstance.afterSave) {
       this.pondListSubscriptions.push(addPondModal.componentInstance.afterSave.subscribe((res: any) => {
-        if (res && res.pondDetail) {
-          this.pondList.unshift(res.pondDetail);
+        if (res) {
+          this.pondList.unshift(res);
         }
       }));
     }
@@ -77,16 +77,14 @@ export class PondListComponent implements OnInit {
     addPondModal.componentInstance.isEditMode = true;
     if (addPondModal.componentInstance.afterSave) {
       addPondModal.componentInstance.afterSave.subscribe((res: any) => {
-        if (res && res.pond) {
-          debugger
-          //this.pondList.unshift(res.pond);
-          const index = this.pondList.findIndex((up: any) => up._id === res.pond._id);
-          this.pondList[index].owner = res.pond.farmName;
-          this.pondList[index].farmer = res.pond.contactNo;
-          this.pondList[index].areaOfPond = res.pond.areaOfPond;
-          this.pondList[index].pondNo = res.pond.pondNo;
-          this.pondList[index].gradeOfPond = res.pond.gradeOfPond;
-          this.pondList[index].fixedCost = res.pond.fixedCost;
+        if (res) {
+          const index = this.pondList.findIndex((up: any) => up._id === res._id);
+          this.pondList[index].owner = res.owner;
+          this.pondList[index].farmer = res.farmer;
+          this.pondList[index].areaOfPond = res.areaOfPond;
+          this.pondList[index].pondNo = res.pondNo;
+          this.pondList[index].gradeOfPond = res.gradeOfPond;
+          this.pondList[index].fixedCost = res.fixedCost;
         }
       });
     }

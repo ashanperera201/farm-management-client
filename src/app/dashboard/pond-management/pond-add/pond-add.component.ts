@@ -106,7 +106,6 @@ export class PondAddComponent implements OnInit {
   }
 
   savePond = () => {
-    debugger
     this.blockUI.start('Processing.....');
     if (this.addPondForm.valid) {
       if (this.isEditMode) {
@@ -120,8 +119,9 @@ export class PondAddComponent implements OnInit {
 
         this.pondService.updatePond(pond).subscribe(res => {
           if (res && res.result) {
+            const pondData = this.setOwnerAndFarm(pond);
             this.closeModal();
-            this.afterSave.emit(res.result);
+            this.afterSave.emit(pondData);
             this.toastrService.success("Pond data updated successfully.", "Successfully Saved");
           }
           this.blockUI.stop();
@@ -141,7 +141,8 @@ export class PondAddComponent implements OnInit {
 
         this.pondService.savePond(pond).subscribe(res => {
           if (res && res.result) {
-            this.afterSave.emit(res.result);
+            const pondData = this.setOwnerAndFarm(res.result.pondDetail);
+            this.afterSave.emit(pondData);
             this.closeModal();
             this.toastrService.success("Pond data saved successfully.", "Successfully Saved");
           }
@@ -151,6 +152,16 @@ export class PondAddComponent implements OnInit {
           this.toastrService.error("Unable to save pond data", "Error");
         });
     }
+    }
+  }
+
+  setOwnerAndFarm = (result: any): any => {
+    const owner: any = this.ownerList.find(x => x._id === result.owner);
+    const farm: any = this.farmList.find(x => x._id === result.farmer);
+    if (owner || farm) {
+      result.owner = owner;
+      result.farmer = farm;
+      return result;
     }
   }
 

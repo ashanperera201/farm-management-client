@@ -83,7 +83,7 @@ export class FarmListComponent implements OnInit, OnDestroy {
           this.farmList[index].farmName = afterSaveRes.farmName;
           this.farmList[index].contactNo = afterSaveRes.contactNo;
           this.farmList[index].address = afterSaveRes.address;
-          this.farmList[index].pondNo = afterSaveRes.pondNo;
+          this.farmList[index].pondCount = afterSaveRes.pondCount;
           this.farmList[index].owner = afterSaveRes.owner;
         }
       });
