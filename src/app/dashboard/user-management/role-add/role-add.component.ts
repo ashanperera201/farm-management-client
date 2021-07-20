@@ -83,7 +83,7 @@ export class RoleAddComponent implements OnInit {
   }
 
   addRole = () => {
-    this.blockUI.start('Prcessing.....');
+    this.blockUI.start('Processing.....');
     if (this.addRoleForm.valid) {
       if (this.isEditMode) {
         this.role.roleCode = this.addRoleForm.value.roleCode;;

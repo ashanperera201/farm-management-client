@@ -72,9 +72,9 @@ export class ClubMemberAddComponent implements OnInit {
   }
 
   saveClubMember = () => {
-    this.blockUI.start('Prcessing.....');
-    if (this.isEditMode) {
-      if (this.addClubmembersForm.valid) {
+    this.blockUI.start('Processing.....');
+    if (this.addClubmembersForm.valid) {
+      if (this.isEditMode) {
         const clubMember = this.existingClubMember;
         clubMember.firstName = this.addClubmembersForm.value.firstName;
         clubMember.lastName = this.addClubmembersForm.value.lastName;
@@ -97,10 +97,9 @@ export class ClubMemberAddComponent implements OnInit {
             this.toastrService.error("Unable to update Club Member data", "Error");
             this.blockUI.stop();
           });
+
       }
-    }
-    else {
-      if (this.addClubmembersForm.valid) {
+      else {
         const clubMember = new clubMemberModel();
         clubMember.firstName = this.addClubmembersForm.value.firstName;
         clubMember.lastName = this.addClubmembersForm.value.lastName;

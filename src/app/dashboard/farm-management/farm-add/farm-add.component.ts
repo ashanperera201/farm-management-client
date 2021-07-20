@@ -55,6 +55,7 @@ export class FarmAddComponent implements OnInit, OnDestroy {
       const form = this.existingFarm;
       form.owner = this.existingFarm.owner._id;
       this.addFarmForm.patchValue(form);
+      this.blockUI.stop();
     }
   }
 

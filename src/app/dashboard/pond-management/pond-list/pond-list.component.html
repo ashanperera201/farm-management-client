@@ -7,6 +7,7 @@
         <div class="card-toolbar">
             <a type="button" class="btn btn-primary" (click)="addNewPond()"><i class="fa fa-plus" aria-hidden="true"></i> Add Pond</a>
             <a type="button" class="btn btn-success m-1" (click)="importPonds()"><i class="fa fa-files-o" aria-hidden="true"></i> Import Ponds</a>
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"><i class="fa fa-trash" aria-hidden="true"></i>Delete Ponds</a>
         </div>
     </div>
     <div class="card-body">
@@ -42,7 +43,11 @@
             <table class="table table-head-custom table-vertical-center overflow-hidden">
                 <thead>
                     <th class="selection-cell-header" data-row-selection="true">
-                        <label class="checkbox checkbox-single"><input type="checkbox" /><span></span></label>
+                        <label class="checkbox checkbox-single">
+                            <input type="checkbox" [checked]="isAllChecked" [(ngModel)]="isAllChecked"
+                                (ngModelChange)="onSelectionChange()" />
+                            <span></span>
+                        </label>
                     </th>
                     <th> Owner</th>
                     <th> Farm </th>
@@ -55,7 +60,8 @@
                 <tbody>
                     <tr *ngFor="let pond of (pondList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:filterParam;let i = index">
                         <td class="selection-cell">
-                            <label class="checkbox checkbox-single"><input type="checkbox" />
+                            <label class="checkbox checkbox-single">
+                                <input type="checkbox" [checked]="pond.isChecked" (change)="singleSelectionChange(i)" />
                                 <span></span>
                             </label>
                         </td>
@@ -71,7 +77,7 @@
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deletePond(pond._id)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteRecord(pond._id)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

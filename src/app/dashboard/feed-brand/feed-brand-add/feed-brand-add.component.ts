@@ -56,7 +56,7 @@ export class FeedBrandAddComponent implements OnInit {
   }
 
   saveFeedBrand = () => {
-    this.blockUI.start('Prcessing.....');
+    this.blockUI.start('Processing.....');
     if (this.isEditMode) {
       if (this.addFeedBrandForm.valid) {
         const feedBrand = this.existingFeedBrand;

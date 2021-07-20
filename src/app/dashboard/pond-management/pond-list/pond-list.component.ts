@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Subscription } from 'rxjs';
+import * as moment from 'moment';
 import { FileService } from '../../../shared/services/file.service';
 import { ExportTypes } from '../../../../app/shared/enums/export-type';
 import { PondService } from '../../../../app/shared/services/pond.service';
 import { PondAddComponent } from '../pond-add/pond-add.component';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-pond-list',
@@ -17,11 +18,13 @@ export class PondListComponent implements OnInit {
 
   @BlockUI() blockUI!: NgBlockUI;
 
+  isAllChecked!: boolean;
   pondList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
+  pondListSubscriptions: Subscription[] = [];
   
   constructor(
     private pondService: PondService,
@@ -35,7 +38,7 @@ export class PondListComponent implements OnInit {
 
   fetchPondsList = () => {
     this.blockUI.start('Fetching Ponds...');
-    this.pondService.fetchPonds().subscribe(res => {
+    this.pondListSubscriptions.push(this.pondService.fetchPonds().subscribe(res => {
       if (res && res.result) {
         this.pondList = res.result;
       }
@@ -43,7 +46,7 @@ export class PondListComponent implements OnInit {
     }, () => {
       this.blockUI.stop();
       this.toastrService.error("Unable to load Pond data","Error");
-    });
+    }));
   }
 
   addNewPond = () => {
@@ -53,14 +56,17 @@ export class PondListComponent implements OnInit {
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addPondModal.componentInstance.afterSave.subscribe((res: any) => {
-      if(res){
-        this.fetchPondsList();
-      }
-    });
+    if (addPondModal.componentInstance.afterSave) {
+      this.pondListSubscriptions.push(addPondModal.componentInstance.afterSave.subscribe((res: any) => {
+        if (res) {
+          this.pondList.unshift(res);
+        }
+      }));
+    }
   }
 
   updatePond = (pond: any) => {
+    this.blockUI.start("Fetching data.....");
     const addPondModal = this.modalService.open(PondAddComponent, {
       animation: true,
       keyboard: true,
@@ -71,31 +77,63 @@ export class PondListComponent implements OnInit {
     addPondModal.componentInstance.isEditMode = true;
     if (addPondModal.componentInstance.afterSave) {
       addPondModal.componentInstance.afterSave.subscribe((res: any) => {
-        if (res && res.pond) {
-          this.pondList.unshift(res.pond);
+        if (res) {
+          const index = this.pondList.findIndex((up: any) => up._id === res._id);
+          this.pondList[index].owner = res.owner;
+          this.pondList[index].farmer = res.farmer;
+          this.pondList[index].areaOfPond = res.areaOfPond;
+          this.pondList[index].pondNo = res.pondNo;
+          this.pondList[index].gradeOfPond = res.gradeOfPond;
+          this.pondList[index].fixedCost = res.fixedCost;
         }
       });
     }
   }
 
-
-  deletePond = (pondIds: any) => {
-    this.blockUI.start('Deleting...');
-    const pondDetailIds = JSON.stringify([].concat(pondIds));
-    let form = new FormData();
-    form.append("pondDetailIds", pondDetailIds);
-  
-     this.pondService.deletePonds(form).subscribe(res => {
-       if(res && this.pondList.length > 0){
-        let deletedIndex =  this.pondList.indexOf(this.pondList.filter(a=> a._id == pondIds)[0]);
-        this.pondList.splice(deletedIndex, 1);
-        this.toastrService.success("Pond Data deleted.","Success");
-       }
-       this.blockUI.stop();
-     }, () => {
+  deleteSelected = () => {
+    this.blockUI.start('Deleting....');
+    const pondIds: string[] = (this.pondList.filter(x => x.isChecked === true)).map(x => x._id);
+    if (pondIds && pondIds.length > 0) {
+      this.proceedDelete(pondIds);
+    } else {
+      this.toastrService.error("Please select items to delete.", "Error");
       this.blockUI.stop();
-      this.toastrService.error("Unable to delete Pond data.","Error");
-     });
+    }
+  }
+
+  deleteRecord = (pondId: any) => {
+    this.blockUI.start('Deleting....');
+    this.proceedDelete([].concat(pondId));
+  }
+
+  proceedDelete = (pondIds: string[]) => {
+    let form = new FormData();
+    form.append("pondDetailIds", JSON.stringify(pondIds));
+
+    this.pondListSubscriptions.push(this.pondService.deletePonds(form).subscribe((deletedResult: any) => {
+      if (deletedResult) {
+        this.isAllChecked = false;
+        pondIds.forEach(e => { const index: number = this.pondList.findIndex((up: any) => up._id === e); this.pondList.splice(index, 1); });
+        this.toastrService.success('Successfully deleted.', 'Success');
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error('Failed to delete', 'Error');
+      this.blockUI.stop();
+    }));
+  }
+
+  onSelectionChange = () => {
+    if (this.isAllChecked) {
+      this.pondList = this.pondList.map(p => { return { ...p, isChecked: true }; });
+    } else {
+      this.pondList = this.pondList.map(up => { return { ...up, isChecked: false }; });
+    }
+  }
+
+  singleSelectionChange = (index: number) => {
+    this.isAllChecked = false;
+    this.pondList[index]['isChecked'] = !this.pondList[index]['isChecked'];
   }
 
   exportPondList = (type: any) => {
@@ -136,6 +174,14 @@ export class PondListComponent implements OnInit {
 
   importPonds = () => {
 
+  }
+
+  ngOnDestroy() {
+    if (this.pondListSubscriptions && this.pondListSubscriptions.length > 0) {
+      this.pondListSubscriptions.forEach(res => {
+        res.unsubscribe();
+      });
+    }
   }
 
 }
