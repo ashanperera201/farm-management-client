@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import jsPDF from "jspdf";
+import 'jspdf-autotable'
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -30,12 +31,36 @@ export class FileService {
   }
 
   exportToPDF(title: string, headers: any[], data: any, fileName: string) {
-    const header = this.createHeaders(headers);
     let doc = new jsPDF();
-    doc.text(title, 9, 10);
+    const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+    doc.text(title, pageWidth / 2, 8, { align: 'center' });
     doc.setFontSize(7);
-    doc.table(6, 25, data, header, { autoSize: true, fontSize: 8, printHeaders: true });
+
+    const strctData: any[] = this.structureData(headers, data);
+    (doc as any).autoTable({
+      bodyStyles: { valign: 'top' },
+      styles: { font: 'helvetica', fontStyle: 'bold', lineColor: '#000' },
+      head: [headers],
+      body: strctData,
+    });
     doc.save(fileName);
+  }
+
+  private structureData = (headers: any[], data: any[]): any[] => {
+    let retVal: any[] = [];
+    if (data && headers && headers.length > 0 && data.length > 0) {
+      retVal = data.map((x, i) => {
+        const keys: any[] = Object.keys(x);
+        let arrr: any[] = [];
+
+        keys.forEach(x2 => {
+          arrr.push(x[x2])
+        });
+        return arrr;
+      })
+    }
+
+    return retVal;
   }
 
   private createHeaders(keys: any) {

@@ -38,12 +38,15 @@ export class StockListComponent implements OnInit {
   }
 
   fetchStockList = () => {
+    this.blockUI.start("Fetching.....");
     this.stockSubscriptions.push(this.stockService.fetchStock().subscribe(res => {
       if (res && res.result) {
         this.stockList = res.result;
       }
+      this.blockUI.stop();
     }, () => {
       this.toastrService.error("Unable to load Stock data", "Error");
+      this.blockUI.stop();
     }));
   }
 
@@ -76,7 +79,7 @@ export class StockListComponent implements OnInit {
     addStockModal.componentInstance.isEditMode = true;
 
     if (addStockModal.componentInstance.afterSave) {
-      addStockModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
+      this.stockSubscriptions.push(addStockModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
         if (afterSaveRes && afterSaveRes.pond) {
           const index = this.stockList.findIndex((up: any) => up._id === afterSaveRes._id);
           this.stockList[index].farmName = afterSaveRes.farmName;
@@ -85,10 +88,9 @@ export class StockListComponent implements OnInit {
           this.stockList[index].pondNo = afterSaveRes.pondNo;
           this.stockList[index].owner = afterSaveRes.owner;
         }
-      });
+      }));
     }
   }
-
 
   deleteSelected = () => {
     this.blockUI.start('Deleting....');
@@ -156,9 +158,9 @@ export class StockListComponent implements OnInit {
     if (type === ExportTypes.CSV) {
       const csvData: any[] = this.stockList.map(x => {
         return {
-          'Owner': x.owner,
-          'Farm': x.farmer,
-          'Pond': x.pondId,
+          'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
+          'Farm': `${x.farmer.farmName}`,
+          'Pond': `${x.pond.pondNo}`,
           'Number of PL`s': x.plCount,
           'PL Age': x.plAge,
           'Date of Stocking': moment(x.dateOfStocking).format('YYYY-MM-DD'),
@@ -174,20 +176,17 @@ export class StockListComponent implements OnInit {
     else {
       const pdfData: any[] = this.stockList.map(x => {
         return {
-          'Owner': x.owner,
-          'Farm': x.farmer,
-          'Pond': x.pondId,
-          'Number of PL`s': x.plCount,
-          'PL Age': x.plAge,
+          'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
+          'Farm': `${x.farmer.farmName}`,
+          'Pond': `${x.pond.pondNo}`,
+          'pl count': x.plCount ? `${x.plCount}` : '-',
+          'actual pls': x.actualPlRemains ? `${x.actualPlRemains}` : '-',
           'Date of Stocking': moment(x.dateOfStocking).format('YYYY-MM-DD'),
           'Created By': x.createdBy,
-          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
-          'Full Stocked': x.fullStocked,
-          'PL Price': x.plPrice,
-          'Actual PL`s Remain': x.actualPlRemains
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD')
         }
       });
-      const headers: any[] = ['Owner', 'Farm', 'Pond', 'Number of PL`s', 'PL Age', 'Date of Stocking', 'Created By', 'Created On', 'Full Stocked', 'PL Price', 'Actual PL`s Remain'];
+      const headers: any[] = ['Owner', 'Farm', 'Pond', 'pl count', 'actual pls', 'Date of Stocking', 'Created By', 'Created On'];
       this.fileService.exportToPDF("Stock Data", headers, pdfData, 'Stock_Data');
     }
   }
