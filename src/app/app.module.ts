@@ -6,12 +6,15 @@ import { BlockUIModule } from 'ng-block-ui';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { CommonModule } from '@angular/common';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+import { reducers } from './redux/reducers/main-reducer';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptorService } from './shared/services/auth-interceptor.service';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { CommonModule } from '@angular/common';
-
 @NgModule({
   declarations: [
     AppComponent
@@ -27,7 +30,11 @@ import { CommonModule } from '@angular/common';
     ToastrModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    StoreModule.forRoot(reducers),
+    StoreDevtoolsModule.instrument({
+      maxAge: false,
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },

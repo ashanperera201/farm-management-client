@@ -35,7 +35,8 @@
               "moment",
               "canvg",
               "raf",
-              "@babel/runtime-corejs3"
+              "@babel/runtime-corejs3",
+              "jspdf-autotable"
             ],
             "aot": true,
             "assets": [

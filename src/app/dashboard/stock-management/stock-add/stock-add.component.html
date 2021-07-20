@@ -35,13 +35,17 @@
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Number of PL's</label>
-        <input type="text" class="form-control" placeholder="Number of PL's" formControlName="plCount">
+        <input type="text" class="form-control" placeholder="Number of PL's" formControlName="plCount" maxlength="3"
+          onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+          (keypress)="onKeyPressChanges($event)">
       </div>
     </div>
     <div class="form-row mb-4">
       <div class="col">
         <label class="font-size-h7  text-dark required">PL age</label>
-        <input type="text" class="form-control" placeholder="PL age" formControlName="plAge">
+        <input type="text" class="form-control" placeholder="PL age" formControlName="plAge" maxlength="2"
+          onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+          (keypress)="onKeyPressChanges($event)">
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Date of Stocking</label>
@@ -67,13 +71,17 @@
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">PL Price</label>
-        <input type="text" class="form-control" placeholder="PL Price" formControlName="plPrice">
+        <input type="text" class="form-control" placeholder="PL Price" formControlName="plPrice" maxlength="5"
+          onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+          (keypress)="onKeyPressChanges($event)">
       </div>
     </div>
     <div class="form-row mb-4">
       <div class="col">
         <label class="font-size-h7  text-dark">Actual PL's Remain</label>
-        <input type="text" class="form-control" placeholder="Actual PL's Remain" formControlName="actualPlRemains">
+        <input type="text" class="form-control" placeholder="Actual PL's Remain" formControlName="actualPlRemains" maxlength="5"
+        onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+        (keypress)="onKeyPressChanges($event)">
       </div>
     </div>
   </div>

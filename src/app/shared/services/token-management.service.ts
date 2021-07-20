@@ -20,12 +20,21 @@ export class TokenManagementService {
     localStorage.removeItem('access_token');
   }
 
-  getDecodedUserToken = (): any => {
+  private getDecodedUserToken = (): any => {
     const token = this.getItem();
     if (token) {
       return jwt_decode(token.toString());
     }
     return "";
+  }
+
+  getUserId = (): string | null => {
+    let userId = null;
+    const decodedToken: any = this.getDecodedUserToken();
+    if (decodedToken) {
+      userId = decodedToken.userId;
+    }
+    return userId;
   }
 
   getTokenExpirationDate = (): Date | null => {

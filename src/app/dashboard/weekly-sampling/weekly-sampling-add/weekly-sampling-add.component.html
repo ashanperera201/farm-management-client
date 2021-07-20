@@ -12,10 +12,12 @@
     <div class="form-row mb-4">
       <div class="col">
         <label class="font-size-h7  text-dark required">Date</label>
-        <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="samplingDate"
-          placeholder="Date" [(ngModel)]="modelSampling" ngbDatepicker #d="ngbDatepicker" [minDate]="modelSampling">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" name="dp" placeholder="Date"
+            formControlName="samplingDate" ngbDatepicker #d="ngbDatepicker" [minDate]="modelSampling">
+          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
+            <i class="far fa-calendar-alt"></i>
+          </button>
         </div>
       </div>
       <div class="col">
@@ -49,17 +51,23 @@
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Total Weight</label>
-        <input type="text" class="form-control" placeholder="Total Weight" formControlName="totalWeight">
+        <input type="text" class="form-control" placeholder="Total Weight" formControlName="totalWeight" maxlength="5"
+          onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+          (keypress)="onKeyPressChanges($event)">
       </div>
     </div>
     <div class="form-row mb-4">
       <div class="col">
         <label class="font-size-h7  text-dark required">Total Shrimp</label>
-        <input type="text" class="form-control" placeholder="Total Shrimp" formControlName="totalShrimp">
+        <input type="text" class="form-control" placeholder="Total Shrimp" formControlName="totalShrimp" maxlength="5"
+          onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+          (keypress)="onKeyPressChanges($event)">
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Average Body Weight</label>
-        <input type="text" class="form-control" placeholder="Average Body Weight" formControlName="averageBodyWeight">
+        <input type="text" class="form-control" placeholder="Average Body Weight" formControlName="averageBodyWeight"
+          maxlength="5" onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+          (keypress)="onKeyPressChanges($event)">
       </div>
     </div>
     <div class="form-row mb-4">
@@ -69,13 +77,17 @@
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark">Gain in Weight</label>
-        <input type="text" class="form-control" placeholder="Gain in Weight" formControlName="gainInWeight">
+        <input type="text" class="form-control" placeholder="Gain in Weight" formControlName="gainInWeight"
+          maxlength="5" onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+          (keypress)="onKeyPressChanges($event)">
       </div>
     </div>
     <div class="form-row mb-4">
       <div class="col">
         <label class="font-size-h7  text-dark required">Expected Survival Percentage</label>
-        <input type="text" class="form-control" placeholder="Expected Survival Percentage" formControlName="expectedSurvivalPercentage">
+        <input type="text" class="form-control" placeholder="Expected Survival Percentage"
+          formControlName="expectedSurvivalPercentage" maxlength="5" onCopy="return false" onDrag="return false"
+          onDrop="return false" onPaste="return false" (keypress)="onKeyPressChanges($event)">
       </div>
     </div>
   </div>

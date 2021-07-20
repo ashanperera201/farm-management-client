@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ClubMemberService } from 'src/app/shared/services/club-member.service';
-import { FarmService } from 'src/app/shared/services/farm.service';
-import { PondService } from 'src/app/shared/services/pond.service';
+import { ClubMemberService } from '../../../shared/services/club-member.service';
+import { FarmService } from '../../../shared/services/farm.service';
+import { PondService } from '../../../shared/services/pond.service';
+import { keyPressNumbers } from '../../../shared/utils';
 
 @Component({
   selector: 'app-weekly-sampling-add',
@@ -36,7 +37,7 @@ export class WeeklySamplingAddComponent implements OnInit {
       month: 0,
       day: 0
     }
-   }
+  }
 
   ngOnInit(): void {
     this.initAddWeeklySamplingForm();
@@ -120,8 +121,11 @@ export class WeeklySamplingAddComponent implements OnInit {
     });
   }
 
+  onKeyPressChanges = (event: any): boolean => {
+    return keyPressNumbers(event);
+  }
+
   saveWeeklySampling = () => {
-    
   }
 
   closeModal = () => {

@@ -1,7 +1,7 @@
-import { UserRoleModel } from './../models/user-role-model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UserRoleModel } from './../models/user-role-model';
 import { environment } from '../../../environments/environment';
 import { UserModel } from '../models/user-model';
 

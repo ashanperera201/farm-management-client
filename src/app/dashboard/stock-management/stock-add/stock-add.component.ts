@@ -7,10 +7,11 @@ import { switchMap } from 'rxjs/operators';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs';
 import { StockModel } from '../../../shared/models/stock-model';
-import { ClubMemberService } from 'src/app/shared/services/club-member.service';
-import { FarmService } from 'src/app/shared/services/farm.service';
-import { PondService } from 'src/app/shared/services/pond.service';
-import { StockService } from 'src/app/shared/services/stock.service';
+import { ClubMemberService } from '../../../shared/services/club-member.service';
+import { FarmService } from '../../../shared/services/farm.service';
+import { PondService } from '../../../shared/services/pond.service';
+import { StockService } from '../../../shared/services/stock.service';
+import {keyPressNumbers} from '../../../shared/utils';
 
 @Component({
   selector: 'app-stock-add',
@@ -214,8 +215,11 @@ export class StockAddComponent implements OnInit, DoCheck {
     }
   }
 
+  onKeyPressChanges = (event: any): boolean => {
+    return keyPressNumbers(event);
+  }
+
   closeModal = () => {
     this.activeModal.close();
   }
-
 }

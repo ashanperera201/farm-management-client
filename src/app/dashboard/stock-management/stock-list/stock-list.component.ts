@@ -4,6 +4,8 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState, addStockDetail, setStockDetails, updateStockDetail, removeStockBulk } from '../../../redux';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { FileService } from '../../../shared/services/file.service';
 import { StockService } from '../../../shared/services/stock.service';
@@ -30,7 +32,8 @@ export class StockListComponent implements OnInit {
     private stockService: StockService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService
+    private fileService: FileService,
+    private store: Store<AppState>
   ) { }
 
   ngOnInit(): void {
@@ -39,9 +42,11 @@ export class StockListComponent implements OnInit {
 
   fetchStockList = () => {
     this.blockUI.start("Fetching.....");
+    //  TODO **: CHECK WHETHER STORE HAS DATA SET OR NOT LATER : VERSIONS.
     this.stockSubscriptions.push(this.stockService.fetchStock().subscribe(res => {
       if (res && res.result) {
         this.stockList = res.result;
+        this.store.dispatch(setStockDetails(this.stockList));
       }
       this.blockUI.stop();
     }, () => {
@@ -87,6 +92,8 @@ export class StockListComponent implements OnInit {
           this.stockList[index].address = afterSaveRes.address;
           this.stockList[index].pondNo = afterSaveRes.pondNo;
           this.stockList[index].owner = afterSaveRes.owner;
+          // ** 
+          this.store.dispatch(updateStockDetail(afterSaveRes));
         }
       }));
     }
@@ -136,22 +143,6 @@ export class StockListComponent implements OnInit {
   singleSelectionChange = (index: number) => {
     this.isAllChecked = false;
     this.stockList[index]['isChecked'] = !this.stockList[index]['isChecked'];
-  }
-
-  deleteStock = (stockIds: any) => {
-    const stockDetailIds = JSON.stringify([].concat(stockIds));
-    let form = new FormData();
-    form.append("stockDetailIds", stockDetailIds);
-
-    this.stockService.deleteStock(form).subscribe(res => {
-      if (res && this.stockList.length > 0) {
-        let deletedIndex = this.stockList.indexOf(this.stockList.filter(a => a._id == stockIds)[0]);
-        this.stockList.splice(deletedIndex, 1);
-        this.toastrService.success("Stock Data deleted.", "Success");
-      }
-    }, () => {
-      this.toastrService.error("Unable to delete Stock data.", "Error");
-    });
   }
 
   exportStockList = (type: any) => {

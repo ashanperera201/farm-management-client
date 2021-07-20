@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { ExportTypes } from 'src/app/shared/enums/export-type';
-import { FileService } from 'src/app/shared/services/file.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Subscription } from 'rxjs';
+import { ExportTypes } from '../../../shared/enums/export-type';
+import { FileService } from '../../../shared/services/file.service';
+import { WeeklySamplingService } from '../../../shared/services/weekly-sampling.service';
 import { WeeklySamplingAddComponent } from '../weekly-sampling-add/weekly-sampling-add.component';
 
 @Component({
@@ -10,8 +13,13 @@ import { WeeklySamplingAddComponent } from '../weekly-sampling-add/weekly-sampli
   templateUrl: './weekly-sampling-list.component.html',
   styleUrls: ['./weekly-sampling-list.component.scss']
 })
+
 export class WeeklySamplingListComponent implements OnInit {
 
+  @BlockUI() blockUI!: NgBlockUI;
+
+  weeklySamplingSubscriptions: Subscription[] = [];
+  isAllChecked!: boolean;
   weelySamplingList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
@@ -21,10 +29,25 @@ export class WeeklySamplingListComponent implements OnInit {
   constructor(
     private toastrService: ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService
+    private fileService: FileService,
+    private weeklySamplingService: WeeklySamplingService
   ) { }
 
   ngOnInit(): void {
+    this.fetchWeeklySamplingData();
+  }
+
+  fetchWeeklySamplingData = () => {
+    this.blockUI.start('Fetching....');
+    this.weeklySamplingSubscriptions.push(this.weeklySamplingService.getAllWeeklySamplings().subscribe((samplingResponse: any) => {
+      if (samplingResponse && samplingResponse.validity) {
+        this.weelySamplingList = samplingResponse.result;
+      }
+      this.blockUI.stop();
+    }, () => {
+      console.log('Failed to fetch weekly sampling data.');
+      this.blockUI.stop();
+    }))
   }
 
   addNewWeeklySampling = () => {
@@ -59,24 +82,55 @@ export class WeeklySamplingListComponent implements OnInit {
     }
   }
 
-  deleteWeelySampling = (stockIds: any) => {
-    // const stockDetailIds = JSON.stringify([].concat(stockIds));
-    // let form = new FormData();
-    // form.append("stockDetailIds", stockDetailIds);
-
-    // this.stockService.deleteStock(form).subscribe(res => {
-    //   if (res && this.stockList.length > 0) {
-    //     let deletedIndex = this.stockList.indexOf(this.stockList.filter(a => a._id == stockIds)[0]);
-    //     this.stockList.splice(deletedIndex, 1);
-    //     this.toastrService.success("Stock Data deleted.", "Success");
-    //   }
-    // }, () => {
-    //   this.toastrService.error("Unable to delete Stock data.", "Error");
-    // });
+  deleteSelected = () => {
+    this.blockUI.start('Deleting....');
+    const weeklySamplingIds: string[] = (this.weelySamplingList.filter(x => x.isChecked === true)).map(x => x._id);
+    if (weeklySamplingIds && weeklySamplingIds.length > 0) {
+      this.proceedDelete(weeklySamplingIds);
+    } else {
+      this.toastrService.error("Please select weekly samplings to delete.", "Error");
+      this.blockUI.stop();
+    }
   }
 
+  deleteWeeklySamplingRecord = (weeklySamplingIds: any) => {
+    this.blockUI.start('Deleting....');
+    this.proceedDelete([].concat(weeklySamplingIds));
+  }
+
+  proceedDelete = (weeklySamplingIds: string[]) => {
+    let form = new FormData();
+    form.append("weeklySampleIds", JSON.stringify(weeklySamplingIds));
+
+    this.weeklySamplingSubscriptions.push(this.weeklySamplingService.deleteWeeklySampling(form).subscribe((deletedResult: any) => {
+      if (deletedResult) {
+        this.isAllChecked = false;
+        weeklySamplingIds.forEach(e => { const index: number = this.weelySamplingList.findIndex((up: any) => up._id === e); this.weelySamplingList.splice(index, 1); });
+        this.toastrService.success('Successfully deleted.', 'Success');
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error('Failed to delete', 'Error');
+      this.blockUI.stop();
+    }));
+  }
+
+  onSelectionChange = () => {
+    if (this.isAllChecked) {
+      this.weelySamplingList = this.weelySamplingList.map(p => { return { ...p, isChecked: true }; });
+    } else {
+      this.weelySamplingList = this.weelySamplingList.map(up => { return { ...up, isChecked: false }; });
+    }
+  }
+
+  singleSelectionChange = (index: number) => {
+    this.isAllChecked = false;
+    this.weelySamplingList[index]['isChecked'] = !this.weelySamplingList[index]['isChecked'];
+  }
+
+
   exportWeeklySampling = (type: any) => {
-    
+
   }
 
   importWeeklySampling = () => {
