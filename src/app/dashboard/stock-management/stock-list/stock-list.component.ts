@@ -85,15 +85,23 @@ export class StockListComponent implements OnInit {
 
     if (addStockModal.componentInstance.afterSave) {
       this.stockSubscriptions.push(addStockModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
-        if (afterSaveRes && afterSaveRes.pond) {
+        if (afterSaveRes) {
           const index = this.stockList.findIndex((up: any) => up._id === afterSaveRes._id);
-          this.stockList[index].farmName = afterSaveRes.farmName;
-          this.stockList[index].contactNo = afterSaveRes.contactNo;
-          this.stockList[index].address = afterSaveRes.address;
-          this.stockList[index].pondNo = afterSaveRes.pondNo;
-          this.stockList[index].owner = afterSaveRes.owner;
+          let stockRefs = JSON.parse(JSON.stringify(this.stockList));
+
+          stockRefs[index].farmer = afterSaveRes.farmer;
+          stockRefs[index].owner = afterSaveRes.owner;
+          stockRefs[index].pond = afterSaveRes.pond;
+          stockRefs[index].plCount = afterSaveRes.plCount;
+          stockRefs[index].plAge = afterSaveRes.plAge;
+          stockRefs[index].dateOfStocking = afterSaveRes.dateOfStocking;
+          stockRefs[index].fullStocked = afterSaveRes.fullStocked;
+          stockRefs[index].plPrice = afterSaveRes.plPrice;
+          stockRefs[index].actualPlRemains = afterSaveRes.actualPlRemains;
+
+          this.stockList = [...stockRefs];
           // ** 
-          this.store.dispatch(updateStockDetail(afterSaveRes));
+          this.store.dispatch(updateStockDetail(this.stockList[index]));
         }
       }));
     }
@@ -155,7 +163,6 @@ export class StockListComponent implements OnInit {
           'Number of PL`s': x.plCount,
           'PL Age': x.plAge,
           'Date of Stocking': moment(x.dateOfStocking).format('YYYY-MM-DD'),
-          'Created By': x.createdBy,
           'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
           'Full Stocked': x.fullStocked,
           'PL Price': x.plPrice,
@@ -173,11 +180,10 @@ export class StockListComponent implements OnInit {
           'pl count': x.plCount ? `${x.plCount}` : '-',
           'actual pls': x.actualPlRemains ? `${x.actualPlRemains}` : '-',
           'Date of Stocking': moment(x.dateOfStocking).format('YYYY-MM-DD'),
-          'Created By': x.createdBy,
           'Created On': moment(x.createdOn).format('YYYY-MM-DD')
         }
       });
-      const headers: any[] = ['Owner', 'Farm', 'Pond', 'pl count', 'actual pls', 'Date of Stocking', 'Created By', 'Created On'];
+      const headers: any[] = ['Owner', 'Farm', 'Pond', 'pl count', 'actual pls', 'Date of Stocking', 'Created On'];
       this.fileService.exportToPDF("Stock Data", headers, pdfData, 'Stock_Data');
     }
   }

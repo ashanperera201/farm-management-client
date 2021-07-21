@@ -12,14 +12,14 @@
     <div class="form-row mb-4">
       <div class="col">
         <label class="font-size-h7  text-dark required">Owner</label>
-        <select name="owner" id="owner" formControlName="owner" class="form-control">
+        <select name="owner" id="owner" formControlName="owner" class="form-control" (change)="ownerOnChange()">
           <option value=null disabled selected>Select Owner</option>
-          <option *ngFor="let o of ownerList" [value]="o._id">{{o.firstName}}</option>
+          <option *ngFor="let o of initialDataSet?.ownerList" [value]="o._id">{{o.firstName}}</option>
         </select>
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Farm</label>
-        <select name="farm" id="farm" formControlName="farmer" class="form-control">
+        <select name="farm" id="farm" formControlName="farmer" class="form-control" (change)="farmOnChange()">
           <option value=null disabled selected>Select Farm</option>
           <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
         </select>
