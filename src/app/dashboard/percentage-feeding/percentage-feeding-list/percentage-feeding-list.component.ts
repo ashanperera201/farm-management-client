@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import * as moment from 'moment';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { FileService } from '../../../shared/services/file.service';
 import { PercentageFeedingAddComponent } from '../percentage-feeding-add/percentage-feeding-add.component';
@@ -103,6 +104,17 @@ export class PercentageFeedingListComponent implements OnInit {
     });
     updatePercentageFeedingrModal.componentInstance.existingPercentageFeed = percentageFeeding;
     updatePercentageFeedingrModal.componentInstance.isEditMode = true;
+    if (updatePercentageFeedingrModal.componentInstance.afterSave) {
+      updatePercentageFeedingrModal.componentInstance.afterSave.subscribe((res: any) => {
+        if (res) {
+          const index = this.percentageFeedingList.findIndex((up: any) => up._id === res._id);
+          this.percentageFeedingList[index].owner = res.owner;
+          this.percentageFeedingList[index].farmer = res.farmer;
+          this.percentageFeedingList[index].areaOfPond = res.areaOfPond;
+          this.percentageFeedingList[index].pondNo = res.pondNo;
+        }
+      });
+    }
   }
 
 
@@ -153,11 +165,31 @@ export class PercentageFeedingListComponent implements OnInit {
   }
 
   exportPercentageFeedingList = (type: any) => {
-    if(type === ExportTypes.CSV){
-
+    //TO DO
+    if (type === ExportTypes.CSV) {
+      this.blockUI.start('Exporting Excel...');
+      const csvData: any[] = this.percentageFeedingList.map(x => {
+        return {
+          'Owner': x.owner,
+          'Farm': x.farmer,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+        }
+      });
+      this.fileService.exportAsExcelFile(csvData, "Ponds_Data");
+      this.blockUI.stop();
     }
-    else{
-
+    else {
+      this.blockUI.start('Exporting Pdf...');
+      const pdfData: any[] = this.percentageFeedingList.map(x => {
+        return {
+          'Owner': x.owner,
+          'Farm': x.farmer,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+        }
+      });
+      const headers: any[] = ['Owner', 'Farm', 'Created On', 'Pond Count','Area Of Pond', 'Grade of Pond','Fixed Cost' ];
+      this.fileService.exportToPDF("Ponds Data", headers, pdfData, 'Pond_Data');
+      this.blockUI.stop();
     }
   }
 

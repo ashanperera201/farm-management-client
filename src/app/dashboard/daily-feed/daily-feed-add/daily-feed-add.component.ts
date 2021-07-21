@@ -1,3 +1,4 @@
+import { DailyFeedService } from './../../../shared/services/daily-feed.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -35,6 +36,7 @@ export class DailyFeedAddComponent implements OnInit {
   dailyFeedSubscriptions: Subscription[] = [];
 
   constructor(
+    private dailyFeedService : DailyFeedService,
     private clubMemberService : ClubMemberService,
     private farmService : FarmService,
     private pondService : PondService,
@@ -92,13 +94,53 @@ export class DailyFeedAddComponent implements OnInit {
   }
 
   saveDailyFeed = () => {
-    if(this.addDailyFeedForm.valid){
-      if(this.isEditMode){
+    if (this.addDailyFeedForm.valid) {
+      if (this.isEditMode) {
+        const dailyFeed = this.existingData;
+        // dailyFeed.applicationType = this.addPercentageFeedingForm.value.applicationType;
 
+        this.dailyFeedService.updateDailyFeed(dailyFeed).subscribe(res => {
+          if (res) {
+            const dailyFeedData = this.setOtherData(dailyFeed);
+            this.afterSave.emit(dailyFeedData);
+            this.closeModal();
+            this.toastrService.success("Percentage of Feeding data updated successfully", "Success");
+          }
+          this.blockUI.stop();
+        }, () => {
+          this.toastrService.error("Unable to update data", "Error");
+          this.blockUI.stop();
+        });
       }
-      else{
-        
+      else {
+        const dailyFeed = new DailyFeedModel();
+        //dailyFeed.applicationType = this.addPercentageFeedingForm.value.applicationType;
+
+        this.dailyFeedService.saveDailyFeed(dailyFeed).subscribe(res => {
+          if (res && res.result) {
+            const dailyFeedData = this.setOtherData(res.result.dailyFeedData);
+            this.afterSave.emit(dailyFeedData);
+            this.closeModal();
+            this.toastrService.success("Data saved successfully", "Success");
+          }
+          this.blockUI.stop();
+        }, () => {
+          this.toastrService.error("Unable to save data", "Error");
+          this.blockUI.stop();
+        });
       }
+    }
+  }
+
+  setOtherData = (result: any): any => {
+    const owner: any = this.memberList.find(x => x._id === result.owner);
+    const farm: any = this.farmList.find(x => x._id === result.farmer);
+    const pond: any = this.pondList.find(x => x._id === result.pond);
+    if (owner || farm) {
+      result.owner = owner;
+      result.farmer = farm;
+      result.pond = pond;
+      return result;
     }
   }
 

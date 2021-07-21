@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { PercentageFeed } from '../models/percentage-feed-modal';
+import { PercentageFeedModel } from '../models/percentage-feed-modal';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +23,12 @@ export class PercentageFeedingService {
     return this.http.get(url);
   }
 
-  savePercentageFeeding(percentageFeedingData: PercentageFeed): Observable<any> {
+  savePercentageFeeding(percentageFeedingData: PercentageFeedModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/PercentageFeeding-management/create`;
     return this.http.post(url, percentageFeedingData)
   }
 
-  updatePercentageFeeding(percentageFeedingData: PercentageFeed): Observable<any> {
+  updatePercentageFeeding(percentageFeedingData: PercentageFeedModel): Observable<any> {
     const url: string = `${this.baseUrl}/api/v1/PercentageFeeding-management/update`;
     return this.http.put(url, percentageFeedingData)
   }
