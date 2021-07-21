@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { DailyFeedListComponent } from './daily-feed-list/daily-feed-list.component';
 import { DailyFeedComponent } from './daily-feed.component';
 import { DailyFeedRoutingModule } from './daily-feed.routing';
@@ -23,7 +23,8 @@ import { DailyFeedAddComponent } from './daily-feed-add/daily-feed-add.component
     ReactiveFormsModule,
     InlineSVGModule,
     Ng2SearchPipeModule,
-    NgbPaginationModule
+    NgbPaginationModule,
+    NgbModule
   ]
 })
 export class DailyFeedModule { }

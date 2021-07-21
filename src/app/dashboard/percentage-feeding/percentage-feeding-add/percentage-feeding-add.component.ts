@@ -51,8 +51,8 @@ export class PercentageFeedingAddComponent implements OnInit {
 
   initAddPercentageFeedForm = () => {
     this.addPercentageFeedingForm = new FormGroup({
-      clubMember: new FormControl(null, Validators.compose([Validators.required])),
-      farm: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
+      farmer: new FormControl(null, Validators.compose([Validators.required])),
       pond: new FormControl(null, Validators.compose([Validators.required])),
       averageBodyWeight: new FormControl(null, Validators.compose([Validators.required])),
       feedPercentage: new FormControl(null, Validators.compose([Validators.required]))
@@ -89,15 +89,24 @@ export class PercentageFeedingAddComponent implements OnInit {
 
   patchForm = () => {
     if (this.existingPercentageFeed) {
-      this.addPercentageFeedingForm.patchValue(this.existingPercentageFeed);
+      const percentage = Object.assign({}, this.existingPercentageFeed);
+      percentage.owner = this.existingPercentageFeed.owner._id;
+      percentage.farmer = this.existingPercentageFeed.farmer._id;
+      percentage.pond = this.existingPercentageFeed.pond._id;
+      this.addPercentageFeedingForm.patchValue(percentage);
     }
+    this.blockUI.stop();
   }
 
   savePercentageFeeding = () => {
     if (this.addPercentageFeedingForm.valid) {
       if (this.isEditMode) {
-        const percentageFeeding = this.existingPercentageFeeding;
-        // percentageFeeding.applicationType = this.addPercentageFeedingForm.value.applicationType;
+        const percentageFeeding = this.existingPercentageFeed;
+        percentageFeeding.owner = this.addPercentageFeedingForm.value.owner;
+        percentageFeeding.farmer = this.addPercentageFeedingForm.value.farmer;
+        percentageFeeding.pond = this.addPercentageFeedingForm.value.pond;
+        percentageFeeding.averageBodyWeight = this.addPercentageFeedingForm.value.averageBodyWeight;
+        percentageFeeding.feedPercentage = this.addPercentageFeedingForm.value.feedPercentage;
 
         this.percentageFeedingService.updatePercentageFeeding(percentageFeeding).subscribe(res => {
           if (res) {
@@ -114,11 +123,15 @@ export class PercentageFeedingAddComponent implements OnInit {
       }
       else {
         const percentageFeeding = new PercentageFeedModel();
-        //percentageFeeding.applicationType = this.addPercentageFeedingForm.value.applicationType;
+        percentageFeeding.owner = this.addPercentageFeedingForm.value.owner;
+        percentageFeeding.farmer = this.addPercentageFeedingForm.value.farmer;
+        percentageFeeding.pond = this.addPercentageFeedingForm.value.pond;
+        percentageFeeding.averageBodyWeight = this.addPercentageFeedingForm.value.averageBodyWeight;
+        percentageFeeding.feedPercentage = this.addPercentageFeedingForm.value.feedPercentage;
 
         this.percentageFeedingService.savePercentageFeeding(percentageFeeding).subscribe(res => {
           if (res && res.result) {
-            const percentageFeedingData = this.setOtherData(res.result.percentageFeedingData);
+            const percentageFeedingData = this.setOtherData(res.result.feedingPercentage);
             this.afterSave.emit(percentageFeedingData);
             this.closeModal();
             this.toastrService.success("Data saved successfully", "Success");

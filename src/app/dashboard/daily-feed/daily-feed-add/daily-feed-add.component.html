@@ -34,19 +34,28 @@
                 <option *ngFor="let p of pondList" [value]="p._id">{{p.pondNo}}</option>
             </select>
         </div>
-            <div class="col">
-                <label class="font-size-h7  text-dark required">Calculated Daily Feed</label>
-                <input type="text" class="form-control" placeholder="Calculated Daily Feed" formControlName="calculatedDailyFeed"
-                (keypress)="onKeyPressChangesDecimal($event)">
+        <div class="col">
+            <label class="font-size-h7  text-dark required">Date</label>
+            <div class="input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="date"
+                placeholder="Date" ngbDatepicker #d="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
+                  <i class="far fa-calendar-alt"></i>
+                </button>
+              </div>
             </div>
+          </div>
         </div>
         <div class="form-row mb-4">
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Calculated Daily Feed</label>
+                <input type="text" class="form-control" formControlName="calculatedDailyFeed" readonly>
+            </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Actual No Of Killos</label>
                 <input type="text" class="form-control" placeholder="Actual No Of Killos" formControlName="actualNoOfKillos"
                 (keypress)="onKeyPressChangesDecimal($event)">
-            </div>
-            <div class="col">
             </div>
         </div>
     </div>
