@@ -21,6 +21,7 @@ const routes: Routes = [
             { path: 'percentage-feeding', loadChildren: () => import(`./percentage-feeding/percentage-feeding.module`).then(m => m.PercentageFeedingModule) },
             { path: 'daily-feed', loadChildren: () => import(`./daily-feed/daily-feed.module`).then(m => m.DailyFeedModule) },
             { path: 'feed-chart', loadChildren: () => import(`./feed-chart/feed-chart.module`).then(m => m.FeedChartModule) },
+            { path: 'harvest-management', loadChildren: () => import(`./harvest-management/harvest-management.module`).then(m => m.HarvestManagementModule) },
             { path: '**', redirectTo: 'home' }
         ]
     }
