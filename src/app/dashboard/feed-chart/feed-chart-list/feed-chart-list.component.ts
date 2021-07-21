@@ -1,27 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { ExportTypes } from '../../../shared/enums/export-type';
-import { FileService } from '../../../shared/services/file.service';
-import { DailyFeedAddComponent } from '../daily-feed-add/daily-feed-add.component';
-import { PondService } from './../../../shared/services/pond.service';
-import { FarmService } from './../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
-import { DailyFeedService } from '../../../shared/services/daily-feed.service';
+import { FarmService } from '../../../shared/services/farm.service';
+import { PondService } from '../../../shared/services/pond.service';
+import { FileService } from '../../../shared/services/file.service';
+import { FeedChartService } from '../../../shared/services/feed-chart.service';
 
 @Component({
-  selector: 'app-daily-feed-list',
-  templateUrl: './daily-feed-list.component.html',
-  styleUrls: ['./daily-feed-list.component.scss']
+  selector: 'app-feed-chart-list',
+  templateUrl: './feed-chart-list.component.html',
+  styleUrls: ['./feed-chart-list.component.scss']
 })
-export class DailyFeedListComponent implements OnInit {
+export class FeedChartListComponent implements OnInit {
 
   isAllChecked! : boolean;
-  dailyFeedList: any[] = [];
+  feedChartList: any[] = [];
   memberList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
@@ -29,17 +27,16 @@ export class DailyFeedListComponent implements OnInit {
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
-  dailyFeedSubscriptions: Subscription[] = [];
+  feedChartSubscription: Subscription[] = [];
 
   @BlockUI() blockUI!: NgBlockUI;
 
   constructor(
-    private dailyFeedService : DailyFeedService,
+    private feedChartService : FeedChartService,
     private clubMemberService : ClubMemberService,
     private farmService : FarmService,
     private pondService : PondService,
     private toastrService: ToastrService,
-    private modalService: NgbModal,
     private fileService: FileService
   ) { }
 
@@ -50,9 +47,9 @@ export class DailyFeedListComponent implements OnInit {
 
   fetchDailyFeed = () => {
     this.blockUI.start('Fetching Daily Feed......');
-    this.dailyFeedSubscriptions.push(this.dailyFeedService.fetchDailyFeeds().subscribe(res=> {
+    this.feedChartSubscription.push(this.feedChartService.fetchFeedCharts().subscribe(res=> {
       if(res && res.result){
-        this.dailyFeedList = res.result;
+        this.feedChartList = res.result;
       }
       this.blockUI.stop();
     }, () => {
@@ -63,7 +60,7 @@ export class DailyFeedListComponent implements OnInit {
 
   fetchInitialData = () => {
     this.blockUI.start('Fetching Data...');
-    this.dailyFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
+    this.feedChartSubscription.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
         this.memberList = ownerRes.result;
       }
@@ -81,46 +78,9 @@ export class DailyFeedListComponent implements OnInit {
     this.blockUI.stop();
   }
 
-
-  addNewDailyFeed = () => {
-    const addDailyFeedrModal = this.modalService.open(DailyFeedAddComponent, {
-      animation: true,
-      keyboard: true,
-      backdrop: true,
-      modalDialogClass: 'modal-md',
-    });
-    addDailyFeedrModal.componentInstance.afterSave.subscribe((res: any) => {
-      if (res && res.percentageFeeding) {
-        this.dailyFeedList.unshift(res.percentageFeeding);
-      }
-    });
-  }
-
-  updateDailyFeed = (dailyFeed: any) => {
-    const updateDailyFeedModal = this.modalService.open(DailyFeedAddComponent, {
-      animation: true,
-      keyboard: true,
-      backdrop: true,
-      modalDialogClass: 'modal-md',
-    });
-    updateDailyFeedModal.componentInstance.existingDailyFeed = dailyFeed;
-    updateDailyFeedModal.componentInstance.isEditMode = true;
-    if (updateDailyFeedModal.componentInstance.afterSave) {
-      updateDailyFeedModal.componentInstance.afterSave.subscribe((res: any) => {
-        if (res) {
-          const index = this.dailyFeedList.findIndex((up: any) => up._id === res._id);
-          this.dailyFeedList[index].owner = res.owner;
-          this.dailyFeedList[index].farmer = res.farmer;
-          this.dailyFeedList[index].areaOfPond = res.areaOfPond;
-          this.dailyFeedList[index].pondNo = res.pondNo;
-        }
-      });
-    }
-  }
-
   deleteSelected = () => {
     this.blockUI.start('Deleting....');
-    const pfIds: string[] = (this.dailyFeedList.filter(x => x.isChecked === true)).map(x => x._id);
+    const pfIds: string[] = (this.feedChartList.filter(x => x.isChecked === true)).map(x => x._id);
     if (pfIds && pfIds.length > 0) {
       this.proceedDelete(pfIds);
     } else {
@@ -138,10 +98,10 @@ export class DailyFeedListComponent implements OnInit {
     let form = new FormData();
     form.append("dailyFeedIds", JSON.stringify(pfIds));
   
-    this.dailyFeedSubscriptions.push(this.dailyFeedService.deleteDailyFeed(form).subscribe((deletedResult: any) => {
+    this.feedChartSubscription.push(this.feedChartService.deleteFeedCharts(form).subscribe((deletedResult: any) => {
       if (deletedResult) {
         this.isAllChecked = false;
-        pfIds.forEach(e => { const index: number = this.dailyFeedList.findIndex((up: any) => up._id === e); this.dailyFeedList.splice(index, 1); });
+        pfIds.forEach(e => { const index: number = this.feedChartList.findIndex((up: any) => up._id === e); this.feedChartList.splice(index, 1); });
         this.toastrService.success('Successfully deleted.', 'Success');
       }
       this.blockUI.stop();
@@ -153,22 +113,22 @@ export class DailyFeedListComponent implements OnInit {
   
   onSelectionChange = () => {
     if (this.isAllChecked) {
-      this.dailyFeedList = this.dailyFeedList.map(p => { return { ...p, isChecked: true }; });
+      this.feedChartList = this.feedChartList.map(p => { return { ...p, isChecked: true }; });
     } else {
-      this.dailyFeedList = this.dailyFeedList.map(up => { return { ...up, isChecked: false }; });
+      this.feedChartList = this.feedChartList.map(up => { return { ...up, isChecked: false }; });
     }
   }
   
   singleSelectionChange = (index: number) => {
     this.isAllChecked = false;
-    this.dailyFeedList[index]['isChecked'] = !this.dailyFeedList[index]['isChecked'];
+    this.feedChartList[index]['isChecked'] = !this.feedChartList[index]['isChecked'];
   }
 
-  exportDailyFeedList = (type: any) => {
-    //TO DO
+  exportFeedChartList = (type: any) => {
+    /////////////TO DO
     if (type === ExportTypes.CSV) {
       this.blockUI.start('Exporting Excel...');
-      const csvData: any[] = this.dailyFeedList.map(x => {
+      const csvData: any[] = this.feedChartList.map(x => {
         return {
           'Owner': x.owner,
           'Farm': x.farmer,
@@ -180,7 +140,7 @@ export class DailyFeedListComponent implements OnInit {
     }
     else {
       this.blockUI.start('Exporting Pdf...');
-      const pdfData: any[] = this.dailyFeedList.map(x => {
+      const pdfData: any[] = this.feedChartList.map(x => {
         return {
           'Owner': x.owner,
           'Farm': x.farmer,
@@ -191,10 +151,6 @@ export class DailyFeedListComponent implements OnInit {
       this.fileService.exportToPDF("Ponds Data", headers, pdfData, 'Pond_Data');
       this.blockUI.stop();
     }
-  }
-
-  importDailyFeed = () => {
-
   }
 
 }

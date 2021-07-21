@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { keyPressDecimals, keyPressNumbers } from '../../../shared/utils';
-import { PercentageFeed } from '../../../shared/models/percentage-feed-modal';
+import { PercentageFeedModel } from '../../../shared/models/percentage-feed-modal';
 import { PercentageFeedingService } from '../../../shared/services/percentage-feeding.service';
 import { PondService } from './../../../shared/services/pond.service';
 import { FarmService } from './../../../shared/services/farm.service';
@@ -31,7 +31,7 @@ export class PercentageFeedingAddComponent implements OnInit {
   memberList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
-  existingPercentageFeeding = new PercentageFeed();
+  existingPercentageFeeding = new PercentageFeedModel();
   addPercentageFeedingForm!: FormGroup;
   percentageFeedingSubscriptions: Subscription[] = [];
 
@@ -101,6 +101,8 @@ export class PercentageFeedingAddComponent implements OnInit {
 
         this.percentageFeedingService.updatePercentageFeeding(percentageFeeding).subscribe(res => {
           if (res) {
+            const percentageFeedingData = this.setOtherData(percentageFeeding);
+            this.afterSave.emit(percentageFeedingData);
             this.closeModal();
             this.toastrService.success("Percentage of Feeding data updated successfully", "Success");
           }
@@ -111,14 +113,15 @@ export class PercentageFeedingAddComponent implements OnInit {
         });
       }
       else {
-        const percentageFeeding = new PercentageFeed();
+        const percentageFeeding = new PercentageFeedModel();
         //percentageFeeding.applicationType = this.addPercentageFeedingForm.value.applicationType;
 
         this.percentageFeedingService.savePercentageFeeding(percentageFeeding).subscribe(res => {
           if (res && res.result) {
+            const percentageFeedingData = this.setOtherData(res.result.percentageFeedingData);
+            this.afterSave.emit(percentageFeedingData);
             this.closeModal();
             this.toastrService.success("Data saved successfully", "Success");
-            this.afterSave.emit(res.result);
           }
           this.blockUI.stop();
         }, () => {
@@ -126,6 +129,18 @@ export class PercentageFeedingAddComponent implements OnInit {
           this.blockUI.stop();
         });
       }
+    }
+  }
+
+  setOtherData = (result: any): any => {
+    const owner: any = this.memberList.find(x => x._id === result.owner);
+    const farm: any = this.farmList.find(x => x._id === result.farmer);
+    const pond: any = this.pondList.find(x => x._id === result.pond);
+    if (owner || farm) {
+      result.owner = owner;
+      result.farmer = farm;
+      result.pond = pond;
+      return result;
     }
   }
 

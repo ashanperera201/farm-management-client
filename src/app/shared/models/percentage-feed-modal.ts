@@ -1,4 +1,4 @@
-export class PercentageFeed {
+export class PercentageFeedModel {
     Awb! : string;
     Feed! : string;
     Percentage! : string;
