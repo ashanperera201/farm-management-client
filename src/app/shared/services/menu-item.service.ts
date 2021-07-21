@@ -201,7 +201,19 @@ export class MenuItemService {
             subItems: []
           }
         ]
-      }
+      },
+      {
+        id: 13,
+        displayName: 'Harvest Management',
+        route: '/dashboard/harvest-management',
+        svgIconPath: './assets/media/svg/icons/Tools/Pantone.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
     ]
   }
 }
