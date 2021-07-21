@@ -5,7 +5,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { keyPressNumbers } from '../../../shared/utils';
+import { keyPressDecimals, keyPressNumbers } from '../../../shared/utils';
 import { PercentageFeed } from '../../../shared/models/percentage-feed-modal';
 import { PercentageFeedingService } from '../../../shared/services/percentage-feeding.service';
 import { PondService } from './../../../shared/services/pond.service';
@@ -131,6 +131,10 @@ export class PercentageFeedingAddComponent implements OnInit {
 
   onKeyPressChanges = (event: any): boolean => {
     return keyPressNumbers(event);
+  }
+
+  onKeyPressChangesDecimal = (event: any): boolean => {
+    return keyPressDecimals(event);
   }
 
   closeModal = () => {

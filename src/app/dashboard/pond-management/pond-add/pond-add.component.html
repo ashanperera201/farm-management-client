@@ -32,7 +32,9 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Area of the pond</label>
-                <input type="text" class="form-control" placeholder="Area of the pond" formControlName="areaOfPond" min="0">
+                <input type="text" class="form-control" placeholder="Area of the pond" formControlName="areaOfPond" min="0"
+                onCopy="return false" onDrag="return false" onDrop="return false"
+                onPaste="return false" (keypress)="onKeyPressChangesDecimal($event)">
             </div>
         </div>
         <div class="form-row mb-4">
@@ -42,12 +44,15 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Other fixed cost per Kg</label>
-                <input type="text" class="form-control" placeholder="Fixed cost per Kg" formControlName="fixedCost" min="0">
+                <input type="text" class="form-control" placeholder="Fixed cost per Kg" formControlName="fixedCost" min="0"
+                onCopy="return false" onDrag="return false" onDrop="return false"  (keypress)="onKeyPressChangesDecimal($event)"
+                onPaste="return false"
+                >
             </div>
         </div>
     </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-    <button type="button" class="btn btn-primary" [disabled]="addPondForm.invalid" (click)="savePond()">{{saveButtonText}}</button>
+    <button type="button" class="btn btn-primary" [disabled]="addPondForm.invalid || invalidInput" (click)="savePond()">{{saveButtonText}}</button>
 </div>

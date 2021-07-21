@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ApplicationsService } from '../../../shared/services/applications.service';
 import { ApplicationModel } from './../../../shared/models/application-model';
-import { keyPressNumbers } from '../../../shared/utils';
+import { keyPressDecimals } from '../../../shared/utils';
 
 @Component({
   selector: 'app-application-add',
@@ -104,6 +104,10 @@ export class ApplicationAddComponent implements OnInit {
         });
       }
     }
+  }
+
+  onKeyPressChangesDecimal = (event: any): boolean => {
+    return keyPressDecimals(event);
   }
 
   closeModal = () => {

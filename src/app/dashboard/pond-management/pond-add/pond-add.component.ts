@@ -9,6 +9,7 @@ import { FarmService } from '../../../shared/services/farm.service';
 import { pondModel } from './../../../shared/models/pond-model';
 import { PondService } from '../../../shared/services/pond.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
+import { keyPressDecimals } from '../../../shared/utils';
 
 @Component({
   selector: 'app-pond-add',
@@ -22,6 +23,7 @@ export class PondAddComponent implements OnInit {
 
   @BlockUI() blockUI!: NgBlockUI;
 
+  invalidInput: boolean = true;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Pond';
   feedBrandList: any[] = [];
@@ -168,6 +170,21 @@ export class PondAddComponent implements OnInit {
   closeModal = () => {
     this.activeModal.close();
   }
+
+  onKeyPressChangesDecimal = (event: any): boolean => {
+    return keyPressDecimals(event);
+  }
+
+  // checkDecimalPoints = () => {
+  //   debugger
+  //   const validation = /^[0-9]+\.?[0-9]*$/;
+  //   if (validation.test(this.addPondForm.value.fixedCost) == false) {
+  //     this.invalidInput = true;
+  //   }
+  //   else {
+  //     this.invalidInput = false;
+  //   }
+  // }
 
   ngOnDestroy() {
     if ((this.ownerListSubscriptions && this.ownerListSubscriptions.length > 0) || (this.farmerListSubscriptions && this.farmerListSubscriptions.length > 0) ) {
