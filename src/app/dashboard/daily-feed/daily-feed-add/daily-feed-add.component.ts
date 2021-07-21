@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DailyFeedModel } from 'src/app/shared/models/daily-feed-model';
-import { keyPressNumbers } from '../../../shared/utils';
+import { keyPressDecimals, keyPressNumbers } from '../../../shared/utils';
 import { PondService } from './../../../shared/services/pond.service';
 import { FarmService } from './../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
@@ -110,5 +110,8 @@ export class DailyFeedAddComponent implements OnInit {
     this.activeModal.close();
   }
 
+  onKeyPressChangesDecimal = (event: any): boolean => {
+    return keyPressDecimals(event);
+  }
 
 }

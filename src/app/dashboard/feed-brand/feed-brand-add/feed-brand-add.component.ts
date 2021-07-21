@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { feedBrandModel } from '../../../shared/models/feed-brand-model';
 import { FeedBrandService } from '../../../shared/services/feed-brand.service';
+import { keyPressDecimals } from '../../../shared/utils';
 
 @Component({
   selector: 'app-feed-brand-add',
@@ -98,6 +99,10 @@ export class FeedBrandAddComponent implements OnInit {
         });
       }
     }
+  }
+
+  onKeyPressChangesDecimal = (event: any): boolean => {
+    return keyPressDecimals(event);
   }
 
   closeModal = () => {

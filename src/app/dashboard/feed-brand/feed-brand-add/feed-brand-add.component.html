@@ -21,11 +21,13 @@
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Shrimp Weight/Doc</label>
-                <input type="text" class="form-control" placeholder="Grade of the pond" formControlName="shrimpWeight">
+                <input type="text" class="form-control" placeholder="Grade of the pond" formControlName="shrimpWeight"
+                (keypress)="onKeyPressChangesDecimal($event)">
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Price/Kg</label>
-                <input type="text" class="form-control" placeholder="Fixed cost per Kg" formControlName="price">
+                <input type="text" class="form-control" placeholder="Fixed cost per Kg" formControlName="price" 
+                (keypress)="onKeyPressChangesDecimal($event)">
             </div>
         </div>
     </div>
