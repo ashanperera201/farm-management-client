@@ -7,7 +7,6 @@ const initialState = {
 export function stockReducer(state = initialState, action: any): any {
     switch (action.type) {
         case StockActions.SET_STOCK_DETAILS:
-            debugger
             return {
                 ...state,
                 stockDetails: action.payload,
@@ -25,25 +24,25 @@ export function stockReducer(state = initialState, action: any): any {
                 stockDetails: state.stockDetails.map((sd: any) => sd._id === action.payload._id ?
                     {
                         ...sd,
-                        owner: sd.owner,
-                        farmer: sd.farmer,
-                        pond: sd.pond,
-                        plCount: sd.plCount,
-                        plAge: sd.plAge,
-                        dateOfStocking: sd.dateOfStocking,
-                        fullStocked: sd.fullStocked,
-                        plPrice: sd.plPrice,
-                        actualPlRemains: sd.actualPlRemains,
+                        owner: action.payload.owner,
+                        farmer: action.payload.farmer,
+                        pond: action.payload.pond,
+                        plCount: action.payload.plCount,
+                        plAge: action.payload.plAge,
+                        dateOfStocking: action.payload.dateOfStocking,
+                        fullStocked: action.payload.fullStocked,
+                        plPrice: action.payload.plPrice,
+                        actualPlRemains: action.payload.actualPlRemains,
                     } : sd)
             }
         case StockActions.STOCK_BULK_REMOVE:
             action.payload.forEach((id: any) => {
-                const index: number = state.stockDetails.findIndex((sd: any) => sd.stockingUniqueId === id);
+                const index: number = state.stockDetails.findIndex((sd: any) => sd._id === id);
                 state.stockDetails.splice(index, 1)
             });
             return {
                 ...state,
-                user: [...state.stockDetails]
+                stockDetails: [...state.stockDetails]
             }
         default:
             return {

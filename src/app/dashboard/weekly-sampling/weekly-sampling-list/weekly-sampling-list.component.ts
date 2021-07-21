@@ -3,10 +3,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs';
+import * as moment from 'moment';
+import { Store } from '@ngrx/store';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { FileService } from '../../../shared/services/file.service';
 import { WeeklySamplingService } from '../../../shared/services/weekly-sampling.service';
 import { WeeklySamplingAddComponent } from '../weekly-sampling-add/weekly-sampling-add.component';
+import { AppState, removeWeeklySamplings } from '../../../redux';
 
 @Component({
   selector: 'app-weekly-sampling-list',
@@ -30,7 +33,8 @@ export class WeeklySamplingListComponent implements OnInit {
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fileService: FileService,
-    private weeklySamplingService: WeeklySamplingService
+    private weeklySamplingService: WeeklySamplingService,
+    private store: Store<AppState>
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +63,7 @@ export class WeeklySamplingListComponent implements OnInit {
     });
     addWeeklySamplingModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res) {
-        // this.fetchStockList();
+        this.weelySamplingList.unshift(res);
       }
     });
   }
@@ -71,12 +75,26 @@ export class WeeklySamplingListComponent implements OnInit {
       backdrop: true,
       modalDialogClass: 'modal-lg',
     });
-    addWeeklySamplingModal.componentInstance.existingStock = weeklySample;
+
+    addWeeklySamplingModal.componentInstance.existingWeeklySampling = JSON.parse(JSON.stringify(weeklySample));
     addWeeklySamplingModal.componentInstance.isEditMode = true;
+
     if (addWeeklySamplingModal.componentInstance.afterSave) {
       addWeeklySamplingModal.componentInstance.afterSave.subscribe((res: any) => {
-        if (res && res.pond) {
-          this.weelySamplingList.unshift(res.pond);
+        if (res) {
+          const index = this.weelySamplingList.findIndex((up: any) => up._id === res._id);
+
+          this.weelySamplingList[index].samplingDate = res.samplingDate;
+          this.weelySamplingList[index].farmer = res.farmer;
+          this.weelySamplingList[index].owner = res.owner;
+          this.weelySamplingList[index].pond = res.pond;
+          this.weelySamplingList[index].dateOfCulture = res.dateOfCulture;
+          this.weelySamplingList[index].totalWeight = res.totalWeight;
+          this.weelySamplingList[index].totalShrimp = res.totalShrimp;
+          this.weelySamplingList[index].averageBodyWeight = res.averageBodyWeight;
+          this.weelySamplingList[index].previousAwb = res.previousAwb;
+          this.weelySamplingList[index].gainInWeight = res.gainInWeight;
+          this.weelySamplingList[index].expectedSurvivalPercentage = res.expectedSurvivalPercentage;
         }
       });
     }
@@ -106,6 +124,7 @@ export class WeeklySamplingListComponent implements OnInit {
       if (deletedResult) {
         this.isAllChecked = false;
         weeklySamplingIds.forEach(e => { const index: number = this.weelySamplingList.findIndex((up: any) => up._id === e); this.weelySamplingList.splice(index, 1); });
+        this.store.dispatch(removeWeeklySamplings(weeklySamplingIds));
         this.toastrService.success('Successfully deleted.', 'Success');
       }
       this.blockUI.stop();
@@ -130,7 +149,26 @@ export class WeeklySamplingListComponent implements OnInit {
 
 
   exportWeeklySampling = (type: any) => {
+    const dataSet: any[] = this.weelySamplingList.map(x => {
+      return {
+        'Sampling date': moment(x.samplingDate).format('YYYY-MM-DD'),
+        'Farm': `${x.farmer.farmName}`,
+        'Date of culture': x.dateOfCulture,
+        'Total weight': x.totalWeight,
+        'Total shrimp': x.totalShrimp,
+        'Average body weight': x.averageBodyWeight,
+        'Gain in weight': x.gainInWeight,
+        'Created On': moment(x.createdOn).format('YYYY-MM-DD')
+      }
+    });
 
+    if (type === ExportTypes.CSV) {
+      this.fileService.exportAsExcelFile(dataSet, "Ponds_Data");
+    }
+    else {
+      const headers: any[] = ['sampling date', 'Farm', 'Date of culture', 'Total weight', 'Total shrimp', 'Average body weight', 'Gain in weight', 'Created On'];
+      this.fileService.exportToPDF("Stock Data", headers, dataSet, 'Stock_Data');
+    }
   }
 
   importWeeklySampling = () => {

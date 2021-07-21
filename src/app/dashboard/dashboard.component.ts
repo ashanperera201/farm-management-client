@@ -1,13 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { switchMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { NavigationModes } from '../shared/enums/navigation.enum';
-import { MenuItemService } from '../shared/services/menu-item.service';
+import { StockService } from '../shared/services/stock.service';
+import { ClubMemberService } from '../shared/services/club-member.service';
+import { WeeklySamplingService } from '../shared/services/weekly-sampling.service';
+import { AppState, setStockDetails, setWeeklySamplings } from '../redux';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   navigationModes = NavigationModes;
   asideMenuDropdown: any = 1;
@@ -15,14 +21,37 @@ export class DashboardComponent implements OnInit {
 
   menuItems: any[] = [];
   currentIndex!: number;
+  dashboardSubscriptions: Subscription[] = [];
 
-  constructor(private menuItemService: MenuItemService) { }
+  constructor(
+    private store: Store<AppState>,
+    private stockService: StockService,
+    private clubMemberService: ClubMemberService,
+    private weeklySamplingService: WeeklySamplingService
+  ) { }
 
   ngOnInit(): void {
-   
+    this.fetchInitialDataSets();
   }
 
-  // menu related methods
+  fetchInitialDataSets = () => {
+    this.dashboardSubscriptions.push(this.stockService.fetchStock().pipe(switchMap(stockDetails => {
+      if (stockDetails && stockDetails.validity) {
+        const details = stockDetails.result;
+        this.store.dispatch(setStockDetails(details));
+      }
+      return this.weeklySamplingService.getAllWeeklySamplings();
+    })).pipe(switchMap((weeklySampling: any) => {
+      if (weeklySampling && weeklySampling.validity) {
+        const samplingDetails = weeklySampling.result;
+        this.store.dispatch(setWeeklySamplings(samplingDetails));
+      }
+      return this.clubMemberService.fetchClubMembers()
+    }))
+      .subscribe((clubMemberServiceRes: any) => {
+        // TODO dispatch later.
+      }));
+  }
 
   onMenuItemClick = (index: number) => {
     if (this.currentIndex >= 0) {
@@ -34,4 +63,13 @@ export class DashboardComponent implements OnInit {
     this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
     this.currentIndex = index;
   }
+
+  ngOnDestroy() {
+    if (this.dashboardSubscriptions && this.dashboardSubscriptions.length > 0) {
+      this.dashboardSubscriptions.forEach(s => {
+        s.unsubscribe();
+      })
+    }
+  }
+
 }

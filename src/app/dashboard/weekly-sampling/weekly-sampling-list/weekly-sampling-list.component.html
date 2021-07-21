@@ -58,13 +58,18 @@
                             <span></span>
                         </label>
                     </th>
-                    <th> Doc</th>
+                    <th> Doc </th>
+                    <th> Farmer </th>
+                    <th> Owner Name </th>
+                    <th> Owner Email </th>
                     <th> Total Weight </th>
                     <th> Total Shrimp </th>
                     <th> AWB </th>
                     <th> Previous AWB </th>
                     <th> Gain in Weight </th>
                     <th> Expected Survival Percentage </th>
+                    <th> Created On </th>
+                    <th> Status </th>
                     <th> Action </th>
                 </thead>
                 <tbody>
@@ -78,12 +83,17 @@
                             </label>
                         </td>
                         <td>{{ weeklySample?.dateOfCulture }}</td>
+                        <td>{{ weeklySample?.farmer?.farmName }}</td>
+                        <td>{{ weeklySample?.owner?.firstName }}</td>
+                        <td>{{ weeklySample?.owner?.email }}</td>
                         <td>{{ weeklySample?.totalWeight }}</td>
                         <td>{{ weeklySample?.totalShrimp }}</td>
                         <td>{{ weeklySample?.averageBodyWeight }}</td>
                         <td>{{ weeklySample?.previousAwb }}</td>
                         <td>{{ weeklySample?.gainInWeight }}</td>
-                        <td>{{ weeklySample?.totalWeight }}</td>
+                        <td>{{ weeklySample?.expectedSurvivalPercentage }}</td>
+                        <td>{{ weeklySample?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
+                        <td> <span [ngClass]="weeklySample?.isActive ? 'active' : 'inactive'"></span> </td>
                         <td>
                             <a title=" Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
                                 (click)="updateWeelySampling(weeklySample)">
