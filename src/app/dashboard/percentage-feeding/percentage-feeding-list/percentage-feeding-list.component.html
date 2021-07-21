@@ -84,16 +84,16 @@
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{percentageFeeding?.awb}}</td>
-                        <td>{{percentageFeeding?.feed}}</td>
-                        <td>{{percentageFeeding?.percentage}}</td>
+                        <td>{{percentageFeeding?.averageBodyWeight}}</td>
+                        <td>{{percentageFeeding?.feedPercentage}}</td>
+                        <td>{{percentageFeeding?.feedPercentage}}%</td>
                        <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updatePercentageFeeding(percentageFeeding)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteRecord(percentageFeeding)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteRecord(percentageFeeding._id)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

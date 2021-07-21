@@ -13,14 +13,14 @@
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Club Member</label>
-                <select name="firstName" id="_id" class="form-control" formControlName="clubMember">
+                <select name="firstName" id="_id" class="form-control" formControlName="owner">
                     <option value=null disabled selected>Select Owner</option>
                     <option *ngFor="let o of memberList" [value]="o._id">{{o.firstName}}</option>
                 </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Farm</label>
-                <select name="firstName" id="_id" class="form-control" formControlName="farm">
+                <select name="firstName" id="_id" class="form-control" formControlName="farmer">
                     <option value=null disabled selected>Select Farm</option>
                     <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
                 </select>

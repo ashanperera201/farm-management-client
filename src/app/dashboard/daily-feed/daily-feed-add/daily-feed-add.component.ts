@@ -1,7 +1,6 @@
-import { DailyFeedService } from './../../../shared/services/daily-feed.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -11,6 +10,7 @@ import { keyPressDecimals, keyPressNumbers } from '../../../shared/utils';
 import { PondService } from './../../../shared/services/pond.service';
 import { FarmService } from './../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
+import { DailyFeedService } from './../../../shared/services/daily-feed.service';
 
 @Component({
   selector: 'app-daily-feed-add',
@@ -34,6 +34,9 @@ export class DailyFeedAddComponent implements OnInit {
   existingData = new DailyFeedModel();
   addDailyFeedForm!: FormGroup;
   dailyFeedSubscriptions: Subscription[] = [];
+  model: NgbDateStruct;
+  //TODO
+  calculatedDailyFeed = 25;
 
   constructor(
     private dailyFeedService : DailyFeedService,
@@ -41,7 +44,14 @@ export class DailyFeedAddComponent implements OnInit {
     private farmService : FarmService,
     private pondService : PondService,
     private toastrService: ToastrService,
-    private activeModal: NgbActiveModal) { }
+    private activeModal: NgbActiveModal,
+    private parserFormatter: NgbDateParserFormatter) {
+      this.model = {
+        year: 0,
+        month: 0,
+        day: 0
+      }
+    }
 
   ngOnInit(): void {
     this.initAddDailyFeedForm();
@@ -54,7 +64,8 @@ export class DailyFeedAddComponent implements OnInit {
       clubMember: new FormControl(null, Validators.compose([Validators.required])),
       farm: new FormControl(null, Validators.compose([Validators.required])),
       pond: new FormControl(null, Validators.compose([Validators.required])),
-      calculatedDailyFeed: new FormControl(null, Validators.compose([Validators.required])),
+      date: new FormControl(null, Validators.compose([Validators.required])),
+      calculatedDailyFeed: new FormControl(this.calculatedDailyFeed),
       actualNoOfKillos: new FormControl(null, Validators.compose([Validators.required]))
     });
   }
@@ -85,6 +96,15 @@ export class DailyFeedAddComponent implements OnInit {
       this.headerText = "Update Daily Feed";
       this.patchForm();
     }
+    else{
+      const current = new Date();
+      this.model = {
+        year: current.getFullYear(),
+        month: current.getMonth() + 1,
+        day: current.getDate()
+      };
+      this.addDailyFeedForm.get('date')?.patchValue(this.model);
+    }
   }
 
   patchForm = () => {
@@ -98,6 +118,7 @@ export class DailyFeedAddComponent implements OnInit {
       if (this.isEditMode) {
         const dailyFeed = this.existingData;
         // dailyFeed.applicationType = this.addPercentageFeedingForm.value.applicationType;
+        //dailyFeed.dateOfStocking = this.parserFormatter.format(this.addStockForm.value.dateOfStocking);
 
         this.dailyFeedService.updateDailyFeed(dailyFeed).subscribe(res => {
           if (res) {

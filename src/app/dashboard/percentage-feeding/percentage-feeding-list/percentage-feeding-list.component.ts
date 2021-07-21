@@ -89,13 +89,15 @@ export class PercentageFeedingListComponent implements OnInit {
       modalDialogClass: 'modal-md',
     });
     addPercentageFeedingrModal.componentInstance.afterSave.subscribe((res: any) => {
-      if (res && res.percentageFeeding) {
-        this.percentageFeedingList.unshift(res.percentageFeeding);
+      debugger
+      if (res) {
+        this.percentageFeedingList.unshift(res);
       }
     });
   }
 
   updatePercentageFeeding = (percentageFeeding: any) => {
+    this.blockUI.start("Fetching Data.....");
     const updatePercentageFeedingrModal = this.modalService.open(PercentageFeedingAddComponent, {
       animation: true,
       keyboard: true,
@@ -110,13 +112,13 @@ export class PercentageFeedingListComponent implements OnInit {
           const index = this.percentageFeedingList.findIndex((up: any) => up._id === res._id);
           this.percentageFeedingList[index].owner = res.owner;
           this.percentageFeedingList[index].farmer = res.farmer;
-          this.percentageFeedingList[index].areaOfPond = res.areaOfPond;
-          this.percentageFeedingList[index].pondNo = res.pondNo;
+          this.percentageFeedingList[index].pond = res.pond;
+          this.percentageFeedingList[index].averageBodyWeight = res.averageBodyWeight;
+          this.percentageFeedingList[index].feedPercentage = res.feedPercentage;
         }
       });
     }
   }
-
 
   deleteSelected = () => {
     this.blockUI.start('Deleting....');
@@ -136,7 +138,7 @@ export class PercentageFeedingListComponent implements OnInit {
   
   proceedDelete = (pfIds: string[]) => {
     let form = new FormData();
-    form.append("applicationIds", JSON.stringify(pfIds));
+    form.append("feedingPercentageIds", JSON.stringify(pfIds));
   
     this.percentageFeedSubscriptions.push(this.percentageFeedingService.deletePercentageFeeding(form).subscribe((deletedResult: any) => {
       if (deletedResult) {
@@ -165,30 +167,35 @@ export class PercentageFeedingListComponent implements OnInit {
   }
 
   exportPercentageFeedingList = (type: any) => {
-    //TO DO
     if (type === ExportTypes.CSV) {
       this.blockUI.start('Exporting Excel...');
       const csvData: any[] = this.percentageFeedingList.map(x => {
         return {
-          'Owner': x.owner,
-          'Farm': x.farmer,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Owner': x.owner.firstName,
+          'Farm': x.farmer.farmName,
+          'Pond': x.pond.pondNo,
+          'Average Body Weight': x.averageBodyWeight,
+          'Feed Percentage' : x.feedPercentage,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD')
         }
       });
-      this.fileService.exportAsExcelFile(csvData, "Ponds_Data");
+      this.fileService.exportAsExcelFile(csvData, "Feeding_Percentage_Data");
       this.blockUI.stop();
     }
     else {
       this.blockUI.start('Exporting Pdf...');
       const pdfData: any[] = this.percentageFeedingList.map(x => {
         return {
-          'Owner': x.owner,
-          'Farm': x.farmer,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Owner': x.owner.firstName,
+          'Farm': x.farmer.farmName,
+          'Pond': x.pond.pondNo,
+          'Average Body Weight': x.averageBodyWeight,
+          'Feed Percentage' : x.feedPercentage,
+          'Created On':  moment(x.createdOn).format('YYYY-MM-DD')
         }
       });
-      const headers: any[] = ['Owner', 'Farm', 'Created On', 'Pond Count','Area Of Pond', 'Grade of Pond','Fixed Cost' ];
-      this.fileService.exportToPDF("Ponds Data", headers, pdfData, 'Pond_Data');
+      const headers: any[] = ['Owner', 'Farm', 'Pond', 'Average Body Weight', 'Feed Percentage', 'Created On'];
+      this.fileService.exportToPDF("Feeding Percentage Data", headers, pdfData, 'Feeding_Percentage_Data');
       this.blockUI.stop();
     }
   }

@@ -1,5 +1,8 @@
 export class PercentageFeedModel {
-    Awb! : string;
-    Feed! : string;
-    Percentage! : string;
+    owner! : any;
+    farmer! : any;
+    pond! : any;
+    averageBodyWeight! : any;
+    feedPercentage! : any;
+    feedingPercentageDate! : any;
 }
