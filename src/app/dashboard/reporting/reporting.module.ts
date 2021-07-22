@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { ReportingComponent } from './reporting.component';
 import { ReportingRouterModule } from './reporting.routing';
 import { ClubMemberReportComponent } from './club-member-report/club-member-report.component';
@@ -32,7 +35,10 @@ import { AwbDetailReportComponent } from './awb-detail-report/awb-detail-report.
   ],
   imports: [
     CommonModule,
-    ReportingRouterModule
+    ReportingRouterModule,
+    FormsModule,
+    NgbModule,
+    Ng2SearchPipeModule
   ]
 })
 export class ReportingModule { }

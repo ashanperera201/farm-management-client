@@ -5,6 +5,7 @@ import { WeeklyApplicationListComponent } from './weekly-application-list/weekly
 import { WeeklyApplicationComponent } from './weekly-application.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: '', pathMatch: 'full' },
   {
     path: '', component: WeeklyApplicationComponent, children:
       [
@@ -12,7 +13,8 @@ const routes: Routes = [
         { path: 'view-all', component: WeeklyApplicationListComponent },
         { path: '**', redirectTo: 'view-all' }
       ]
-  }
+  },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

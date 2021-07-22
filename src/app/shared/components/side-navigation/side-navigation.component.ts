@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output } from '@angular/core';
+import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { NavigationModes } from '../../enums/navigation.enum';
 
 @Component({
@@ -11,6 +12,8 @@ export class SideNavigationComponent implements OnInit {
   @Input() mode: string = NavigationModes.side;
   @Input() open: boolean = false;
 
+  config: PerfectScrollbarConfigInterface = {};
+
   show!: boolean;
 
   constructor() { }
@@ -22,7 +25,7 @@ export class SideNavigationComponent implements OnInit {
   toggle = () => {
     if (this.mode === NavigationModes.over && this.show) {
       this.show = !this.show;
-    } else { 
+    } else {
       this.show = !this.show;
     }
   }
