@@ -84,7 +84,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
         this.pondList = resPonds.result;
-        this.initialData.farmList = this.pondList;
+        this.initialData.pondList = this.pondList;
       }
       return this.applicationsService.fetchApplications()
     })).pipe(switchMap((resApplication: any) => {
@@ -161,7 +161,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
       const farmer = this.initialData.farmList.find((x: any) => x._id === formRawValues.farmer);
       const clubMember = this.initialData.memberList.find((x: any) => x._id === formRawValues.clubMember);
       const pond = this.initialData.pondList.find((x: any) => x._id === formRawValues.pond);
-      const applicationType = this.initialData.applicationTypeList.find((x: any) => x._id === formRawValues.applicationType);
+      const applicationType = this.initialData.applicationList.find((x: any) => x._id === formRawValues.applicationType);
 
       if (this.isEditMode) {
 
