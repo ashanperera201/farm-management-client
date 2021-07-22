@@ -155,55 +155,6 @@ export class MenuItemService {
       },
       {
         id: 12,
-        displayName: 'User Management',
-        route: '#',
-        svgIconPath: './assets/media/svg/icons/General/User.svg',
-        classes: 'menu-item',
-        activeClass: '',
-        selected: false,
-        isMenuHeading: false,
-        isMenuOpened: false,
-        subItems: [
-          {
-            id: 1,
-            displayName: 'User List',
-            route: '/dashboard/user-management/view-users',
-            svgIconPath: '',
-            classes: 'menu-item',
-            activeClass: '',
-            selected: false,
-            isMenuHeading: false,
-            isMenuOpened: false,
-            subItems: []
-          },
-          {
-            id: 2,
-            displayName: 'User Roles',
-            route: '/dashboard/user-management/view-roles',
-            svgIconPath: '',
-            classes: 'menu-item',
-            activeClass: '',
-            selected: false,
-            isMenuHeading: false,
-            isMenuOpened: false,
-            subItems: []
-          },
-          {
-            id: 3,
-            displayName: 'User Permission',
-            route: '/dashboard/user-management/view-permissions',
-            svgIconPath: '',
-            classes: 'menu-item',
-            activeClass: '',
-            selected: false,
-            isMenuHeading: false,
-            isMenuOpened: false,
-            subItems: []
-          }
-        ]
-      },
-      {
-        id: 13,
         displayName: 'Harvest Management',
         route: '/dashboard/harvest-management',
         svgIconPath: './assets/media/svg/icons/Code/Time-schedule.svg',
@@ -215,7 +166,7 @@ export class MenuItemService {
         subItems: []
       },
       {
-        id: 14,
+        id: 13,
         displayName: 'Weekly Application',
         route: '/dashboard/weekly-application',
         svgIconPath: './assets/media/svg/icons/Code/Time-schedule.svg',
@@ -227,7 +178,7 @@ export class MenuItemService {
         subItems: []
       },
       {
-        id: 15,
+        id: 14,
         displayName: 'Reporting Management',
         route: '#',
         svgIconPath: './assets/media/svg/icons/Files/Compilation.svg',
@@ -369,6 +320,55 @@ export class MenuItemService {
             isMenuOpened: false,
             subItems: []
           },
+        ]
+      },
+      {
+        id: 15,
+        displayName: 'User Management',
+        route: '#',
+        svgIconPath: './assets/media/svg/icons/General/User.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: [
+          {
+            id: 1,
+            displayName: 'User List',
+            route: '/dashboard/user-management/view-users',
+            svgIconPath: '',
+            classes: 'menu-item',
+            activeClass: '',
+            selected: false,
+            isMenuHeading: false,
+            isMenuOpened: false,
+            subItems: []
+          },
+          {
+            id: 2,
+            displayName: 'User Roles',
+            route: '/dashboard/user-management/view-roles',
+            svgIconPath: '',
+            classes: 'menu-item',
+            activeClass: '',
+            selected: false,
+            isMenuHeading: false,
+            isMenuOpened: false,
+            subItems: []
+          },
+          {
+            id: 3,
+            displayName: 'User Permission',
+            route: '/dashboard/user-management/view-permissions',
+            svgIconPath: '',
+            classes: 'menu-item',
+            activeClass: '',
+            selected: false,
+            isMenuHeading: false,
+            isMenuOpened: false,
+            subItems: []
+          }
         ]
       },
     ]

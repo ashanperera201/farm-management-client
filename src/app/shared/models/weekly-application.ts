@@ -2,7 +2,7 @@ export class WeeklyApplicationModel {
   owner!: string;
   farmer!: string;
   pond!: string;
-  applicationType!: string;
+  application!: string;
   unit!: string;
   numberOfUnit!: string;
 }

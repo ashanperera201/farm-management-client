@@ -63,13 +63,13 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
 
   initWeeklyApplicationForm = () => {
     this.addWeeklyApplicationForm = new FormGroup({
-      clubMember: new FormControl(null, Validators.compose([Validators.required])),
-      farm: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
+      farmer: new FormControl(null, Validators.compose([Validators.required])),
       pond: new FormControl(null, Validators.compose([Validators.required])),
       weekNumber: new FormControl(null, Validators.compose([Validators.required])),
-      applicationType: new FormControl(null, Validators.compose([Validators.required])),
-      unit: new FormControl(null, Validators.compose([Validators.required])),
-      numberUnits: new FormControl(null, Validators.compose([Validators.required]))
+      application: new FormControl(null, Validators.compose([Validators.required])),
+      unit: new FormControl(null, Validators.required),
+      numberOfUnit: new FormControl(null, Validators.compose([Validators.required]))
     });
   }
 
@@ -98,9 +98,11 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
         this.farmList = farmRes.result;
         this.initialData.farmList = this.farmList;
       }
+      this.blockUI.stop();
+    }, () => {
+      this.blockUI.stop();
     }))
     this.configValues();
-    this.blockUI.stop();
   }
 
   configValues = () => {
@@ -113,7 +115,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
         form.owner = this.existingWeeklyApplication.owner._id;
         form.farmer = this.existingWeeklyApplication.farmer._id;
         form.pond = this.existingWeeklyApplication.pond._id;
-        form.applicationType = this.existingWeeklyApplication.applicationType._id;
+        form.application = this.existingWeeklyApplication.application._id;
 
         this.addWeeklyApplicationForm.patchValue(form);
         this.clubMemberOnChange();
@@ -122,7 +124,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
         this.addWeeklyApplicationForm.get("clubMember")?.patchValue(form.clubMember);
         this.addWeeklyApplicationForm.get("farm")?.patchValue(form.farm);
         this.addWeeklyApplicationForm.get("pond")?.patchValue(form.pond);
-        this.addWeeklyApplicationForm.get("applicationType")?.patchValue(form.applicationType);
+        this.addWeeklyApplicationForm.get("application")?.patchValue(form.application);
       }
     }
   }
@@ -161,7 +163,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
       const farmer = this.initialData.farmList.find((x: any) => x._id === formRawValues.farmer);
       const clubMember = this.initialData.memberList.find((x: any) => x._id === formRawValues.clubMember);
       const pond = this.initialData.pondList.find((x: any) => x._id === formRawValues.pond);
-      const applicationType = this.initialData.applicationList.find((x: any) => x._id === formRawValues.applicationType);
+      const application = this.initialData.applicationList.find((x: any) => x._id === formRawValues.application);
 
       if (this.isEditMode) {
 
@@ -169,7 +171,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
         existsWeeklyApplication.farmer = formRawValues.farmer;
         existsWeeklyApplication.owner = formRawValues.owner;
         existsWeeklyApplication.pond = formRawValues.pond;
-        existsWeeklyApplication.applicationType = formRawValues.applicationType;
+        existsWeeklyApplication.application = formRawValues.application;
         existsWeeklyApplication.unit = formRawValues.unit;
         existsWeeklyApplication.numberOfUnit = formRawValues.numberOfUnit;
 
@@ -178,7 +180,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
             existsWeeklyApplication.farmer = farmer;
             existsWeeklyApplication.owner = clubMember;
             existsWeeklyApplication.pond = pond;
-            existsWeeklyApplication.applicationType = applicationType;
+            existsWeeklyApplication.application = application;
 
             this.afterSave.emit(existsWeeklyApplication);
             this.store.dispatch(updateWeeklyApplication(existsWeeklyApplication));
@@ -199,7 +201,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
             savedResult.farmer = farmer;
             savedResult.owner = clubMember;
             savedResult.pond = pond;
-            savedResult.applicationType = applicationType;
+            savedResult.application = application;
 
             this.afterSave.emit(savedResult);
             this.store.dispatch(addWeeklyApplication(savedResult));
