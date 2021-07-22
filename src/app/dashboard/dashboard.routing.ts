@@ -22,6 +22,7 @@ const routes: Routes = [
             { path: 'daily-feed', loadChildren: () => import(`./daily-feed/daily-feed.module`).then(m => m.DailyFeedModule) },
             { path: 'feed-chart', loadChildren: () => import(`./feed-chart/feed-chart.module`).then(m => m.FeedChartModule) },
             { path: 'harvest-management', loadChildren: () => import(`./harvest-management/harvest-management.module`).then(m => m.HarvestManagementModule) },
+            { path: 'weekly-application', loadChildren: () => import(`./weekly-application/weekly-application.module`).then(m => m.WeeklyApplicationModule) },
             { path: '**', redirectTo: 'home' }
         ]
     }

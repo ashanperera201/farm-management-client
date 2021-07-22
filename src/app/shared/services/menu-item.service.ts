@@ -214,6 +214,18 @@ export class MenuItemService {
         isMenuOpened: false,
         subItems: []
       },
+      {
+        id: 14,
+        displayName: 'Weekly Applications',
+        route: '/dashboard/weekly-application/view-all',
+        svgIconPath: './assets/media/svg/icons/Layout/Layout-arrange.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
     ]
   }
 }
