@@ -44,8 +44,7 @@ export class PercentageFeedingListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetchPercentageFeeding();
-    this.fetchInitialData();
+    this.fetchPercentageFeeding();;
   }
 
   fetchPercentageFeeding = () => {
@@ -53,6 +52,9 @@ export class PercentageFeedingListComponent implements OnInit {
     this.percentageFeedSubscriptions.push(this.percentageFeedingService.fetchPercentageFeedings().subscribe(res=> {
       if(res && res.result){
         this.percentageFeedingList = res.result;
+        this.farmList = res.result.farmer;
+        this.pondList = res.result.pond;
+        this.memberList = res.result.owner;
       }
       this.blockUI.stop();
     }, () => {
@@ -61,25 +63,25 @@ export class PercentageFeedingListComponent implements OnInit {
     }));
   }
 
-  fetchInitialData = () => {
-    this.blockUI.start('Fetching Data...');
-    this.percentageFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
-      if (ownerRes && ownerRes.result) {
-        this.memberList = ownerRes.result;
-      }
-      return this.pondService.fetchPonds()
-    })).pipe(switchMap((resPonds: any) => {
-      if (resPonds && resPonds.result) {
-        this.pondList = resPonds.result;
-      }
-      return this.farmService.fetchFarms()
-    })).subscribe((farmRes: any) => {
-      if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
-      }
-    }))
-    this.blockUI.stop();
-  }
+  // fetchInitialData = () => {
+  //   this.blockUI.start('Fetching Data...');
+  //   this.percentageFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
+  //     if (ownerRes && ownerRes.result) {
+  //       this.memberList = ownerRes.result;
+  //     }
+  //     return this.pondService.fetchPonds()
+  //   })).pipe(switchMap((resPonds: any) => {
+  //     if (resPonds && resPonds.result) {
+  //       this.pondList = resPonds.result;
+  //     }
+  //     return this.farmService.fetchFarms()
+  //   })).subscribe((farmRes: any) => {
+  //     if (farmRes && farmRes.result) {
+  //       this.farmList = farmRes.result;
+  //     }
+  //   }))
+  //   this.blockUI.stop();
+  // }
 
   addNewPercentageFeeding = () => {
     const addPercentageFeedingrModal = this.modalService.open(PercentageFeedingAddComponent, {
@@ -89,7 +91,6 @@ export class PercentageFeedingListComponent implements OnInit {
       modalDialogClass: 'modal-md',
     });
     addPercentageFeedingrModal.componentInstance.afterSave.subscribe((res: any) => {
-      debugger
       if (res) {
         this.percentageFeedingList.unshift(res);
       }

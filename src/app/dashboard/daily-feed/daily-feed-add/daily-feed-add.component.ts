@@ -61,12 +61,12 @@ export class DailyFeedAddComponent implements OnInit {
 
   initAddDailyFeedForm = () => {
     this.addDailyFeedForm = new FormGroup({
-      clubMember: new FormControl(null, Validators.compose([Validators.required])),
-      farm: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
+      farmer: new FormControl(null, Validators.compose([Validators.required])),
       pond: new FormControl(null, Validators.compose([Validators.required])),
-      date: new FormControl(null, Validators.compose([Validators.required])),
+      dailyFeedDate: new FormControl(null, Validators.compose([Validators.required])),
       calculatedDailyFeed: new FormControl(this.calculatedDailyFeed),
-      actualNoOfKillos: new FormControl(null, Validators.compose([Validators.required]))
+      actualNumberOfKilos: new FormControl(null, Validators.compose([Validators.required]))
     });
   }
 
@@ -103,7 +103,7 @@ export class DailyFeedAddComponent implements OnInit {
         month: current.getMonth() + 1,
         day: current.getDate()
       };
-      this.addDailyFeedForm.get('date')?.patchValue(this.model);
+      this.addDailyFeedForm.get('dailyFeedDate')?.patchValue(this.model);
     }
   }
 
@@ -117,8 +117,12 @@ export class DailyFeedAddComponent implements OnInit {
     if (this.addDailyFeedForm.valid) {
       if (this.isEditMode) {
         const dailyFeed = this.existingData;
-        // dailyFeed.applicationType = this.addPercentageFeedingForm.value.applicationType;
-        //dailyFeed.dateOfStocking = this.parserFormatter.format(this.addStockForm.value.dateOfStocking);
+        dailyFeed.owner = this.addDailyFeedForm.value.owner;
+        dailyFeed.farmer = this.addDailyFeedForm.value.farmer;
+        dailyFeed.pond = this.addDailyFeedForm.value.pond;
+        dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
+        dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
+        dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
 
         this.dailyFeedService.updateDailyFeed(dailyFeed).subscribe(res => {
           if (res) {
@@ -135,7 +139,12 @@ export class DailyFeedAddComponent implements OnInit {
       }
       else {
         const dailyFeed = new DailyFeedModel();
-        //dailyFeed.applicationType = this.addPercentageFeedingForm.value.applicationType;
+        dailyFeed.owner = this.addDailyFeedForm.value.owner;
+        dailyFeed.farmer = this.addDailyFeedForm.value.farmer;
+        dailyFeed.pond = this.addDailyFeedForm.value.pond;
+        dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
+        dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
+        dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
 
         this.dailyFeedService.saveDailyFeed(dailyFeed).subscribe(res => {
           if (res && res.result) {

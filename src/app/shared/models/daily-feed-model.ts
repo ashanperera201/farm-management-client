@@ -1,9 +1,8 @@
 export class DailyFeedModel {
-clubMemberId! : string;
-farmId! : string;
-pondId! : string;
-date! : string;
-calculateDailyFeed! : string;
-actualNoOfKillo! : string;
-remark! : string;
+owner! : any;
+farmer! : any;
+pond! : any;
+dailyFeedDate: any;
+calculatedDailyFeed: any;
+actualNumberOfKilos: any;
 }
