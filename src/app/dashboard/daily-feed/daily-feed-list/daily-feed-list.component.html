@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-row mb-4">
+        <!-- <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark">Club Member</label>
                 <select name="firstName" id="_id" class="form-control">
@@ -57,7 +57,7 @@
                     <option *ngFor="let p of pondList" [value]="p._id">{{p.pondNo}}</option>
                 </select>
             </div>
-        </div>
+        </div> -->
         <!-- end: Filtration form -->
 
         <!-- begin:Table -->
@@ -71,6 +71,9 @@
                             <span></span>
                         </label>
                     </th>
+                    <th> Owner </th>
+                    <th> Farmer </th>
+                    <th> Pond </th>
                     <th> Date </th>
                     <th> Calculated Dialy feed </th>
                     <th> Percentage </th>
@@ -85,6 +88,9 @@
                                 <span></span>
                             </label>
                         </td>
+                        <td>{{dailyFeed?.owner?.ownerName}}</td>
+                        <td>{{dailyFeed?.farmer?.farmName}}</td>
+                        <td>{{dailyFeed?.pond?.pondNo}}</td>
                         <td>{{dailyFeed?.date}}</td>
                         <td>{{dailyFeed?.calculatedDailyFeed}}</td>
                         <td>{{dailyFeed?.percentage}}</td>

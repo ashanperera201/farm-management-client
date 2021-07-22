@@ -107,6 +107,12 @@ export class PondAddComponent implements OnInit {
     }));
   }
 
+  fetchOwnerFarms = () => {
+    debugger
+    let member = this.addPondForm.value.farmer;
+    //this.farmList = this.farmList.filter(a=>a.)
+  }
+
   savePond = () => {
     this.blockUI.start('Processing.....');
     if (this.addPondForm.valid) {

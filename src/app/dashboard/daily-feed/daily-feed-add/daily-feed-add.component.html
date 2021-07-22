@@ -13,14 +13,14 @@
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Club Member</label>
-                <select name="firstName" id="_id" class="form-control" formControlName="clubMember">
+                <select name="firstName" id="_id" class="form-control" formControlName="owner">
                     <option value=null disabled selected>Select Owner</option>
                     <option *ngFor="let o of memberList" [value]="o._id">{{o.firstName}}</option>
                 </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Farm</label>
-                <select name="firstName" id="_id" class="form-control" formControlName="farm">
+                <select name="firstName" id="_id" class="form-control" formControlName="farmer">
                     <option value=null disabled selected>Select Farm</option>
                     <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
                 </select>
@@ -37,7 +37,7 @@
         <div class="col">
             <label class="font-size-h7  text-dark required">Date</label>
             <div class="input-group">
-              <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="date"
+              <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="dailyFeedDate"
                 placeholder="Date" ngbDatepicker #d="ngbDatepicker">
               <div class="input-group-append">
                 <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
@@ -54,7 +54,7 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Actual No Of Killos</label>
-                <input type="text" class="form-control" placeholder="Actual No Of Killos" formControlName="actualNoOfKillos"
+                <input type="text" class="form-control" placeholder="Actual No Of Killos" formControlName="actualNumberOfKilos"
                 (keypress)="onKeyPressChangesDecimal($event)">
             </div>
         </div>
