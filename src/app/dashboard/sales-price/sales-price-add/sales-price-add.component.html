@@ -13,12 +13,14 @@
       <div class="col">
         <label class="font-size-h7  text-dark required">Average Body Weight</label>
         <input type="text" class="form-control" placeholder="Average Body Weight" formControlName="averageBodyWeight"
-          (keypress)="onKeyPressChangesDecimal($event)">
+        maxlength="3" onCopy="return false" onDrag="return false" onDrop="return false"
+        onPaste="return false" (keypress)="onKeyPressChangesDecimal($event)">
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Sales Price</label>
         <input type="text" class="form-control" placeholder="Sales Price" formControlName="salesPrice"
-          (keypress)="onKeyPressChangesDecimal($event)">
+        maxlength="8" onCopy="return false" onDrag="return false" onDrop="return false"
+        onPaste="return false" (keypress)="onKeyPressChangesDecimal($event)">
       </div>
     </div>
   </div>
