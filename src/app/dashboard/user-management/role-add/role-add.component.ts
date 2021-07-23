@@ -5,8 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { UserRoleModel } from '../../../shared/models/user-role-model';
-import { UserManagementService } from 'src/app/shared/services/user-management.service';
-import { RolePermissionService } from 'src/app/shared/services/role-permission.service';
+import { UserManagementService } from '../../../shared/services/user-management.service';
+import { RolePermissionService } from '../../../shared/services/role-permission.service';
 
 @Component({
   selector: 'app-role-add',

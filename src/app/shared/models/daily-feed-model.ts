@@ -5,4 +5,5 @@ pond! : any;
 dailyFeedDate: any;
 calculatedDailyFeed: any;
 actualNumberOfKilos: any;
+remark: any
 }

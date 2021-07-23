@@ -86,6 +86,7 @@ export class DailyFeedListComponent implements OnInit {
 
 
   addNewDailyFeed = () => {
+    this.blockUI.start("Fetching Data.....");
     const addDailyFeedrModal = this.modalService.open(DailyFeedAddComponent, {
       animation: true,
       keyboard: true,
@@ -93,13 +94,14 @@ export class DailyFeedListComponent implements OnInit {
       modalDialogClass: 'modal-md',
     });
     addDailyFeedrModal.componentInstance.afterSave.subscribe((res: any) => {
-      if (res && res.percentageFeeding) {
-        this.dailyFeedList.unshift(res.percentageFeeding);
+      if (res) {
+        this.dailyFeedList.unshift(res);
       }
     });
   }
 
   updateDailyFeed = (dailyFeed: any) => {
+    this.blockUI.start("Fetching Data.....");
     const updateDailyFeedModal = this.modalService.open(DailyFeedAddComponent, {
       animation: true,
       keyboard: true,
@@ -108,14 +110,19 @@ export class DailyFeedListComponent implements OnInit {
     });
     updateDailyFeedModal.componentInstance.existingDailyFeed = dailyFeed;
     updateDailyFeedModal.componentInstance.isEditMode = true;
+
     if (updateDailyFeedModal.componentInstance.afterSave) {
       updateDailyFeedModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
           const index = this.dailyFeedList.findIndex((up: any) => up._id === res._id);
-          this.dailyFeedList[index].owner = res.owner;
-          this.dailyFeedList[index].farmer = res.farmer;
-          this.dailyFeedList[index].areaOfPond = res.areaOfPond;
-          this.dailyFeedList[index].pondNo = res.pondNo;
+          let feedRef = JSON.parse(JSON.stringify(this.dailyFeedList));
+          feedRef[index].owner = res.owner;
+          feedRef[index].farmer = res.farmer;
+          feedRef[index].pondNo = res.pondNo;
+          feedRef[index].dailyFeedDate = res.dailyFeedDate;
+          feedRef[index].calculatedDailyFeed = res.calculatedDailyFeed;
+          feedRef[index].actualNumberOfKilos = res.actualNumberOfKilos;
+          feedRef[index].remark = res.remark;
         }
       });
     }

@@ -5,12 +5,13 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { DailyFeedModel } from 'src/app/shared/models/daily-feed-model';
+import { DailyFeedModel } from '../../../shared/models/daily-feed-model';
 import { keyPressDecimals, keyPressNumbers } from '../../../shared/utils';
 import { PondService } from './../../../shared/services/pond.service';
 import { FarmService } from './../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { DailyFeedService } from './../../../shared/services/daily-feed.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-daily-feed-add',
@@ -55,7 +56,6 @@ export class DailyFeedAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.initAddDailyFeedForm();
-    this.setEditModeValues();
     this.fetchInitialData();
   }
 
@@ -66,7 +66,8 @@ export class DailyFeedAddComponent implements OnInit {
       pond: new FormControl(null, Validators.compose([Validators.required])),
       dailyFeedDate: new FormControl(null, Validators.compose([Validators.required])),
       calculatedDailyFeed: new FormControl(this.calculatedDailyFeed),
-      actualNumberOfKilos: new FormControl(null, Validators.compose([Validators.required]))
+      actualNumberOfKilos: new FormControl(null, Validators.compose([Validators.required])),
+      remark: new FormControl(null)
     });
   }
 
@@ -86,11 +87,14 @@ export class DailyFeedAddComponent implements OnInit {
       if (farmRes && farmRes.result) {
         this.farmList = farmRes.result;
       }
+      this.configValues();
+    }, () => {
+      this.blockUI.stop();
     }))
     this.blockUI.stop();
   }
 
-  setEditModeValues = () => {
+  configValues = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Daily Feed";
@@ -105,12 +109,27 @@ export class DailyFeedAddComponent implements OnInit {
       };
       this.addDailyFeedForm.get('dailyFeedDate')?.patchValue(this.model);
     }
+    this.blockUI.stop();
   }
 
   patchForm = () => {
+    let dateFormat = moment(this.existingDailyFeed.dailyFeedDate).format('YYYY-MM-DD').split('-')
+    this.model.year = +dateFormat[0];
+    this.model.month = +dateFormat[1];
+    this.model.day = +dateFormat[2];
+    
     if (this.existingDailyFeed) {
-      this.addDailyFeedForm.patchValue(this.existingDailyFeed);
+      const feed = Object.assign({}, this.existingDailyFeed);
+      feed.owner = this.existingDailyFeed.owner._id;
+      feed.farmer = this.existingDailyFeed.farmer._id;
+      feed.pond = this.existingDailyFeed.pond._id;
+      feed.dailyFeedDate =  this.model;
+      feed.calculatedDailyFeed = this.existingDailyFeed.calculatedDailyFeed;
+      feed.actualNumberOfKilos = this.existingDailyFeed.actualNumberOfKilos;
+      //feed.remark = this.existingDailyFeed.remark;
+      this.addDailyFeedForm.patchValue(feed);
     }
+    this.blockUI.stop();
   }
 
   saveDailyFeed = () => {
@@ -123,13 +142,14 @@ export class DailyFeedAddComponent implements OnInit {
         dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
         dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
         dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
+        //dailyFeed.remark = this.addDailyFeedForm.value.remark;
 
         this.dailyFeedService.updateDailyFeed(dailyFeed).subscribe(res => {
           if (res) {
             const dailyFeedData = this.setOtherData(dailyFeed);
             this.afterSave.emit(dailyFeedData);
             this.closeModal();
-            this.toastrService.success("Percentage of Feeding data updated successfully", "Success");
+            this.toastrService.success("Daily Feed data updated successfully", "Success");
           }
           this.blockUI.stop();
         }, () => {
@@ -145,10 +165,11 @@ export class DailyFeedAddComponent implements OnInit {
         dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
         dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
         dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
+        dailyFeed.remark = this.addDailyFeedForm.value.remark;
 
         this.dailyFeedService.saveDailyFeed(dailyFeed).subscribe(res => {
           if (res && res.result) {
-            const dailyFeedData = this.setOtherData(res.result.dailyFeedData);
+            const dailyFeedData = this.setOtherData(res.result);
             this.afterSave.emit(dailyFeedData);
             this.closeModal();
             this.toastrService.success("Data saved successfully", "Success");
