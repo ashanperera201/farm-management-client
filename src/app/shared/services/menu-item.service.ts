@@ -179,6 +179,18 @@ export class MenuItemService {
       },
       {
         id: 14,
+        displayName: 'Sales Price',
+        route: '/dashboard/sales-price/view-all',
+        svgIconPath: './assets/media/svg/icons/Layout/Layout-arrange.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
+      {
+        id: 15,
         displayName: 'Reporting Management',
         route: '#',
         svgIconPath: './assets/media/svg/icons/Files/Compilation.svg',
@@ -323,7 +335,7 @@ export class MenuItemService {
         ]
       },
       {
-        id: 15,
+        id: 16,
         displayName: 'User Management',
         route: '#',
         svgIconPath: './assets/media/svg/icons/General/User.svg',
@@ -370,7 +382,7 @@ export class MenuItemService {
             subItems: []
           }
         ]
-      },
+      }
     ]
   }
 }

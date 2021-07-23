@@ -5,7 +5,6 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ComponentsModule } from '../shared/components/components.module';
 import { DashboardRoutingModule } from './dashboard.routing';
 import { HomeComponent } from './home/home.component';
-
 @NgModule({
   declarations: [
     HomeComponent,
