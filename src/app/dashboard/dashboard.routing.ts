@@ -24,6 +24,7 @@ const routes: Routes = [
             { path: 'harvest-management', loadChildren: () => import(`./harvest-management/harvest-management.module`).then(m => m.HarvestManagementModule) },
             { path: 'weekly-application', loadChildren: () => import(`./weekly-application/weekly-application.module`).then(m => m.WeeklyApplicationModule) },
             { path: 'report-management', loadChildren: () => import(`./reporting/reporting.module`).then(m => m.ReportingModule) },
+            { path: 'sales-price', loadChildren: () => import(`./sales-price/sales-price.module`).then(m => m.SalesPriceModule) },
             { path: '**', redirectTo: 'home' }
         ]
     }
