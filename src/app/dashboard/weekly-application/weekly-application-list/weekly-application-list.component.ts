@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
@@ -21,7 +21,7 @@ import { WeeklyApplicationAddComponent } from '../weekly-application-add/weekly-
   templateUrl: './weekly-application-list.component.html',
   styleUrls: ['./weekly-application-list.component.scss']
 })
-export class WeeklyApplicationListComponent implements OnInit {
+export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -48,6 +48,10 @@ export class WeeklyApplicationListComponent implements OnInit {
   ngOnInit(): void {
     this.fetchWeeklyApplication();
     this.fetchInitialData();
+  }
+
+  ngAfterViewInit() {
+
   }
 
   fetchWeeklyApplication = () => {
@@ -170,7 +174,11 @@ export class WeeklyApplicationListComponent implements OnInit {
     const dataSet: any[] = this.weeklyApplicationList.map(x => {
       return {
         'Farm': `${x.farmer.farmName}`,
-        'Created On': moment(x.createdOn).format('YYYY-MM-DD')
+        'Week Number': `${x.weekNumber}`,
+        'Type of Application': `${x.application?.applicationType}`,
+        'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
+        'Unit': `${x.unit}`,
+        'Number of Units': `${x.numberOfUnit}`,
       }
     });
 
@@ -178,7 +186,7 @@ export class WeeklyApplicationListComponent implements OnInit {
       this.fileService.exportAsExcelFile(dataSet, "Ponds_Data");
     }
     else {
-      const headers: any[] = ['Farm', 'Created On'];
+      const headers: any[] = ['Farm', 'Week Number', 'Type of Application', 'Created On', 'Unit', 'Number of Units'];
       this.fileService.exportToPDF("Weekly Applications Data", headers, dataSet, 'Weekly_Applications_Data');
     }
   }

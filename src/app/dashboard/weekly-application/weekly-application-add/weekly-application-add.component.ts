@@ -121,8 +121,8 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
         this.clubMemberOnChange();
         this.farmOnChange();
 
-        this.addWeeklyApplicationForm.get("clubMember")?.patchValue(form.clubMember);
-        this.addWeeklyApplicationForm.get("farm")?.patchValue(form.farm);
+        this.addWeeklyApplicationForm.get("owner")?.patchValue(form.owner);
+        this.addWeeklyApplicationForm.get("farmer")?.patchValue(form.farmer);
         this.addWeeklyApplicationForm.get("pond")?.patchValue(form.pond);
         this.addWeeklyApplicationForm.get("application")?.patchValue(form.application);
       }
@@ -130,9 +130,9 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
   }
 
   clubMemberOnChange = () => {
-    const clubMember = this.addWeeklyApplicationForm.get("clubMember")?.value;
+    const clubMember = this.addWeeklyApplicationForm.get("owner")?.value;
     if (clubMember) {
-      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.clubMember && x.clubMember._id === clubMember);
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === clubMember);
       if (filteredFarmList && filteredFarmList.length > 0) {
         this.farmList = filteredFarmList;
       } else {
@@ -142,12 +142,12 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
   }
 
   farmOnChange = () => {
-    const clubMember = this.addWeeklyApplicationForm.get("clubMember")?.value;
-    const farm = this.addWeeklyApplicationForm.get("farm")?.value;
+    const clubMember = this.addWeeklyApplicationForm.get("owner")?.value;
+    const farm = this.addWeeklyApplicationForm.get("farmer")?.value;
 
     if (clubMember && farm) {
       // const stock = this.stockDetails.find(sd => sd.farmer._id === farmer);
-      const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farm) && (x.clubMember && x.clubMember._id === clubMember));
+      const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farm) && (x.owner && x.owner._id === clubMember));
       if (pondList && pondList.length > 0) {
         this.pondList = pondList;
       } else {
@@ -161,7 +161,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
       const formRawValues: any = this.addWeeklyApplicationForm.getRawValue();
 
       const farmer = this.initialData.farmList.find((x: any) => x._id === formRawValues.farmer);
-      const clubMember = this.initialData.memberList.find((x: any) => x._id === formRawValues.clubMember);
+      const clubMember = this.initialData.memberList.find((x: any) => x._id === formRawValues.owner);
       const pond = this.initialData.pondList.find((x: any) => x._id === formRawValues.pond);
       const application = this.initialData.applicationList.find((x: any) => x._id === formRawValues.application);
 
@@ -196,7 +196,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
         const formRawValues: any = this.addWeeklyApplicationForm.getRawValue();
         this.weeklyApplicationSubscriptions.push(this.weeklyApplicationsService.saveWeeklyApplication(formRawValues).subscribe((weeklyApplication: any) => {
           if (weeklyApplication && weeklyApplication.validity) {
-            const savedResult = weeklyApplication.result.weeklyApplication;
+            const savedResult = weeklyApplication.result;
 
             savedResult.farmer = farmer;
             savedResult.owner = clubMember;
