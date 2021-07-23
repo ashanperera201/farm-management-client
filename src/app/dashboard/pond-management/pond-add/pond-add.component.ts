@@ -5,11 +5,13 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { FarmService } from '../../../shared/services/farm.service';
 import { pondModel } from './../../../shared/models/pond-model';
 import { PondService } from '../../../shared/services/pond.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { keyPressDecimals } from '../../../shared/utils';
+import { AppState } from '../../../redux';
 
 @Component({
   selector: 'app-pond-add',
@@ -23,7 +25,6 @@ export class PondAddComponent implements OnInit {
 
   @BlockUI() blockUI!: NgBlockUI;
 
-  invalidInput: boolean = true;
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Pond';
   feedBrandList: any[] = [];
@@ -32,26 +33,39 @@ export class PondAddComponent implements OnInit {
   ownerList: any[] = [];
   ownerListSubscriptions: Subscription[] = [];
   farmerListSubscriptions: Subscription[] = [];
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+  }
 
   constructor(
     private pondService: PondService,
     private clubMemberService: ClubMemberService,
     private farmService: FarmService,
     private toastrService: ToastrService,
-    private activeModal: NgbActiveModal) { }
+    private activeModal: NgbActiveModal,
+    private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.initAddPondForm();
-    this.configValues();
-    this.fetchInitialData();
+    this.fetchInitialDetails();
   }
 
   configValues = () => {
     if (this.isEditMode) {
       this.saveButtonText = "Update";
       this.headerText = "Update Pond";
+      if (this.existingPond) {
+        const form = this.existingPond;
+        form.owner = this.existingPond.owner._id;
+        form.farmer = this.existingPond.farmer._id;
+        this.addPondForm.patchValue(form);
+        this.ownerOnChange();
+        this.addPondForm.get("farmer")?.patchValue(form.farmer);
     }
   }
+  this.blockUI.stop();
+}
 
   patchExistsRecord = () => {
     const pond = Object.assign({}, this.existingPond);
@@ -76,41 +90,34 @@ export class PondAddComponent implements OnInit {
     this.addPondForm.reset();
   }
 
-  fetchInitialData = () => {
-    this.blockUI.start('Fetching Data...');
+  fetchInitialDetails = () => {
+    this.blockUI.start('Fetching...');
     this.ownerListSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap(ownerRes => {
       if (ownerRes && ownerRes.result) {
-        this.ownerList = ownerRes.result;
+        this.initialData.ownerList = ownerRes.result;
       }
-      return this.farmService.fetchFarms();
-    })).subscribe(farmRes => {
-      if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
-        if(this.isEditMode){
-          this.patchExistsRecord();
-        }
+      return this.farmService.fetchFarms()
+    })).subscribe(farmServiceRes => {
+      if (farmServiceRes && farmServiceRes.validity) {
+        this.initialData.farmList = farmServiceRes.result;
       }
-    }));
-    this.blockUI.stop();
+      this.configValues();
+      this.blockUI.stop();
+    })), () => {
+      this.blockUI.stop();
+    };
   }
 
-  fetchFarmsOwnerWise = (owner: number) => {
-    this.blockUI.start('Fetching Data...');
-    this.farmerListSubscriptions.push(this.farmService.fetchFarmByowner(owner).subscribe(res => {
-      if (res && res.result) {
-        this.farmList = res.result;
+  ownerOnChange = () => {
+    const owner = this.addPondForm.get("owner")?.value;
+    if (owner) {
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
+      if (filteredFarmList && filteredFarmList.length > 0) {
+        this.farmList = filteredFarmList;
+      } else {
+        this.farmList = [];
       }
-      this.blockUI.stop();
-    }, () => {
-      this.blockUI.stop();
-      this.toastrService.error("Unable to load Farms", "Error");
-    }));
-  }
-
-  fetchOwnerFarms = () => {
-    debugger
-    let member = this.addPondForm.value.farmer;
-    //this.farmList = this.farmList.filter(a=>a.)
+    }
   }
 
   savePond = () => {
@@ -164,7 +171,7 @@ export class PondAddComponent implements OnInit {
   }
 
   setOwnerAndFarm = (result: any): any => {
-    const owner: any = this.ownerList.find(x => x._id === result.owner);
+    const owner: any = this.initialData.ownerList.find((x:any) => x._id === result.owner);
     const farm: any = this.farmList.find(x => x._id === result.farmer);
     if (owner || farm) {
       result.owner = owner;
@@ -180,17 +187,6 @@ export class PondAddComponent implements OnInit {
   onKeyPressChangesDecimal = (event: any): boolean => {
     return keyPressDecimals(event);
   }
-
-  // checkDecimalPoints = () => {
-  //   debugger
-  //   const validation = /^[0-9]+\.?[0-9]*$/;
-  //   if (validation.test(this.addPondForm.value.fixedCost) == false) {
-  //     this.invalidInput = true;
-  //   }
-  //   else {
-  //     this.invalidInput = false;
-  //   }
-  // }
 
   ngOnDestroy() {
     if ((this.ownerListSubscriptions && this.ownerListSubscriptions.length > 0) || (this.farmerListSubscriptions && this.farmerListSubscriptions.length > 0) ) {

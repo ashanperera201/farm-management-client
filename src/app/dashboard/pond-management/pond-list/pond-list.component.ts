@@ -67,17 +67,19 @@ export class PondListComponent implements OnInit {
 
   updatePond = (pond: any) => {
     this.blockUI.start("Fetching data.....");
-    const addPondModal = this.modalService.open(PondAddComponent, {
+    const updatePondModal = this.modalService.open(PondAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    addPondModal.componentInstance.existingPond = pond;
-    addPondModal.componentInstance.isEditMode = true;
-    if (addPondModal.componentInstance.afterSave) {
-      addPondModal.componentInstance.afterSave.subscribe((res: any) => {
+    updatePondModal.componentInstance.existingPond =  JSON.parse(JSON.stringify(pond));
+    updatePondModal.componentInstance.isEditMode = true;
+    
+    if (updatePondModal.componentInstance.afterSave) {
+      updatePondModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
+          debugger
           const index = this.pondList.findIndex((up: any) => up._id === res._id);
           this.pondList[index].owner = res.owner;
           this.pondList[index].farmer = res.farmer;
@@ -139,10 +141,11 @@ export class PondListComponent implements OnInit {
   exportPondList = (type: any) => {
     if (type === ExportTypes.CSV) {
       this.blockUI.start('Exporting Excel...');
+      debugger
       const csvData: any[] = this.pondList.map(x => {
         return {
-          'Owner': x.owner,
-          'Farm': x.farmer,
+          'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
+          'Farm': `${x.farmer.farmName}`,
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
           'Pond Count': x.pondNo,
           'Area Of Pond': x.areaOfPond,
@@ -157,8 +160,8 @@ export class PondListComponent implements OnInit {
       this.blockUI.start('Exporting Pdf...');
       const pdfData: any[] = this.pondList.map(x => {
         return {
-          'Owner': x.owner,
-          'Farm': x.farmer,
+          'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
+          'Farm': `${x.farmer.farmName}`,
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
           'Pond Count': x.pondNo,
           'Area Of Pond': x.areaOfPond,

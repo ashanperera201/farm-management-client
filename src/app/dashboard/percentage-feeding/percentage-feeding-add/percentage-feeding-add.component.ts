@@ -46,7 +46,6 @@ export class PercentageFeedingAddComponent implements OnInit {
   ngOnInit(): void {
     this.initAddPercentageFeedForm();
     this.fetchInitialData();
-    this.setEditModeValues();
   }
 
   initAddPercentageFeedForm = () => {
@@ -75,6 +74,9 @@ export class PercentageFeedingAddComponent implements OnInit {
       if (farmRes && farmRes.result) {
         this.farmList = farmRes.result;
       }
+      this.setEditModeValues();
+    }, () => {
+      this.blockUI.stop();
     }))
     this.blockUI.stop();
   }

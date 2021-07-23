@@ -12,9 +12,9 @@
         <div class="form-row mb-4">
             <div class="col">
                 <label class="font-size-h7  text-dark required">Owner</label>
-                <select name="owner" id="owner" formControlName="owner" class="form-control" (change)="fetchOwnerFarms()">
+                <select name="owner" id="owner" formControlName="owner" class="form-control" (change)="ownerOnChange()">
                     <option value=null disabled selected>Select Owner</option>
-                    <option *ngFor="let o of ownerList" [value]="o._id">{{o.firstName}}</option>
+                    <option *ngFor="let o of initialData?.ownerList" [value]="o._id">{{o.firstName}} {{o.lastName}}</option>
                   </select>
             </div>
             <div class="col">
@@ -54,5 +54,5 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-    <button type="button" class="btn btn-primary" [disabled]="addPondForm.invalid || invalidInput" (click)="savePond()">{{saveButtonText}}</button>
+    <button type="button" class="btn btn-primary" [disabled]="addPondForm.invalid" (click)="savePond()">{{saveButtonText}}</button>
 </div>

@@ -74,10 +74,10 @@
                     <th> Owner </th>
                     <th> Farmer </th>
                     <th> Pond </th>
-                    <th> Date </th>
+                    <th> Feed Date </th>
                     <th> Calculated Dialy feed </th>
-                    <th> Percentage </th>
                     <th> Actual No of Kilos </th>
+                    <th> Remark </th>
                     <th> Action </th>
                 </thead>
                 <tbody>
@@ -88,13 +88,13 @@
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{dailyFeed?.owner?.ownerName}}</td>
+                        <td>{{dailyFeed?.owner?.firstName}} {{dailyFeed?.owner?.lastName}}</td>
                         <td>{{dailyFeed?.farmer?.farmName}}</td>
                         <td>{{dailyFeed?.pond?.pondNo}}</td>
-                        <td>{{dailyFeed?.date}}</td>
+                        <td>{{dailyFeed?.dailyFeedDate | date: 'yyyy-MM-dd'}}</td>
                         <td>{{dailyFeed?.calculatedDailyFeed}}</td>
-                        <td>{{dailyFeed?.percentage}}</td>
-                        <td>{{dailyFeed?.actualNoOfKillos}}</td>
+                        <td>{{dailyFeed?.actualNumberOfKilos}}</td>
+                        <td>{{dailyFeed?.remark}}</td>
                        <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateDailyFeed(dailyFeed)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"

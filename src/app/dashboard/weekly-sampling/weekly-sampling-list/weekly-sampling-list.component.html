@@ -68,7 +68,7 @@
                     <th> Previous AWB </th>
                     <th> Gain in Weight </th>
                     <th> Expected Survival Percentage </th>
-                    <th> Created On </th>
+                    <!-- <th> Created On </th> -->
                     <th> Status </th>
                     <th> Action </th>
                 </thead>
@@ -92,7 +92,7 @@
                         <td>{{ weeklySample?.previousAwb }}</td>
                         <td>{{ weeklySample?.gainInWeight }}</td>
                         <td>{{ weeklySample?.expectedSurvivalPercentage }}</td>
-                        <td>{{ weeklySample?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
+                        <!-- <td>{{ weeklySample?.createdOn | date: 'EEEE, MMMM d, y' }}</td> -->
                         <td> <span [ngClass]="weeklySample?.isActive ? 'active' : 'inactive'"></span> </td>
                         <td>
                             <a title=" Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"

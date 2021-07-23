@@ -67,7 +67,7 @@
                     <th> Full stocked </th>
                     <th> PL price </th>
                     <th> Actual PL's Remain </th>
-                    <th> Created Date </th>
+                    <!-- <th> Created Date </th> -->
                     <th> Action </th>
                 </thead>
                 <tbody>
@@ -89,7 +89,7 @@
                         <td>{{ stock?.fullStocked }}</td>
                         <td>{{ stock?.plPrice }}</td>
                         <td>{{ stock?.actualPlRemains }}</td>
-                        <td>{{ stock?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
+                        <!-- <td>{{ stock?.createdOn | date: 'EEEE, MMMM d, y' }}</td> -->
                         <td>
                             <span [ngClass]="stock?.isActive ? 'active' : 'inactive'"></span>
                         </td>
