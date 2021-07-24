@@ -36,7 +36,8 @@
               "canvg",
               "raf",
               "@babel/runtime-corejs3",
-              "jspdf-autotable"
+              "jspdf-autotable",
+              "base-64"
             ],
             "aot": true,
             "assets": [

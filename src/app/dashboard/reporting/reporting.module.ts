@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { ReportingComponent } from './reporting.component';
 import { ReportingRouterModule } from './reporting.routing';
 import { ClubMemberReportComponent } from './club-member-report/club-member-report.component';
@@ -16,7 +17,6 @@ import { WeeklySampleReportComponent } from './weekly-sample-report/weekly-sampl
 import { WeeklyApplicationReportComponent } from './weekly-application-report/weekly-application-report.component';
 import { HarvestDetailReportComponent } from './harvest-detail-report/harvest-detail-report.component';
 import { AwbDetailReportComponent } from './awb-detail-report/awb-detail-report.component';
-
 
 @NgModule({
   declarations: [
@@ -38,7 +38,8 @@ import { AwbDetailReportComponent } from './awb-detail-report/awb-detail-report.
     ReportingRouterModule,
     FormsModule,
     NgbModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    NgSelectModule
   ]
 })
 export class ReportingModule { }

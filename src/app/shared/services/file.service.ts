@@ -3,6 +3,7 @@ import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import jsPDF from "jspdf";
 import 'jspdf-autotable'
+import { encode } from 'base-64';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -11,6 +12,8 @@ const EXCEL_EXTENSION = '.xlsx';
   providedIn: 'root'
 })
 export class FileService {
+
+  logo: string = `../../../assets/media/logos/sample.png`;
 
   constructor() { }
 
@@ -30,10 +33,11 @@ export class FileService {
     FileSaver.saveAs(data, `${fileName}${EXCEL_EXTENSION}`);
   }
 
-  exportToPDF(title: string, headers: any[], data: any, fileName: string) {
+  exportToPDF(title: string, headers: any[], data: any, fileName: string, footerTitle?: string, showLogo: boolean = false) {
     let doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
-    doc.text(title, pageWidth / 2, 8, { align: 'center' });
+    if (showLogo) { doc.addImage(this.logo, pageWidth / 2.3, 4, 25, 25); }
+    doc.text(title, pageWidth / 2, showLogo ? 40 : 8, { align: 'center' });
     doc.setFontSize(7);
 
     const strctData: any[] = this.structureData(headers, data);
@@ -42,7 +46,9 @@ export class FileService {
       styles: { font: 'helvetica', fontStyle: 'bold', lineColor: '#000' },
       head: [headers],
       body: strctData,
+      startY: showLogo ? 45 : 14
     });
+    doc.text(`${footerTitle ? footerTitle : ''}`, pageWidth / 2.3, doc.internal.pageSize.height - 10);
     doc.save(fileName);
   }
 
@@ -61,15 +67,5 @@ export class FileService {
     }
 
     return retVal;
-  }
-
-  private createHeaders(keys: any) {
-    return keys.map((key: any) => ({
-      'name': key,
-      'prompt': key,
-      'width': 35,
-      'align': 'center',
-      'padding': 0
-    }));
   }
 }
