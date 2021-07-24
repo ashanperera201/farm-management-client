@@ -15,7 +15,7 @@
                 <label class="font-size-h7  text-dark required">Club Member</label>
                 <select name="firstName" id="_id" class="form-control" formControlName="owner">
                     <option value=null disabled selected>Select Owner</option>
-                    <option *ngFor="let o of memberList" [value]="o._id">{{o.firstName}}</option>
+                    <option *ngFor="let o of memberList" [value]="o._id">{{o.firstName}} {{o.lastName}}</option>
                 </select>
             </div>
             <div class="col">

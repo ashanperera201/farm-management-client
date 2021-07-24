@@ -79,7 +79,7 @@ export class PondListComponent implements OnInit {
     if (updatePondModal.componentInstance.afterSave) {
       updatePondModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
-          debugger
+          
           const index = this.pondList.findIndex((up: any) => up._id === res._id);
           this.pondList[index].owner = res.owner;
           this.pondList[index].farmer = res.farmer;
@@ -141,7 +141,7 @@ export class PondListComponent implements OnInit {
   exportPondList = (type: any) => {
     if (type === ExportTypes.CSV) {
       this.blockUI.start('Exporting Excel...');
-      debugger
+      
       const csvData: any[] = this.pondList.map(x => {
         return {
           'Owner': `${x.owner.firstName} ${x.owner.lastName}`,

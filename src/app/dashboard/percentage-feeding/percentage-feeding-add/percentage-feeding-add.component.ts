@@ -165,7 +165,6 @@ export class PercentageFeedingAddComponent implements OnInit {
   }
 
   ownerOnChange = () => {
-    debugger
     const owner = this.addPercentageFeedingForm.get("owner")?.value;
     if (owner) {
       const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
