@@ -25,6 +25,7 @@ const routes: Routes = [
             { path: 'weekly-application', loadChildren: () => import(`./weekly-application/weekly-application.module`).then(m => m.WeeklyApplicationModule) },
             { path: 'report-management', loadChildren: () => import(`./reporting/reporting.module`).then(m => m.ReportingModule) },
             { path: 'sales-price', loadChildren: () => import(`./sales-price/sales-price.module`).then(m => m.SalesPriceModule) },
+            { path: 'weekly-performance', loadChildren: () => import(`./weekly-performance/weekly-performance.module`).then(m => m.WeeklyPerformanceModule) },
             { path: '**', redirectTo: 'home' }
         ]
     }

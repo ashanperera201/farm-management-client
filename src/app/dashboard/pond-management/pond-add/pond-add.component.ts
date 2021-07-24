@@ -31,8 +31,7 @@ export class PondAddComponent implements OnInit {
   addPondForm!: FormGroup;
   farmList: any[] = [];
   ownerList: any[] = [];
-  ownerListSubscriptions: Subscription[] = [];
-  farmerListSubscriptions: Subscription[] = [];
+  pondSubscriptions: Subscription[] = [];
   initialData: any = {
     farmList: [],
     ownerList: [],
@@ -92,7 +91,7 @@ export class PondAddComponent implements OnInit {
 
   fetchInitialDetails = () => {
     this.blockUI.start('Fetching...');
-    this.ownerListSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap(ownerRes => {
+    this.pondSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap(ownerRes => {
       if (ownerRes && ownerRes.result) {
         this.initialData.ownerList = ownerRes.result;
       }
@@ -189,13 +188,10 @@ export class PondAddComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if ((this.ownerListSubscriptions && this.ownerListSubscriptions.length > 0) || (this.farmerListSubscriptions && this.farmerListSubscriptions.length > 0) ) {
-      this.ownerListSubscriptions.forEach(res => {
+    if (this.pondSubscriptions && this.pondSubscriptions.length > 0) {
+      this.pondSubscriptions.forEach(res => {
         res.unsubscribe();
       });
-      this.farmerListSubscriptions.forEach(res => {
-        res.unsubscribe();
-      })
     }
   }
 

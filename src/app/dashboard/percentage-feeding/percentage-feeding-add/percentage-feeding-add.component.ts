@@ -28,12 +28,17 @@ export class PercentageFeedingAddComponent implements OnInit {
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Percentage of Feeding';
   feedBrandList: any[] = [];
-  memberList: any[] = [];
+  ownerList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
   existingPercentageFeeding = new PercentageFeedModel();
   addPercentageFeedingForm!: FormGroup;
   percentageFeedingSubscriptions: Subscription[] = [];
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+    pondList: []
+  }
 
   constructor(
     private percentageFeedingService : PercentageFeedingService,
@@ -62,17 +67,17 @@ export class PercentageFeedingAddComponent implements OnInit {
     this.blockUI.start('Fetching Data...');
     this.percentageFeedingSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.memberList = ownerRes.result;
+        this.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.pondList = resPonds.result;
+        this.initialData.pondList = resPonds.result;
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
+        this.initialData.farmList = farmRes.result;
       }
       this.setEditModeValues();
     }, () => {
@@ -148,7 +153,7 @@ export class PercentageFeedingAddComponent implements OnInit {
   }
 
   setOtherData = (result: any): any => {
-    const owner: any = this.memberList.find(x => x._id === result.owner);
+    const owner: any = this.ownerList.find(x => x._id === result.owner);
     const farm: any = this.farmList.find(x => x._id === result.farmer);
     const pond: any = this.pondList.find(x => x._id === result.pond);
     if (owner || farm) {
@@ -156,6 +161,31 @@ export class PercentageFeedingAddComponent implements OnInit {
       result.farmer = farm;
       result.pond = pond;
       return result;
+    }
+  }
+
+  ownerOnChange = () => {
+    debugger
+    const owner = this.addPercentageFeedingForm.get("owner")?.value;
+    if (owner) {
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
+      if (filteredFarmList && filteredFarmList.length > 0) {
+        this.farmList = filteredFarmList;
+      } else {
+        this.farmList = [];
+      }
+    }
+  }
+
+  farmOnChange = () => {
+    const farmer = this.addPercentageFeedingForm.get("farmer")?.value;
+    if (farmer) {
+      const filteredPondList = this.initialData.pondList.filter((x: any) => x.farmer && x.farmer._id === farmer);
+      if (filteredPondList && filteredPondList.length > 0) {
+        this.pondList = filteredPondList;
+      } else {
+        this.pondList = [];
+      }
     }
   }
 
@@ -171,5 +201,12 @@ export class PercentageFeedingAddComponent implements OnInit {
     this.activeModal.close();
   }
 
+  ngOnDestroy() {
+    if (this.percentageFeedingSubscriptions && this.percentageFeedingSubscriptions.length > 0) {
+      this.percentageFeedingSubscriptions.forEach(res => {
+        res.unsubscribe();
+      });
+    }
+  }
 
 }

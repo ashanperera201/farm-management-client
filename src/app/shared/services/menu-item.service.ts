@@ -191,6 +191,18 @@ export class MenuItemService {
       },
       {
         id: 15,
+        displayName: 'Weekly Performance',
+        route: '/dashboard/weekly-performance',
+        svgIconPath: './assets/media/svg/icons/Code/Time-schedule.svg',
+        classes: 'menu-item',
+        activeClass: '',
+        selected: false,
+        isMenuHeading: false,
+        isMenuOpened: false,
+        subItems: []
+      },
+      {
+        id: 16,
         displayName: 'Reporting Management',
         route: '#',
         svgIconPath: './assets/media/svg/icons/Files/Compilation.svg',
