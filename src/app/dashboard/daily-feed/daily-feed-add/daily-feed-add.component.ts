@@ -1,3 +1,4 @@
+import { FarmDetailReportComponent } from './../../reporting/farm-detail-report/farm-detail-report.component';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
@@ -29,13 +30,18 @@ export class DailyFeedAddComponent implements OnInit {
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Daily Feed';
   feedBrandList: any[] = [];
-  memberList: any[] = [];
+  ownerList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
   existingData = new DailyFeedModel();
   addDailyFeedForm!: FormGroup;
   dailyFeedSubscriptions: Subscription[] = [];
   model: NgbDateStruct;
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+    pondList: []
+  }
   //TODO
   calculatedDailyFeed = 25;
 
@@ -75,17 +81,17 @@ export class DailyFeedAddComponent implements OnInit {
     this.blockUI.start('Fetching Data...');
     this.dailyFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.memberList = ownerRes.result;
+        this.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.pondList = resPonds.result;
+        this.initialData.pondList = resPonds.result;
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
+        this.initialData.farmList = farmRes.result;
       }
       this.configValues();
     }, () => {
@@ -126,7 +132,7 @@ export class DailyFeedAddComponent implements OnInit {
       feed.dailyFeedDate =  this.model;
       feed.calculatedDailyFeed = this.existingDailyFeed.calculatedDailyFeed;
       feed.actualNumberOfKilos = this.existingDailyFeed.actualNumberOfKilos;
-      //feed.remark = this.existingDailyFeed.remark;
+      feed.remark = this.existingDailyFeed.remark;
       this.addDailyFeedForm.patchValue(feed);
     }
     this.blockUI.stop();
@@ -142,7 +148,7 @@ export class DailyFeedAddComponent implements OnInit {
         dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
         dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
         dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
-        //dailyFeed.remark = this.addDailyFeedForm.value.remark;
+        dailyFeed.remark = this.addDailyFeedForm.value.remark;
 
         this.dailyFeedService.updateDailyFeed(dailyFeed).subscribe(res => {
           if (res) {
@@ -184,7 +190,7 @@ export class DailyFeedAddComponent implements OnInit {
   }
 
   setOtherData = (result: any): any => {
-    const owner: any = this.memberList.find(x => x._id === result.owner);
+    const owner: any = this.ownerList.find(x => x._id === result.owner);
     const farm: any = this.farmList.find(x => x._id === result.farmer);
     const pond: any = this.pondList.find(x => x._id === result.pond);
     if (owner || farm) {
@@ -192,6 +198,30 @@ export class DailyFeedAddComponent implements OnInit {
       result.farmer = farm;
       result.pond = pond;
       return result;
+    }
+  }
+
+  ownerOnChange = () => {
+    const owner = this.addDailyFeedForm.get("owner")?.value;
+    if (owner) {
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
+      if (filteredFarmList && filteredFarmList.length > 0) {
+        this.farmList = filteredFarmList;
+      } else {
+        this.farmList = [];
+      }
+    }
+  }
+
+  farmOnChange = () => {
+    const farmer = this.addDailyFeedForm.get("farmer")?.value;
+    if (farmer) {
+      const filteredPondList = this.initialData.pondList.filter((x: any) => x.farmer && x.farmer._id === farmer);
+      if (filteredPondList && filteredPondList.length > 0) {
+        this.pondList = filteredPondList;
+      } else {
+        this.pondList = [];
+      }
     }
   }
 

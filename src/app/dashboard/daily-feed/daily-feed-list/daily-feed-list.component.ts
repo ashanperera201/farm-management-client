@@ -22,7 +22,7 @@ export class DailyFeedListComponent implements OnInit {
 
   isAllChecked! : boolean;
   dailyFeedList: any[] = [];
-  memberList: any[] = [];
+  ownerList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
   filterParam!: string;
@@ -45,7 +45,7 @@ export class DailyFeedListComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchDailyFeed();
-    //this.fetchInitialData();
+    this.fetchInitialData();
   }
 
   fetchDailyFeed = () => {
@@ -53,9 +53,9 @@ export class DailyFeedListComponent implements OnInit {
     this.dailyFeedSubscriptions.push(this.dailyFeedService.fetchDailyFeeds().subscribe(res=> {
       if(res && res.result){
         this.dailyFeedList = res.result;
-        this.memberList = res.result.owners;
-        this.farmList = res.result.farmers;
-        this.pondList = res.result.ponds;
+        // this.ownerList = res.result.owners;
+        // this.farmList = res.result.farmers;
+        // this.pondList = res.result.ponds;
       }
       this.blockUI.stop();
     }, () => {
@@ -68,7 +68,7 @@ export class DailyFeedListComponent implements OnInit {
     this.blockUI.start('Fetching Data...');
     this.dailyFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.memberList = ownerRes.result;
+        this.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
@@ -83,7 +83,6 @@ export class DailyFeedListComponent implements OnInit {
     }))
     this.blockUI.stop();
   }
-
 
   addNewDailyFeed = () => {
     this.blockUI.start("Fetching Data.....");
