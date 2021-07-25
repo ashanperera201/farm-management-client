@@ -98,11 +98,11 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
         this.farmList = farmRes.result;
         this.initialData.farmList = this.farmList;
       }
+      this.configValues();
       this.blockUI.stop();
     }, () => {
       this.blockUI.stop();
     }))
-    this.configValues();
   }
 
   configValues = () => {
@@ -118,9 +118,8 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
         form.application = this.existingWeeklyApplication.application._id;
 
         this.addWeeklyApplicationForm.patchValue(form);
-        this.clubMemberOnChange();
-        this.farmOnChange();
-        this.pondOnChange();
+        // this.ownerOnChange();
+        // this.farmOnChange();
 
         this.addWeeklyApplicationForm.get("owner")?.patchValue(form.owner);
         this.addWeeklyApplicationForm.get("farmer")?.patchValue(form.farmer);
@@ -130,7 +129,7 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
     }
   }
 
-  clubMemberOnChange = () => {
+  ownerOnChange = () => {
     const clubMember = this.addWeeklyApplicationForm.get("owner")?.value;
     if (clubMember) {
       const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === clubMember);
@@ -156,7 +155,6 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
       }
     }
   }
-
   pondOnChange = () => {
     const owner = this.addWeeklyApplicationForm.get('owner')?.value;
     const farmer = this.addWeeklyApplicationForm.get('farmer')?.value;

@@ -21,7 +21,7 @@
                 <label class="font-size-h7  text-dark required">Farm</label>
                 <select name="farm" id="farm" formControlName="farmer" class="form-control">
                     <option value=null disabled selected>Select Farm</option>
-                    <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
+                    <option *ngFor="let f of initialData?.farmList" [value]="f._id">{{f.farmName}}</option>
                   </select>
             </div>
         </div>

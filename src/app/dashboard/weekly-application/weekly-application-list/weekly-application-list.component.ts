@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AppState } from 'src/app/redux';
-import { removeWeeklyApplication } from 'src/app/redux/actions/weekly-applications.action';
+import { removeWeeklyApplication, updateWeeklyApplication } from '../../../redux/actions/weekly-applications.action';
 import { ExportTypes } from 'src/app/shared/enums/export-type';
 import { ClubMemberService } from 'src/app/shared/services/club-member.service';
 import { FarmService } from 'src/app/shared/services/farm.service';
@@ -96,7 +96,8 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     });
     addWeeklyApplicationModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res && res.result) {
-        this.weeklyApplicationList.unshift(res.result);
+        // this.weeklyApplicationList.unshift(res.result);
+        this.fetchInitialData();
       }
     });
   }
@@ -108,15 +109,25 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    updateWeeklyApplicationModal.componentInstance.existingWeeklyApplication = weeklyApplication;
+    updateWeeklyApplicationModal.componentInstance.existingWeeklyApplication = JSON.parse(JSON.stringify(weeklyApplication));
     updateWeeklyApplicationModal.componentInstance.isEditMode = true;
+
     if (updateWeeklyApplicationModal.componentInstance.afterSave) {
       updateWeeklyApplicationModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
-          const index = this.weeklyApplicationList.findIndex((up: any) => up._id === res._id);
-          this.weeklyApplicationList[index].owner = res.owner;
-          this.weeklyApplicationList[index].farmer = res.farmer;
-          this.weeklyApplicationList[index].pondNo = res.pondNo;
+           const index = this.weeklyApplicationList.findIndex((up: any) => up._id === res._id);
+          let weeklyApplicationRefs = JSON.parse(JSON.stringify(this.weeklyApplicationList));
+
+          weeklyApplicationRefs[index].owner = res.owner;
+          weeklyApplicationRefs[index].farmer = res.farmer;
+          weeklyApplicationRefs[index].pond = res.pond;
+          weeklyApplicationRefs[index].weekNumber = res.weekNumber;
+          weeklyApplicationRefs[index].unit = res.unit;
+          weeklyApplicationRefs[index].numberOfUnit = res.numberOfUnit;
+
+          this.weeklyApplicationList = [...weeklyApplicationRefs];
+          // ** 
+          this.store.dispatch(updateWeeklyApplication(this.weeklyApplicationList[index]));
         }
       });
     }
