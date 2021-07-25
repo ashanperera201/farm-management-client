@@ -38,6 +38,7 @@ export class SalesPriceAddComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initSalesPriceForm();
+    this.configValues();
   }
 
   initSalesPriceForm = () => {
@@ -65,7 +66,7 @@ export class SalesPriceAddComponent implements OnInit, OnDestroy {
 
 
       if (this.isEditMode) {
-        const existsSalesPrice = this.existingSalesPriceModel;
+        const existsSalesPrice = this.existingSalesPrice;
         existsSalesPrice.averageBodyWeight = formRawValues.averageBodyWeight;
         existsSalesPrice.salesPrice = formRawValues.salesPrice;
 
@@ -83,6 +84,7 @@ export class SalesPriceAddComponent implements OnInit, OnDestroy {
       } else {
         this.blockUI.start('Saving in progress...');
         const formRawValues: any = this.addSalesPriceForm.getRawValue();
+
         this.salesPriceSubscriptions.push(this.salesPriceService.saveSalesPrice(formRawValues).subscribe((salesPrice: any) => {
           if (salesPrice && salesPrice.validity) {
             const savedResult = salesPrice.result.salesPrice;

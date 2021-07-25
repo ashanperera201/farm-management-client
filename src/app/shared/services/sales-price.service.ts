@@ -13,32 +13,32 @@ export class SalesPriceService {
   constructor(private httpClient: HttpClient) { }
 
   fetchSalesPrice = (): Observable<any> => {
-    const url: string = `${this.baseUrl}/sales-price-details/details`;
+    const url: string = `${this.baseUrl}/sales/details`;
     return this.httpClient.get(url);
   }
 
   fetchSalesPriceById = (salesUniqueId: string): Observable<any> => {
-    const url: string = `${this.baseUrl}/sales-price-details/${salesUniqueId}`;
+    const url: string = `${this.baseUrl}/sales/${salesUniqueId}`;
     return this.httpClient.get(url);
   }
 
   saveSalesPriceCollection = (salesPriceCollection: any[]): Observable<any> => {
-    const url: string = `${this.baseUrl}/sales-price-details/create-collection`;
+    const url: string = `${this.baseUrl}/sales/create-collection`;
     return this.httpClient.post(url, salesPriceCollection);
   }
 
   saveSalesPrice = (salesPrice: any): Observable<any> => {
-    const url: string = `${this.baseUrl}/sales-price-details/create`;
+    const url: string = `${this.baseUrl}/sales/create`;
     return this.httpClient.post(url, salesPrice);
   }
 
   updateSalesPrice = (salesPrice: any): Observable<any> => {
-    const url: string = `${this.baseUrl}/sales-price-details/update`;
+    const url: string = `${this.baseUrl}/sales/update`;
     return this.httpClient.put(url, salesPrice);
   }
 
   deleteSalesPrice = (formData: FormData): Observable<any> => {
-    const url: string = `${this.baseUrl}/sales-price-details/delete`;
+    const url: string = `${this.baseUrl}/sales/delete`;
     return this.httpClient.post(url, formData);
   }
 }
