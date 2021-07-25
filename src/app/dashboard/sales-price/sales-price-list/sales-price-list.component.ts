@@ -5,11 +5,12 @@ import * as moment from 'moment';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { AppState, removeSalesPrice } from 'src/app/redux';
+import { AppState } from '../../../redux/application-state';
 import { ExportTypes } from 'src/app/shared/enums/export-type';
 import { FileService } from 'src/app/shared/services/file.service';
 import { SalesPriceService } from 'src/app/shared/services/sales-price.service';
 import { SalesPriceAddComponent } from '../sales-price-add/sales-price-add.component';
+import { removeSalesPrice } from '../../../redux/actions/sales-price.action';
 
 @Component({
   selector: 'app-sales-price-list',
@@ -74,7 +75,7 @@ export class SalesPriceListComponent implements OnInit {
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
-    updateSalesPriceModal.componentInstance.existingWeeklyApplication = salesPrice;
+    updateSalesPriceModal.componentInstance.existingSalesPrice = salesPrice;
     updateSalesPriceModal.componentInstance.isEditMode = true;
     if (updateSalesPriceModal.componentInstance.afterSave) {
       updateSalesPriceModal.componentInstance.afterSave.subscribe((res: any) => {
@@ -137,8 +138,9 @@ export class SalesPriceListComponent implements OnInit {
   exportSalesPriceList = (type: any) => {
     const dataSet: any[] = this.salesPriceList.map(x => {
       return {
-        'Farm': `${x.farmer.farmName}`,
-        'Created On': moment(x.createdOn).format('YYYY-MM-DD')
+        'Average Body Weight': `${x.averageBodyWeight}`,
+        'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
+        'Sales Price': `${x.salesPrice}`,
       }
     });
 
@@ -146,7 +148,7 @@ export class SalesPriceListComponent implements OnInit {
       this.fileService.exportAsExcelFile(dataSet, "Sales_Price_Data");
     }
     else {
-      const headers: any[] = ['Farm', 'Created On'];
+      const headers: any[] = ['Average Body Weight', 'Created On', 'Sales Price'];
       this.fileService.exportToPDF("Sales Price Data", headers, dataSet, 'Sales_Price_Data');
     }
   }
