@@ -8,6 +8,8 @@ import { ExportTypes } from '../../../shared/enums/export-type';
 import { ApplicationsService } from '../../../../app/shared/services/applications.service';
 import { ApplicationAddComponent } from '../application-add/application-add.component';
 import { FileService } from '../../../shared/services/file.service';
+import { Store } from '@ngrx/store';
+import { AppState, removeApplication, setApplication, updateApplication } from '../../../redux';
 
 @Component({
   selector: 'app-application-list',
@@ -30,7 +32,8 @@ export class ApplicationListComponent implements OnInit {
     private applicationService : ApplicationsService,
     private toastrService:ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService) { }
+    private fileService: FileService,
+    private store: Store<AppState>) { }
 
  ngOnInit(): void {
   this.fetchApplicationsList();
@@ -41,6 +44,7 @@ fetchApplicationsList = () => {
   this.appListSubscriptions.push(this.applicationService.fetchApplications().subscribe(res=> {
     if(res && res.result){
       this.applicationList = res.result;
+      this.store.dispatch(setApplication(res.result));
     }
     this.blockUI.stop();
   }, () => {
@@ -74,6 +78,24 @@ fetchApplicationsList = () => {
   });
    addFeedBrandModal.componentInstance.existingApplication = application;
    addFeedBrandModal.componentInstance.isEditMode = true;
+
+   if (addFeedBrandModal.componentInstance.afterSave) {
+    addFeedBrandModal.componentInstance.afterSave.subscribe((res: any) => {
+      if (res) {
+         const index = this.applicationList.findIndex((up: any) => up._id === res._id);
+        let applicationRefs = JSON.parse(JSON.stringify(this.applicationList));
+
+        applicationRefs[index].applicationType = res.applicationType;
+        applicationRefs[index].applicantName = res.applicantName;
+        applicationRefs[index].unit = res.unit;
+        applicationRefs[index].costPerUnit = res.costPerUnit;
+
+        this.applicationList = [...applicationRefs];
+        // ** 
+        this.store.dispatch(updateApplication(this.applicationList[index]));
+      }
+    });
+  }
  }
 
  deleteSelected = () => {
@@ -100,6 +122,7 @@ proceedDelete = (appIds: string[]) => {
     if (deletedResult) {
       this.isAllChecked = false;
       appIds.forEach(e => { const index: number = this.applicationList.findIndex((up: any) => up._id === e); this.applicationList.splice(index, 1); });
+      this.store.dispatch(removeApplication(appIds));
       this.toastrService.success('Successfully deleted.', 'Success');
     }
     this.blockUI.stop();

@@ -6,6 +6,8 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ApplicationsService } from '../../../shared/services/applications.service';
 import { ApplicationModel } from './../../../shared/models/application-model';
 import { keyPressDecimals } from '../../../shared/utils';
+import { Store } from '@ngrx/store';
+import { addApplication, AppState, updateApplication } from '../../../redux';
 
 @Component({
   selector: 'app-application-add',
@@ -29,7 +31,8 @@ export class ApplicationAddComponent implements OnInit {
   constructor(
     private applicationService : ApplicationsService,
     private toastrService:ToastrService,
-    private activeModal: NgbActiveModal) { }
+    private activeModal: NgbActiveModal,
+    private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.initAddApplicationForm();
@@ -75,6 +78,7 @@ export class ApplicationAddComponent implements OnInit {
         this.applicationService.updateApplication(application).subscribe(res => {
           if(res){
             this.closeModal();
+            this.store.dispatch(updateApplication(application));
             this.toastrService.success("Application data updated successfully","Success");
           }
           this.blockUI.stop();
@@ -94,6 +98,7 @@ export class ApplicationAddComponent implements OnInit {
         this.applicationService.saveApplication(application).subscribe(res => {
           if(res && res.result){
             this.closeModal();
+            this.store.dispatch(addApplication(res.result));
             this.toastrService.success("Application saved successfully","Success");
             this.afterSave.emit(res.result);
           }

@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AppState } from 'src/app/redux';
-import { addWeeklyApplication, updateWeeklyApplication } from 'src/app/redux/actions/weekly-applications.action';
+import { addWeeklyApplication, updateWeeklyApplication } from 'src/app/redux/actions/weekly-applications.actions';
 import { WeeklyApplicationModel } from 'src/app/shared/models/weekly-application';
 import { ApplicationsService } from 'src/app/shared/services/applications.service';
 import { ClubMemberService } from 'src/app/shared/services/club-member.service';
