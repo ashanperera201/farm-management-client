@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
@@ -21,6 +22,7 @@ import { DailyFeedService } from '../../../shared/services/daily-feed.service';
 export class DailyFeedListComponent implements OnInit {
 
   isAllChecked! : boolean;
+  initialDailyFeedList: any[] = [];
   dailyFeedList: any[] = [];
   ownerList: any[] = [];
   farmList: any[] = [];
@@ -30,6 +32,7 @@ export class DailyFeedListComponent implements OnInit {
   pageSize: number = 10;
   page: any = 1;
   dailyFeedSubscriptions: Subscription[] = [];
+  filterForm!: FormGroup;
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -44,8 +47,34 @@ export class DailyFeedListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.initFilterForm();
     this.fetchDailyFeed();
     this.fetchInitialData();
+  }
+
+  initFilterForm= () => {
+    this.filterForm = new FormGroup({
+      owner: new FormControl(null),
+      farmer: new FormControl(null),
+      pond: new FormControl(null),
+    });
+  }
+
+  filterChange = (event: any) => {
+    this.dailyFeedList = this.initialDailyFeedList;
+    const owner = this.filterForm.get("owner")?.value;
+    const farmer = this.filterForm.get("farmer")?.value;
+    const pond = this.filterForm.get("pond")?.value;
+
+    if(owner){
+      this.dailyFeedList = this.dailyFeedList.filter(x => x.owner._id === owner);
+    }
+    if(farmer){
+      this.dailyFeedList = this.dailyFeedList.filter(x => x.farmer._id === farmer);
+    }
+    if(pond){
+      this.dailyFeedList = this.dailyFeedList.filter(x => x.pond._id === pond);
+    }
   }
 
   fetchDailyFeed = () => {
@@ -53,6 +82,7 @@ export class DailyFeedListComponent implements OnInit {
     this.dailyFeedSubscriptions.push(this.dailyFeedService.fetchDailyFeeds().subscribe(res=> {
       if(res && res.result){
         this.dailyFeedList = res.result;
+        this.initialDailyFeedList = res.result;
         // this.ownerList = res.result.owners;
         // this.farmList = res.result.farmers;
         // this.pondList = res.result.ponds;

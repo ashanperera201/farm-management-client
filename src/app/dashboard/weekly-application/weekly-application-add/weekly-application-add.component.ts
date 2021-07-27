@@ -219,7 +219,6 @@ export class WeeklyApplicationAddComponent implements OnInit, OnDestroy {
             savedResult.owner = clubMember;
             savedResult.pond = pond;
             savedResult.application = application;
-
             this.afterSave.emit(savedResult);
             this.store.dispatch(addWeeklyApplication(savedResult));
             this.toastrService.success("Successfully saved.", "Success");

@@ -134,6 +134,10 @@ export class DailyFeedAddComponent implements OnInit {
       feed.actualNumberOfKilos = this.existingDailyFeed.actualNumberOfKilos;
       feed.remark = this.existingDailyFeed.remark;
       this.addDailyFeedForm.patchValue(feed);
+      this.ownerOnChange();
+      this.farmOnChange();
+      this.addDailyFeedForm.get("farmer")?.patchValue(feed.farmer);
+      this.addDailyFeedForm.get("pond")?.patchValue(feed.pond);
     }
     this.blockUI.stop();
   }

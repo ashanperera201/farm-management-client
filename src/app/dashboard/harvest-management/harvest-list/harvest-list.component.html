@@ -32,12 +32,12 @@
           <!-- begin: Grouping -->
           <div>
             <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                    (click)="exportFarmList(exportTypes.PDF)">
+                    (click)="exportHarvestList(exportTypes.PDF)">
               <i class="fa fa-file-text"></i>
               <span>PDF</span>
             </button>
             <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                    (click)="exportFarmList(exportTypes.CSV)">
+                    (click)="exportHarvestList(exportTypes.CSV)">
               <i class="fa fa-table"></i>
               <span>CSV</span>
             </button>
@@ -66,7 +66,7 @@
         <th>Harvest Type</th>
         <th>Harvest Qty</th>
         <th>Harvest AWB</th>
-        <th>Number Of PL's Harvested</th>
+        <th>No.of PL's Harvested</th>
         <th>sales price</th>
         </thead>
         <tbody>
@@ -78,15 +78,15 @@
               <span></span>
             </label>
           </td>
-          <td>{{ harvest?.clubMember}}</td>
-          <td>{{ harvest?.farm }}</td>
-          <td>{{ harvest?.pond }}</td>
+          <td>{{ harvest?.owner?.firstName}} {{ harvest?.owner?.lastName}}</td>
+          <td>{{ harvest?.farmer?.farmName }}</td>
+          <td>{{ harvest?.pond?.pondNo }}</td>
           <td>{{ harvest?.harvestDate }}</td>
           <td>{{ harvest?.harvestType }}</td>
-          <td>{{ harvest?.harvestQty }}</td>
-          <td>{{ harvest?.harvestAwB }}</td>
-          <td>{{ harvest?.harvestQty / harvest?.harvestAwB }}</td>
-          <td>{{ harvest?.salesPrice }}</td>
+          <td>{{ harvest?.harvestQuantity }}</td>
+          <td>{{ harvest?.harvestAWB }}</td>
+          <td>{{ harvest?.harvestQuantity / harvest?.harvestAWB }}</td>
+          <td>{{ harvest?.harvestSalePrice }}</td>
           <td>
             <a title=" Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
                (click)="updateFarm(harvest)">

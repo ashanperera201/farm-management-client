@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -20,7 +21,8 @@ export class FeedChartListComponent implements OnInit {
 
   isAllChecked! : boolean;
   feedChartList: any[] = [];
-  memberList: any[] = [];
+  initialFeedChartList: any[] = [];
+  ownerList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
   filterParam!: string;
@@ -28,6 +30,7 @@ export class FeedChartListComponent implements OnInit {
   pageSize: number = 10;
   page: any = 1;
   feedChartSubscription: Subscription[] = [];
+  filterForm!: FormGroup;
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -41,9 +44,36 @@ export class FeedChartListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.initFilterForm();
     this.fetchDailyFeed();
     this.fetchInitialData();
   }
+
+  initFilterForm= () => {
+    this.filterForm = new FormGroup({
+      owner: new FormControl(null),
+      farmer: new FormControl(null),
+      pond: new FormControl(null),
+    });
+  }
+
+  filterChange = (event: any) => {
+    this.feedChartList = this.initialFeedChartList;
+    const owner = this.filterForm.get("owner")?.value;
+    const farmer = this.filterForm.get("farmer")?.value;
+    const pond = this.filterForm.get("pond")?.value;
+
+    if(owner){
+      this.feedChartList = this.feedChartList.filter(x => x.owner._id === owner);
+    }
+    if(farmer){
+      this.feedChartList = this.feedChartList.filter(x => x.farmer._id === farmer);
+    }
+    if(pond){
+      this.feedChartList = this.feedChartList.filter(x => x.pond._id === pond);
+    }
+  }
+
 
   fetchDailyFeed = () => {
     this.blockUI.start('Fetching Daily Feed......');
@@ -62,7 +92,7 @@ export class FeedChartListComponent implements OnInit {
     this.blockUI.start('Fetching Data...');
     this.feedChartSubscription.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.memberList = ownerRes.result;
+        this.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {

@@ -86,6 +86,7 @@ export class StockListComponent implements OnInit {
     if (addStockModal.componentInstance.afterSave) {
       this.stockSubscriptions.push(addStockModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
         if (afterSaveRes) {
+          debugger
           const index = this.stockList.findIndex((up: any) => up._id === afterSaveRes._id);
           let stockRefs = JSON.parse(JSON.stringify(this.stockList));
 
