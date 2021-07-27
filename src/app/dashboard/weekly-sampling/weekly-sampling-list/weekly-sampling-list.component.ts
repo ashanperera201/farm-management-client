@@ -5,11 +5,16 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
 import { Store } from '@ngrx/store';
+import { switchMap } from 'rxjs/operators';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { FileService } from '../../../shared/services/file.service';
 import { WeeklySamplingService } from '../../../shared/services/weekly-sampling.service';
 import { WeeklySamplingAddComponent } from '../weekly-sampling-add/weekly-sampling-add.component';
 import { AppState, removeWeeklySamplings } from '../../../redux';
+import { FarmService } from '../../../shared/services/farm.service';
+import { ClubMemberService } from '../../../shared/services/club-member.service';
+import { PondService } from '../../../shared/services/pond.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-weekly-sampling-list',
@@ -24,12 +29,22 @@ export class WeeklySamplingListComponent implements OnInit {
   weeklySamplingSubscriptions: Subscription[] = [];
   isAllChecked!: boolean;
   weelySamplingList: any[] = [];
+  initialWeelySamplingList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+    pondList: []
+  }
+  filterForm!: FormGroup;
 
   constructor(
+    private pondService: PondService,
+    private clubMemberService: ClubMemberService,
+    private farmService: FarmService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fileService: FileService,
@@ -38,7 +53,34 @@ export class WeeklySamplingListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.initFilterForm();
     this.fetchWeeklySamplingData();
+    this.fetchInitialData();
+  }
+
+  initFilterForm= () => {
+    this.filterForm = new FormGroup({
+      owner: new FormControl(null),
+      farmer: new FormControl(null),
+      pond: new FormControl(null),
+    });
+  }
+
+  filterChange = (event: any) => {
+    this.weelySamplingList = this.initialWeelySamplingList;
+    const owner = this.filterForm.get("owner")?.value;
+    const farmer = this.filterForm.get("farmer")?.value;
+    const pond = this.filterForm.get("pond")?.value;
+
+    if(owner){
+      this.weelySamplingList = this.weelySamplingList.filter(x => x.owner._id === owner);
+    }
+    if(farmer){
+      this.weelySamplingList = this.weelySamplingList.filter(x => x.farmer._id === farmer);
+    }
+    if(pond){
+      this.weelySamplingList = this.weelySamplingList.filter(x => x.pond._id === pond);
+    }
   }
 
   fetchWeeklySamplingData = () => {
@@ -46,12 +88,33 @@ export class WeeklySamplingListComponent implements OnInit {
     this.weeklySamplingSubscriptions.push(this.weeklySamplingService.getAllWeeklySamplings().subscribe((samplingResponse: any) => {
       if (samplingResponse && samplingResponse.validity) {
         this.weelySamplingList = samplingResponse.result;
+        this.initialWeelySamplingList = samplingResponse.result;
       }
       this.blockUI.stop();
     }, () => {
       console.log('Failed to fetch weekly sampling data.');
       this.blockUI.stop();
     }))
+  }
+
+  fetchInitialData = () => {
+    this.blockUI.start('Fetching Data...');
+    this.weeklySamplingSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
+      if (ownerRes && ownerRes.result) {
+        this.initialData.ownerList = ownerRes.result;
+      }
+      return this.pondService.fetchPonds()
+    })).pipe(switchMap((resPonds: any) => {
+      if (resPonds && resPonds.result) {
+        this.initialData.pondList = resPonds.result;
+      }
+      return this.farmService.fetchFarms()
+    })).subscribe((farmRes: any) => {
+      if (farmRes && farmRes.result) {
+        this.initialData.farmList = farmRes.result;
+      }
+    }))
+    this.blockUI.stop();
   }
 
   addNewWeeklySampling = () => {

@@ -64,14 +64,15 @@ export class HarvestListComponent implements OnInit {
   }
 
   updateFarm = (harvest: any) => {
-    const updateModal = this.modalService.open(FarmAddComponent, {
+    this.blockUI.start("Fetching Data.....");
+    const updateModal = this.modalService.open(HarvestAddComponent, {
       animation: true,
       keyboard: true,
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
 
-    updateModal.componentInstance.existingFarm = JSON.parse(JSON.stringify(harvest));
+    updateModal.componentInstance.existingHarvest = JSON.parse(JSON.stringify(harvest));
     updateModal.componentInstance.isEditMode = true;
 
     if (updateModal.componentInstance.afterSave) {
@@ -130,39 +131,39 @@ export class HarvestListComponent implements OnInit {
     this.harvestList[index]['isChecked'] = !this.harvestList[index]['isChecked'];
   }
 
-  exportFarmList = (type: any) => {
+  exportHarvestList = (type: any) => {
     if (type === ExportTypes.CSV) {
       const csvData: any[] = this.harvestList.map(x => {
         return {
-          'Club Member': x.clubMember,
-          'Farm': x.farm,
-          'Pond': x.pond,
+          'Club Member': x.owner?.firstName,
+          'Farm': x.farmer?.farmName,
+          'Pond': x.pond?.pondNo,
           'Harvest Date': moment(x.harvestDate).format('YYYY-MM-DD'),
           'Harvest Type': x.harvestType,
-          'Harvest Qty': x.harvestQty,
-          'Harvest AwB': x.harvestAwB,
-          'Number of PL\'s Harvested': x.harvestQty / x.harvestAwB,
-          'Harvest Sales Price': x.salesPrice
+          'Harvest Qty': x.harvestQuantity,
+          'Harvest AWB': x.harvestAWB,
+          'Number of PL\'s Harvested': x.harvestQuantity / x.harvestAWB,
+          'Harvest Sales Price': x.harvestSalePrice
         };
       });
-      this.fileService.exportAsExcelFile(csvData, "Farms_Data");
+      this.fileService.exportAsExcelFile(csvData, "Harvest_Data");
     }
     else {
       const pdfData: any[] = this.harvestList.map(x => {
         return {
-          'Club Member': x.clubMember,
-          'Farm': x.farm,
-          'Pond': x.pond,
+          'Club Member': x.owner?.firstName,
+          'Farm': x.farmer?.farmName,
+          'Pond': x.pond?.pondNo,
           'Harvest Date': moment(x.harvestDate).format('YYYY-MM-DD'),
           'Harvest Type': x.harvestType,
-          'Harvest Qty': x.harvestQty,
-          'Harvest AwB': x.harvestAwB,
-          'Number of PL\'s Harvested': x.harvestQty / x.harvestAwB,
-          'Harvest Sales Price': x.salesPrice
+          'Harvest Qty': x.harvestQuantity,
+          'Harvest AwB': x.harvestAWB,
+          'Number of PL\'s Harvested': x.harvestQuantity / x.harvestAWB,
+          'Harvest Sales Price': x.harvestSalePrice
         };
       });
       const headers: any[] = ['Club Member', 'Farm', 'Pond', 'Harvest Date', 'Harvest Type'];
-      this.fileService.exportToPDF('Harvest Data', headers, pdfData, 'Farms_Data');
+      this.fileService.exportToPDF('Harvest Data', headers, pdfData, 'Harvest_Data');
     }
   }
 

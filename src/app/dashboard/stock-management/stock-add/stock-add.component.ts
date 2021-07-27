@@ -137,7 +137,7 @@ export class StockAddComponent implements OnInit, DoCheck {
     this.blockUI.start('Fetching........');
     this.stockSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((clubMemberResults: any) => {
       if (clubMemberResults && clubMemberResults.result) {
-        this.initialDataSet.ownerList = clubMemberResults.result;
+        this.ownerList = clubMemberResults.result;
       }
       return this.farmService.fetchFarms();
     })).pipe(switchMap((farmResult: any) => {
@@ -199,7 +199,7 @@ export class StockAddComponent implements OnInit, DoCheck {
     if (this.addStockForm.valid) {
       const stockForm = this.addStockForm.getRawValue();
 
-      const owner: any = this.initialDataSet.ownerList.find((x: any) => x._id === stockForm.owner);
+      const owner: any = this.ownerList.find((x: any) => x._id === stockForm.owner);
       const farmer: any = this.initialDataSet.farmList.find((x: any) => x._id === stockForm.farmer);
       const pond: any = this.initialDataSet.pondList.find((x: any) => x._id === stockForm.pond);
 

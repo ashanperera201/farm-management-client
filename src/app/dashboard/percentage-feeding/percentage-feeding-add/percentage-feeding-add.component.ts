@@ -101,6 +101,10 @@ export class PercentageFeedingAddComponent implements OnInit {
       percentage.farmer = this.existingPercentageFeed.farmer._id;
       percentage.pond = this.existingPercentageFeed.pond._id;
       this.addPercentageFeedingForm.patchValue(percentage);
+      this.ownerOnChange();
+      this.farmOnChange();
+      this.addPercentageFeedingForm.get("farmer")?.patchValue(percentage.farmer);
+      this.addPercentageFeedingForm.get("pond")?.patchValue(percentage.pond);
     }
     this.blockUI.stop();
   }
@@ -117,8 +121,8 @@ export class PercentageFeedingAddComponent implements OnInit {
 
         this.percentageFeedingService.updatePercentageFeeding(percentageFeeding).subscribe(res => {
           if (res) {
-            const percentageFeedingData = this.setOtherData(percentageFeeding);
-            this.afterSave.emit(percentageFeedingData);
+            const percentageFeedData = this.setOtherData(percentageFeeding);
+            this.afterSave.emit(percentageFeedData);
             this.closeModal();
             this.toastrService.success("Percentage of Feeding data updated successfully", "Success");
           }
@@ -156,7 +160,7 @@ export class PercentageFeedingAddComponent implements OnInit {
     const owner: any = this.ownerList.find(x => x._id === result.owner);
     const farm: any = this.farmList.find(x => x._id === result.farmer);
     const pond: any = this.pondList.find(x => x._id === result.pond);
-    if (owner || farm) {
+    if (owner || farm || pond) {
       result.owner = owner;
       result.farmer = farm;
       result.pond = pond;

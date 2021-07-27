@@ -14,7 +14,7 @@
         <label class="font-size-h7  text-dark required">Owner</label>
         <select name="owner" id="owner" formControlName="owner" class="form-control" (change)="ownerOnChange()">
           <option value=null disabled selected>Select Owner</option>
-          <option *ngFor="let o of initialDataSet?.ownerList" [value]="o._id">{{o.firstName}} {{o.lastName}}</option>
+          <option *ngFor="let o of ownerList" [value]="o._id">{{o.firstName}} {{o.lastName}}</option>
         </select>
       </div>
       <div class="col">

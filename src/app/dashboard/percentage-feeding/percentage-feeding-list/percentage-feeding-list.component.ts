@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -22,6 +23,7 @@ export class PercentageFeedingListComponent implements OnInit {
 
   isAllChecked! : boolean;
   percentageFeedingList: any[] = [];
+  initialPercentageFeedingList: any[] = [];
   ownerList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
@@ -30,6 +32,7 @@ export class PercentageFeedingListComponent implements OnInit {
   pageSize: number = 10;
   page: any = 1;
   percentageFeedSubscriptions: Subscription[] = [];
+  filterForm! : FormGroup;
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -44,8 +47,34 @@ export class PercentageFeedingListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.initFilterForm();
     this.fetchPercentageFeeding();
     this.fetchInitialData();
+  }
+
+  initFilterForm= () => {
+    this.filterForm = new FormGroup({
+      owner: new FormControl(null),
+      farmer: new FormControl(null),
+      pond: new FormControl(null),
+    });
+  }
+
+  filterChange = (event: any) => {
+    this.percentageFeedingList = this.initialPercentageFeedingList;
+    const owner = this.filterForm.get("owner")?.value;
+    const farmer = this.filterForm.get("farmer")?.value;
+    const pond = this.filterForm.get("pond")?.value;
+
+    if(owner){
+      this.percentageFeedingList = this.percentageFeedingList.filter(x => x.owner._id === owner);
+    }
+    if(farmer){
+      this.percentageFeedingList = this.percentageFeedingList.filter(x => x.farmer._id === farmer);
+    }
+    if(pond){
+      this.percentageFeedingList = this.percentageFeedingList.filter(x => x.pond._id === pond);
+    }
   }
 
   fetchPercentageFeeding = () => {
@@ -53,6 +82,7 @@ export class PercentageFeedingListComponent implements OnInit {
     this.percentageFeedSubscriptions.push(this.percentageFeedingService.fetchPercentageFeedings().subscribe(res=> {
       if(res && res.result){
         this.percentageFeedingList = res.result;
+        this.initialPercentageFeedingList = res.result;
         // this.farmList = res.result.farmer;
         // this.pondList = res.result.pond;
         // this.ownerList = res.result.owner;

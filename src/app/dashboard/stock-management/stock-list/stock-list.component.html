@@ -63,8 +63,8 @@
                     <th> Pond No</th>
                     <th> No of PL's </th>
                     <th> PL age </th>
-                    <th> Date of stocking </th>
-                    <th> Full stocked </th>
+                    <th> Stocking Date </th>
+                    <!-- <th> Full stocked </th> -->
                     <th> PL price </th>
                     <th> Actual PL's Remain </th>
                     <!-- <th> Created Date </th> -->
@@ -86,13 +86,10 @@
                         <td>{{ stock?.plCount }}</td>
                         <td>{{ stock?.plAge }}</td>
                         <td>{{ stock?.dateOfStocking | date: 'yyyy-MM-dd' }}</td>
-                        <td>{{ stock?.fullStocked }}</td>
+                        <!-- <td>{{ stock?.fullStocked }}</td> -->
                         <td>{{ stock?.plPrice }}</td>
                         <td>{{ stock?.actualPlRemains }}</td>
                         <!-- <td>{{ stock?.createdOn | date: 'EEEE, MMMM d, y' }}</td> -->
-                        <td>
-                            <span [ngClass]="stock?.isActive ? 'active' : 'inactive'"></span>
-                        </td>
                         <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
                                 (click)="updateStock(stock)">

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
@@ -28,13 +29,15 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
   weeklyApplicationSubscriptions: Subscription[] = [];
   isAllChecked!: boolean;
   weeklyApplicationList: any[] = [];
+  initialWeeklyApplicationList: any[] = [];
   filterParam!: string;
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
-  memberList: any[] = [];
+  ownerList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
+  filterForm!: FormGroup;
 
   constructor(private weeklyApplicationsService: WeeklyApplicationsService,
     private toastrService: ToastrService,
@@ -46,8 +49,34 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     private pondService: PondService) { }
 
   ngOnInit(): void {
+    this.initFilterForm();
     this.fetchWeeklyApplication();
     this.fetchInitialData();
+  }
+
+  initFilterForm= () => {
+    this.filterForm = new FormGroup({
+      owner: new FormControl(null),
+      farmer: new FormControl(null),
+      pond: new FormControl(null),
+    });
+  }
+
+  filterChange = (event: any) => {
+    this.weeklyApplicationList = this.initialWeeklyApplicationList;
+    const owner = this.filterForm.get("owner")?.value;
+    const farmer = this.filterForm.get("farmer")?.value;
+    const pond = this.filterForm.get("pond")?.value;
+
+    if(owner){
+      this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.owner._id === owner);
+    }
+    if(farmer){
+      this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.farmer._id === farmer);
+    }
+    if(pond){
+      this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.pond._id === pond);
+    }
   }
 
   ngAfterViewInit() {
@@ -59,6 +88,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     this.weeklyApplicationSubscriptions.push(this.weeklyApplicationsService.getAllWeeklyApplication().subscribe(res => {
       if (res && res.result) {
         this.weeklyApplicationList = res.result;
+        this.initialWeeklyApplicationList = res.result;
       }
       this.blockUI.stop();
     }, () => {
@@ -71,7 +101,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     this.blockUI.start('Fetching Data...');
     this.weeklyApplicationSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.memberList = ownerRes.result;
+        this.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
@@ -95,9 +125,8 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
       modalDialogClass: 'modal-md',
     });
     addWeeklyApplicationModal.componentInstance.afterSave.subscribe((res: any) => {
-      if (res && res.result) {
-        // this.weeklyApplicationList.unshift(res.result);
-        this.fetchInitialData();
+      if (res) {
+        this.weeklyApplicationList.unshift(res);
       }
     });
   }

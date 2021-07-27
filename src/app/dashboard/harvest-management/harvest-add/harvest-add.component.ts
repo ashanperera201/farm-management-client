@@ -4,13 +4,13 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import {switchMap} from 'rxjs/operators';
+import * as moment from 'moment';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { FarmService } from '../../../shared/services/farm.service';
 import { keyPressNumbers } from '../../../shared/utils';
 import {DailyFeedModel} from '../../../shared/models/daily-feed-model';
 import {PondService} from '../../../shared/services/pond.service';
-import {switchMap} from 'rxjs/operators';
-import * as moment from 'moment';
 import {HarvestService} from '../../../shared/services/harvest.service';
 
 @Component({
@@ -29,12 +29,12 @@ export class HarvestAddComponent implements OnInit {
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Harvest';
   feedBrandList: any[] = [];
-  memberList: any[] = [];
+  ownerList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
   existingData = new DailyFeedModel();
   harvestForm!: FormGroup;
-  dailyFeedSubscriptions: Subscription[] = [];
+  harvestSubscription: Subscription[] = [];
   harvestTypes = [
     {
       code: 'PARTIAL',
@@ -45,6 +45,11 @@ export class HarvestAddComponent implements OnInit {
       value: 'Full'
     }
   ];
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+    pondList: []
+  }
 
   constructor(
     private clubMemberService : ClubMemberService,
@@ -56,39 +61,39 @@ export class HarvestAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.initAddDailyFeedForm();
-    this.setEditModeValues();
     this.fetchInitialData();
   }
 
   initAddDailyFeedForm = () => {
     this.harvestForm = new FormGroup({
-      clubMemberId: new FormControl(null, Validators.compose([Validators.required])),
-      farmId: new FormControl(null, Validators.compose([Validators.required])),
-      pondId: new FormControl(null, Validators.compose([Validators.required])),
+      owner: new FormControl(null, Validators.compose([Validators.required])),
+      farmer: new FormControl(null, Validators.compose([Validators.required])),
+      pond: new FormControl(null, Validators.compose([Validators.required])),
       harvestDate: new FormControl(moment(new Date).format('YYYY-MM-DD'), Validators.compose([Validators.required])),
       harvestType: new FormControl(null, Validators.compose([Validators.required])),
-      harvestQty: new FormControl(null, Validators.compose([Validators.required])),
+      harvestQuantity: new FormControl(null, Validators.compose([Validators.required])),
       harvestAWB: new FormControl(null, Validators.compose([Validators.required])),
-      salesPrice: new FormControl(null, Validators.compose([Validators.required]))
+      harvestSalePrice: new FormControl(null, Validators.compose([Validators.required]))
     });
   }
 
   fetchInitialData = () => {
     this.blockUI.start('Fetching Data...');
-    this.dailyFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
+    this.harvestSubscription.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.memberList = ownerRes.result;
+        this.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.pondList = resPonds.result;
+        this.initialData.pondList = resPonds.result;
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
+        this.initialData.farmList = farmRes.result;
       }
+      this.setEditModeValues();
     }));
     this.blockUI.stop();
   }
@@ -103,12 +108,20 @@ export class HarvestAddComponent implements OnInit {
 
   patchForm = () => {
     if (this.existingHarvest) {
-      this.harvestForm.patchValue(this.existingHarvest);
+      const harvest = Object.assign({}, this.existingHarvest);
+      harvest.owner = this.existingHarvest.owner._id;
+      harvest.farmer = this.existingHarvest.farmer._id;
+      harvest.pond = this.existingHarvest.pond._id;
+      this.harvestForm.patchValue(harvest);
+      this.ownerOnChange();
+      this.farmOnChange();
+      this.harvestForm.get("farmer")?.patchValue(harvest.farmer);
+      this.harvestForm.get("pond")?.patchValue(harvest.pond);
     }
+    this.blockUI.stop();
   }
 
   saveHarvest = () => {
-    console.log(this.harvestForm.value);
     this.blockUI.start('Start processing');
     const request = this.harvestForm.value;
 
@@ -126,9 +139,10 @@ export class HarvestAddComponent implements OnInit {
         this.blockUI.stop();
       });
     } else {
-      this.harvestService.updateHarvest(request).subscribe(res => {
-        if (res && res.validity) {
-          this.afterSave.emit(request);
+      this.harvestService.saveHarvest(request).subscribe(res => {
+        if (res && res.result.harvestManagement) {
+          const percentageFeedingData = this.setOtherData(res.result.harvestManagement);
+          this.afterSave.emit(percentageFeedingData);
           this.closeModal();
           this.toastrService.success("Harvest save successfully", "Success");
         }
@@ -137,6 +151,42 @@ export class HarvestAddComponent implements OnInit {
         this.toastrService.error("Error occured", "Error");
         this.blockUI.stop();
       });
+    }
+  }
+
+  ownerOnChange = () => {
+    const owner = this.harvestForm.get("owner")?.value;
+    if (owner) {
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
+      if (filteredFarmList && filteredFarmList.length > 0) {
+        this.farmList = filteredFarmList;
+      } else {
+        this.farmList = [];
+      }
+    }
+  }
+
+  farmOnChange = () => {
+    const farmer = this.harvestForm.get("farmer")?.value;
+    if (farmer) {
+      const filteredPondList = this.initialData.pondList.filter((x: any) => x.farmer && x.farmer._id === farmer);
+      if (filteredPondList && filteredPondList.length > 0) {
+        this.pondList = filteredPondList;
+      } else {
+        this.pondList = [];
+      }
+    }
+  }
+
+  setOtherData = (result: any): any => {
+    const owner: any = this.ownerList.find(x => x._id === result.owner);
+    const farm: any = this.farmList.find(x => x._id === result.farmer);
+    const pond: any = this.pondList.find(x => x._id === result.pond);
+    if (owner || farm || pond) {
+      result.owner = owner;
+      result.farmer = farm;
+      result.pond = pond;
+      return result;
     }
   }
 
@@ -152,8 +202,8 @@ export class HarvestAddComponent implements OnInit {
     if (this.harvestForm.get('harvestType')?.value === 'FULL') {
       return 0;
     }
-    if (this.harvestForm && this.harvestForm.get('harvestQty')?.value != null && this.harvestForm.get('harvestAWB')?.value != null) {
-      return (this.harvestForm.get('harvestQty')?.value / this.harvestForm.get('harvestAWB')?.value).toFixed(2);
+    if (this.harvestForm && this.harvestForm.get('harvestQuantity')?.value != null && this.harvestForm.get('harvestAWB')?.value != null) {
+      return (this.harvestForm.get('harvestQuantity')?.value / this.harvestForm.get('harvestAWB')?.value).toFixed(2);
     }
     return '';
   }
