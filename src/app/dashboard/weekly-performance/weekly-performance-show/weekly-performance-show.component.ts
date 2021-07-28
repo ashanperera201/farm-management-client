@@ -1,3 +1,4 @@
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -9,6 +10,7 @@ import { PondService } from '../../../shared/services/pond.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { keyPressNumbers } from './../../../shared/utils/keyboard-event';
 import { AppState } from '../../../redux';
+import { WeeklyPerformanceReportComponent } from '../weekly-performance-report/weekly-performance-report.component';
 
 
 @Component({
@@ -34,7 +36,8 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   constructor(
     private clubMemberService : ClubMemberService,
     private farmService : FarmService,
-    private pondService : PondService
+    private pondService : PondService,
+    private modalService : NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -98,7 +101,15 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   showWeeklyPerformance = () => {
-    //TO DO
+    if(this.weeklyApplicationForm.valid){
+      const performanceReportModal = this.modalService.open(WeeklyPerformanceReportComponent, {
+        animation: true,
+        keyboard: true,
+        backdrop: true,
+        modalDialogClass: 'modal-xl',
+      });
+      performanceReportModal.componentInstance.initialData = this.weeklyApplicationForm.value;
+    }
   }
 
   onKeyPressChanges = (event: any): boolean => {
