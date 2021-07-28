@@ -9,8 +9,8 @@ import { FarmService } from '../../../shared/services/farm.service';
 import { PondService } from '../../../shared/services/pond.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { keyPressNumbers } from './../../../shared/utils/keyboard-event';
-import { AppState } from '../../../redux';
 import { WeeklyPerformanceReportComponent } from '../weekly-performance-report/weekly-performance-report.component';
+import { AppState, selectsalesPrice, selectStockDetails, selectWeeklySamplings } from '../../../redux';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
 
   @BlockUI() blockUI!: NgBlockUI;
 
-  weeklyApplicationForm!: FormGroup;
+  weeklyPerformanceForm!: FormGroup;
   farmList: any[] = [];
   ownerList: any[] = [];
   pondList: any[] = [];
@@ -33,11 +33,18 @@ export class WeeklyPerformanceShowComponent implements OnInit {
     pondList: []
   }
 
+  gainInWeight: any;
+  totalBioMass: any;
+  weeklySamplingFilterdata: any;
+  stockFilterdata: any;
+  salesPriceFilterdata: any;
+
   constructor(
     private clubMemberService : ClubMemberService,
     private farmService : FarmService,
     private pondService : PondService,
-    private modalService : NgbModal
+    private modalService : NgbModal,
+    private store: Store<AppState>
   ) { }
 
   ngOnInit(): void {
@@ -46,7 +53,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   initAddPondForm = () => {
-    this.weeklyApplicationForm = new FormGroup({
+    this.weeklyPerformanceForm = new FormGroup({
       farmer: new FormControl(null, Validators.compose([Validators.required])),
       owner: new FormControl(null, Validators.compose([Validators.required])),
       pondNo: new FormControl(null, Validators.compose([Validators.required])),
@@ -77,7 +84,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   ownerOnChange = () => {
-    const owner = this.weeklyApplicationForm.get("owner")?.value;
+    const owner = this.weeklyPerformanceForm.get("owner")?.value;
     if (owner) {
       const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
       if (filteredFarmList && filteredFarmList.length > 0) {
@@ -89,7 +96,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   farmOnChange = () => {
-    const farmer = this.weeklyApplicationForm.get("farmer")?.value;
+    const farmer = this.weeklyPerformanceForm.get("farmer")?.value;
     if (farmer) {
       const filteredPondList = this.initialData.pondList.filter((x: any) => x.farmer && x.farmer._id === farmer);
       if (filteredPondList && filteredPondList.length > 0) {
@@ -101,15 +108,36 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   showWeeklyPerformance = () => {
-    if(this.weeklyApplicationForm.valid){
+    if(this.weeklyPerformanceForm.valid){
       const performanceReportModal = this.modalService.open(WeeklyPerformanceReportComponent, {
         animation: true,
         keyboard: true,
         backdrop: true,
         modalDialogClass: 'modal-xl',
       });
-      performanceReportModal.componentInstance.initialData = this.weeklyApplicationForm.value;
+      performanceReportModal.componentInstance.initialData = this.weeklyPerformanceForm.value;
     }
+    //TO DO
+    this.store.select(selectWeeklySamplings).subscribe(res => {
+      if (res) {
+        this.weeklySamplingFilterdata = res.filter((x: any) => (x.owner && x.owner._id === this.weeklyPerformanceForm.get("owner")?.value) && (x.farmer && x.farmer._id === this.weeklyPerformanceForm.get("farmer")?.value) && (x.pond && x.pond._id === this.weeklyPerformanceForm.get("pondNo")?.value));
+        this.gainInWeight = this.weeklySamplingFilterdata[0].gainInWeight;
+      }
+    });
+
+    this.store.select(selectStockDetails).subscribe(res => {
+      if (res) {
+        this.stockFilterdata = res.filter((x: any) => (x.owner && x.owner._id === this.weeklyPerformanceForm.get("owner")?.value) && (x.farmer && x.farmer._id === this.weeklyPerformanceForm.get("farmer")?.value) && (x.pond && x.pond._id === this.weeklyPerformanceForm.get("pondNo")?.value));
+        this.totalBioMass = this.weeklySamplingFilterdata[0].expectedSurvivalPercentage * this.stockFilterdata[0].plCount * this.weeklySamplingFilterdata[0].averageBodyWeight;
+      }
+    });
+
+    this.store.select(selectsalesPrice).subscribe(res => {
+      if (res) {
+        this.salesPriceFilterdata = res.filter((x: any) => (x.owner && x.owner._id === this.weeklyPerformanceForm.get("owner")?.value) && (x.farmer && x.farmer._id === this.weeklyPerformanceForm.get("farmer")?.value) && (x.pond && x.pond._id === this.weeklyPerformanceForm.get("pondNo")?.value));
+        
+      }
+    })
   }
 
   onKeyPressChanges = (event: any): boolean => {
