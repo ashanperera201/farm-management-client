@@ -10,7 +10,7 @@ import { ExportTypes } from 'src/app/shared/enums/export-type';
 import { FileService } from 'src/app/shared/services/file.service';
 import { SalesPriceService } from 'src/app/shared/services/sales-price.service';
 import { SalesPriceAddComponent } from '../sales-price-add/sales-price-add.component';
-import { removeSalesPrice } from '../../../redux/actions/sales-price.action';
+import { removeSalesPrice } from '../../../redux/actions/sales-price.actions';
 
 @Component({
   selector: 'app-sales-price-list',
