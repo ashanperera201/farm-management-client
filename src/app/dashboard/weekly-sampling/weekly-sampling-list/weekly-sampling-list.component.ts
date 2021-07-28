@@ -10,7 +10,7 @@ import { ExportTypes } from '../../../shared/enums/export-type';
 import { FileService } from '../../../shared/services/file.service';
 import { WeeklySamplingService } from '../../../shared/services/weekly-sampling.service';
 import { WeeklySamplingAddComponent } from '../weekly-sampling-add/weekly-sampling-add.component';
-import { AppState, removeWeeklySamplings } from '../../../redux';
+import { AppState, removeWeeklySamplings, setWeeklySamplings } from '../../../redux';
 import { FarmService } from '../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { PondService } from '../../../shared/services/pond.service';
@@ -89,6 +89,7 @@ export class WeeklySamplingListComponent implements OnInit {
       if (samplingResponse && samplingResponse.validity) {
         this.weelySamplingList = samplingResponse.result;
         this.initialWeelySamplingList = samplingResponse.result;
+        this.store.dispatch(setWeeklySamplings(samplingResponse.result));
       }
       this.blockUI.stop();
     }, () => {
