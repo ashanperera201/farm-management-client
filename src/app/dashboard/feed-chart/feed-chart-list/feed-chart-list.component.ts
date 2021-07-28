@@ -5,12 +5,14 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
+import { Store } from '@ngrx/store';
 import { ExportTypes } from '../../../shared/enums/export-type';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { FarmService } from '../../../shared/services/farm.service';
 import { PondService } from '../../../shared/services/pond.service';
 import { FileService } from '../../../shared/services/file.service';
 import { FeedChartService } from '../../../shared/services/feed-chart.service';
+import { AppState, selectStockDetails } from '../../../redux';
 
 @Component({
   selector: 'app-feed-chart-list',
@@ -31,6 +33,7 @@ export class FeedChartListComponent implements OnInit {
   page: any = 1;
   feedChartSubscription: Subscription[] = [];
   filterForm!: FormGroup;
+  dateOfCulture!: any;
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -40,7 +43,8 @@ export class FeedChartListComponent implements OnInit {
     private farmService : FarmService,
     private pondService : PondService,
     private toastrService: ToastrService,
-    private fileService: FileService
+    private fileService: FileService,
+    private store: Store<AppState>
   ) { }
 
   ngOnInit(): void {
@@ -76,16 +80,31 @@ export class FeedChartListComponent implements OnInit {
 
 
   fetchDailyFeed = () => {
-    this.blockUI.start('Fetching Daily Feed......');
-    this.feedChartSubscription.push(this.feedChartService.fetchFeedCharts().subscribe(res=> {
-      if(res && res.result){
-        this.feedChartList = res.result;
+    debugger;
+    //Adding Date of Culture (DOC) to existing array
+    let today = new Date();
+    this.store.select(selectStockDetails).subscribe(res => {
+      if(res){
+        res = res.map((obj: any) => { return { ...obj, doc : 0 };});
+        res.forEach((x: any) => {
+          let stockDate = new Date(x.dateOfStocking)
+          let diff = (today.getTime() - stockDate.getTime()) / (1000 * 3600 * 24);
+          x.doc = diff;
+        });
       }
-      this.blockUI.stop();
-    }, () => {
-      this.toastrService.error("Failed to load Data","Error");
-      this.blockUI.stop();
-    }));
+    })
+
+
+    // this.blockUI.start('Fetching Daily Feed......');
+    // this.feedChartSubscription.push(this.feedChartService.fetchFeedCharts().subscribe(res=> {
+    //   if(res && res.result){
+    //     this.feedChartList = res.result;
+    //   }
+    //   this.blockUI.stop();
+    // }, () => {
+    //   this.toastrService.error("Failed to load Data","Error");
+    //   this.blockUI.stop();
+    // }));
   }
 
   fetchInitialData = () => {
