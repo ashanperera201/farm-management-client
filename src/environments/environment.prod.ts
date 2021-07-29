@@ -1,4 +1,5 @@
 export const environment = {
-  baseUrl: `http://localhost:3000`,
+  baseUrl: `https://farm-management-server-iw95j.ondigitalocean.app`,
+  // baseUrl: `http://localhost:3000`,
   production: true
 };
