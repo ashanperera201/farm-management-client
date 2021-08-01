@@ -12,6 +12,8 @@ import { keyPressNumbers } from '../../../shared/utils';
 import {DailyFeedModel} from '../../../shared/models/daily-feed-model';
 import {PondService} from '../../../shared/services/pond.service';
 import {HarvestService} from '../../../shared/services/harvest.service';
+import { Store } from '@ngrx/store';
+import { addHarvest, AppState, updateHarvest } from '../../../redux';
 
 @Component({
   selector: 'app-harvest-add',
@@ -57,7 +59,8 @@ export class HarvestAddComponent implements OnInit {
     private pondService : PondService,
     private harvestService: HarvestService,
     private toastrService: ToastrService,
-    private activeModal: NgbActiveModal) { }
+    private activeModal: NgbActiveModal,
+    private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.initAddDailyFeedForm();
@@ -127,10 +130,20 @@ export class HarvestAddComponent implements OnInit {
 
     if(this.isEditMode) {
       request._id = this.existingHarvest._id;
-      this.harvestService.updateHarvest(request).subscribe(res => {
+      const harvestManagement = this.existingHarvest;
+      harvestManagement.owner = this.harvestForm.value.owner;
+      harvestManagement.farmer = this.harvestForm.value.farmer;
+      harvestManagement.pond = this.harvestForm.value.pond;
+      harvestManagement.harvestDate = this.harvestForm.value.harvestDate;
+      harvestManagement.harvestType = this.harvestForm.value.harvestType;
+      harvestManagement.harvestQuantity = this.harvestForm.value.harvestQuantity;
+      harvestManagement.harvestAWB = this.harvestForm.value.harvestAWB;
+      harvestManagement.harvestSalePrice = this.harvestForm.value.harvestSalePrice;
+      this.harvestService.updateHarvest(harvestManagement).subscribe(res => {
         if (res && res.validity) {
           this.afterSave.emit(request);
           this.closeModal();
+          this.store.dispatch(updateHarvest(harvestManagement));
           this.toastrService.success("Harvest updated successfully", "Success");
         }
         this.blockUI.stop();
@@ -144,6 +157,7 @@ export class HarvestAddComponent implements OnInit {
           const percentageFeedingData = this.setOtherData(res.result.harvestManagement);
           this.afterSave.emit(percentageFeedingData);
           this.closeModal();
+          this.store.dispatch(addHarvest(res.result.harvestManagement));
           this.toastrService.success("Harvest save successfully", "Success");
         }
         this.blockUI.stop();
