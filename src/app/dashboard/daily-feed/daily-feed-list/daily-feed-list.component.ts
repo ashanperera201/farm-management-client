@@ -13,6 +13,8 @@ import { PondService } from './../../../shared/services/pond.service';
 import { FarmService } from './../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { DailyFeedService } from '../../../shared/services/daily-feed.service';
+import { Store } from '@ngrx/store';
+import { AppState, removeDailyFeed, setDailyFeed, updateDailyFeed } from '../../../redux';
 
 @Component({
   selector: 'app-daily-feed-list',
@@ -43,7 +45,8 @@ export class DailyFeedListComponent implements OnInit {
     private pondService : PondService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService
+    private fileService: FileService,
+    private store: Store<AppState>
   ) { }
 
   ngOnInit(): void {
@@ -83,9 +86,7 @@ export class DailyFeedListComponent implements OnInit {
       if(res && res.result){
         this.dailyFeedList = res.result;
         this.initialDailyFeedList = res.result;
-        // this.ownerList = res.result.owners;
-        // this.farmList = res.result.farmers;
-        // this.pondList = res.result.ponds;
+        this.store.dispatch(setDailyFeed(res.result));
       }
       this.blockUI.stop();
     }, () => {
@@ -152,6 +153,8 @@ export class DailyFeedListComponent implements OnInit {
           feedRef[index].calculatedDailyFeed = res.calculatedDailyFeed;
           feedRef[index].actualNumberOfKilos = res.actualNumberOfKilos;
           feedRef[index].remark = res.remark;
+
+          this.store.dispatch(updateDailyFeed(this.dailyFeedList[index]));
         }
       });
     }
@@ -181,6 +184,7 @@ export class DailyFeedListComponent implements OnInit {
       if (deletedResult) {
         this.isAllChecked = false;
         pfIds.forEach(e => { const index: number = this.dailyFeedList.findIndex((up: any) => up._id === e); this.dailyFeedList.splice(index, 1); });
+        this.store.dispatch(removeDailyFeed(pfIds));
         this.toastrService.success('Successfully deleted.', 'Success');
       }
       this.blockUI.stop();

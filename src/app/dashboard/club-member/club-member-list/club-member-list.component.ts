@@ -8,6 +8,8 @@ import { ExportTypes } from '../../../shared/enums/export-type';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { ClubMemberAddComponent } from '../club-member-add/club-member-add.component';
 import * as moment from 'moment';
+import { Store } from '@ngrx/store';
+import { AppState, removeClubMember, setClubMember, updateClubMember } from '../../../redux';
 
 
 @Component({
@@ -31,7 +33,8 @@ export class ClubMemberListComponent implements OnInit {
     private clubMemberService: ClubMemberService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService) { }
+    private fileService: FileService,
+    private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.fetchClubMembers();
@@ -42,6 +45,7 @@ export class ClubMemberListComponent implements OnInit {
     this.memberListSubscriptions.push(this.clubMemberService.fetchClubMembers().subscribe(res => {
       if (res && res.result) {
         this.clubMemberList = res.result;
+        this.store.dispatch(setClubMember(res.result));
       }
       this.blockUI.stop();
     }, () => {
@@ -73,6 +77,28 @@ export class ClubMemberListComponent implements OnInit {
     });
     addClubMemberModal.componentInstance.existingClubMember = clubMember;
     addClubMemberModal.componentInstance.isEditMode = true;
+    if (addClubMemberModal.componentInstance.afterSave) {
+      addClubMemberModal.componentInstance.afterSave.subscribe((res: any) => {
+        if (res) {
+           const index = this.clubMemberList.findIndex((up: any) => up._id === res._id);
+          let clubMemberRefs = JSON.parse(JSON.stringify(this.clubMemberList));
+  
+          clubMemberRefs[index].firstName = res.firstName;
+          clubMemberRefs[index].lastName = res.lastName;
+          clubMemberRefs[index].email = res.email;
+          clubMemberRefs[index].contactNumber = res.contactNumber;
+          clubMemberRefs[index].address = res.address;
+          clubMemberRefs[index].city = res.city;
+          clubMemberRefs[index].userName = res.userName;
+          clubMemberRefs[index].password = res.password;
+          clubMemberRefs[index].nic = res.nic;
+  
+          this.clubMemberList = [...clubMemberRefs];
+          // ** 
+          this.store.dispatch(updateClubMember(this.clubMemberList[index]));
+        }
+      });
+    }
   }
 
   deleteSelected = () => {
@@ -100,6 +126,7 @@ export class ClubMemberListComponent implements OnInit {
       if (deletedResult) {
         this.isAllChecked = false;
         clubMemberIds.forEach(e => { const index: number = this.clubMemberList.findIndex((up: any) => up._id === e); this.clubMemberList.splice(index, 1); });
+        this.store.dispatch(removeClubMember(clubMemberIds));
         this.toastrService.success('Successfully deleted.', 'Success');
       }
       this.blockUI.stop();

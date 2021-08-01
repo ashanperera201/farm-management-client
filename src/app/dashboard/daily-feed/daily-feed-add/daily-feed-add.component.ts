@@ -13,6 +13,8 @@ import { FarmService } from './../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { DailyFeedService } from './../../../shared/services/daily-feed.service';
 import * as moment from 'moment';
+import { Store } from '@ngrx/store';
+import { addDailyFeed, AppState, updateDailyFeed } from '../../../redux';
 
 @Component({
   selector: 'app-daily-feed-add',
@@ -52,7 +54,8 @@ export class DailyFeedAddComponent implements OnInit {
     private pondService : PondService,
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal,
-    private parserFormatter: NgbDateParserFormatter) {
+    private parserFormatter: NgbDateParserFormatter,
+    private store: Store<AppState>) {
       this.model = {
         year: 0,
         month: 0,
@@ -159,6 +162,7 @@ export class DailyFeedAddComponent implements OnInit {
             const dailyFeedData = this.setOtherData(dailyFeed);
             this.afterSave.emit(dailyFeedData);
             this.closeModal();
+            this.store.dispatch(updateDailyFeed(dailyFeed));
             this.toastrService.success("Daily Feed data updated successfully", "Success");
           }
           this.blockUI.stop();
@@ -182,6 +186,7 @@ export class DailyFeedAddComponent implements OnInit {
             const dailyFeedData = this.setOtherData(res.result);
             this.afterSave.emit(dailyFeedData);
             this.closeModal();
+            this.store.dispatch(addDailyFeed(res.result));
             this.toastrService.success("Data saved successfully", "Success");
           }
           this.blockUI.stop();

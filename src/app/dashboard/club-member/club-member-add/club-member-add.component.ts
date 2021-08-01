@@ -6,6 +6,8 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { clubMemberModel } from '../../../../app/shared/models/club-member-model';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { keyPressNumbers } from '../../../shared/utils';
+import { Store } from '@ngrx/store';
+import { addClubMember, AppState, updateClubMember } from '../../../redux';
 
 @Component({
   selector: 'app-club-member-add',
@@ -31,7 +33,8 @@ export class ClubMemberAddComponent implements OnInit {
   constructor(
     private clubMemberService: ClubMemberService,
     private toastrService: ToastrService,
-    private activeModal: NgbActiveModal) { }
+    private activeModal: NgbActiveModal,
+    private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.initAddClubMembersForm();
@@ -89,6 +92,7 @@ export class ClubMemberAddComponent implements OnInit {
         this.clubMemberService.updateClubMember(clubMember).subscribe(res => {
           if (res) {
             this.closeModal();
+            this.store.dispatch(updateClubMember(clubMember));
             this.toastrService.success("Club Member updated successfully.", "Successfully Saved");
           }
           this.blockUI.stop();
@@ -115,6 +119,7 @@ export class ClubMemberAddComponent implements OnInit {
           if (res && res.result) {
             this.afterSave.emit(res.result);
             this.closeModal();
+            this.store.dispatch(addClubMember(res.result));
             this.toastrService.success("Club Member saved successfully.", "Successfully Saved");
           }
           this.blockUI.stop();
