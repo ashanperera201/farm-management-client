@@ -8,5 +8,6 @@ export type AppState = {
   application: any,
   clubMember: any,
   dailyFeed: any,
-  farmManagement: any
+  farmManagement: any,
+  harvestManagement: any
 }

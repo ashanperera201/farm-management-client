@@ -8,6 +8,8 @@ import { farmModel } from '../../../shared/models/farm-model';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { FarmService } from '../../../shared/services/farm.service';
 import { keyPressNumbers } from '../../../shared/utils';
+import { Store } from '@ngrx/store';
+import { addFarmManagement, AppState, updateFarmManagement } from '../../../redux';
 
 @Component({
   selector: 'app-farm-add',
@@ -34,7 +36,8 @@ export class FarmAddComponent implements OnInit, OnDestroy {
     private clubMemberService: ClubMemberService,
     private farmService: FarmService,
     private toastrService: ToastrService,
-    private activeModal: NgbActiveModal) { }
+    private activeModal: NgbActiveModal,
+    private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.initAddFarmForm();
@@ -91,6 +94,7 @@ export class FarmAddComponent implements OnInit, OnDestroy {
       this.farmService.updateFarm(farm).subscribe(res => {
         if (res) {
           const farmer = this.setOwner(farm);
+          this.store.dispatch(updateFarmManagement(farm));
           this.toastrService.success("Farm updated successfully", "Success");
           this.afterSave.emit(farmer);
           this.closeModal();
@@ -114,6 +118,7 @@ export class FarmAddComponent implements OnInit, OnDestroy {
             const farmer = this.setOwner(res.result.farmDetail);
             this.afterSave.emit(farmer);
             this.closeModal();
+            this.store.dispatch(addFarmManagement(res.result));
             this.toastrService.success("Farm saved successfully", "Success");
           }
           this.blockUI.stop();

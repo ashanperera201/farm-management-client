@@ -8,6 +8,8 @@ import { ExportTypes } from '../../../shared/enums/export-type';
 import { FarmService } from '../../../shared/services/farm.service';
 import { FarmAddComponent } from '../farm-add/farm-add.component';
 import * as moment from 'moment';
+import { Store } from '@ngrx/store';
+import { AppState, removeFarmManagement, setFarmManagement, updateFarmManagement } from '../../../redux';
 
 @Component({
   selector: 'app-farm-list',
@@ -29,7 +31,8 @@ export class FarmListComponent implements OnInit, OnDestroy {
     private farmService: FarmService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService) { }
+    private fileService: FileService,
+    private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.fetchFarmList();
@@ -40,6 +43,7 @@ export class FarmListComponent implements OnInit, OnDestroy {
     this.farmListSubscriptions.push(this.farmService.fetchFarms().subscribe(res => {
       if (res && res.result) {
         this.farmList = res.result;
+        this.store.dispatch(setFarmManagement(res.result));
       }
       this.blockUI.stop();
     }, () => {
@@ -85,6 +89,8 @@ export class FarmListComponent implements OnInit, OnDestroy {
           this.farmList[index].address = afterSaveRes.address;
           this.farmList[index].pondCount = afterSaveRes.pondCount;
           this.farmList[index].owner = afterSaveRes.owner;
+
+          this.store.dispatch(updateFarmManagement(this.farmList[index]));
         }
       });
     }
@@ -114,6 +120,7 @@ export class FarmListComponent implements OnInit, OnDestroy {
       if (deletedResult) {
         this.isAllChecked = false;
         farmIds.forEach(e => { const index: number = this.farmList.findIndex((up: any) => up._id === e); this.farmList.splice(index, 1); });
+        this.store.dispatch(removeFarmManagement(farmIds));
         this.toastrService.success('Successfully deleted.', 'Success');
       }
       this.blockUI.stop();
