@@ -8,6 +8,8 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FileService} from '../../../shared/services/file.service';
 import {HarvestService} from '../../../shared/services/harvest.service';
 import {HarvestAddComponent} from '../harvest-add/harvest-add.component';
+import { Store } from '@ngrx/store';
+import { AppState, removeHarvest, setHarvest, updateHarvest } from '../../../redux';
 
 @Component({
   selector: 'app-harvest-list',
@@ -28,7 +30,8 @@ export class HarvestListComponent implements OnInit {
   constructor(private harvestService: HarvestService,
               private toastrService: ToastrService,
               private modalService: NgbModal,
-              private fileService: FileService) { }
+              private fileService: FileService,
+              private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.fetchHarvestList();
@@ -39,6 +42,7 @@ export class HarvestListComponent implements OnInit {
     this.harvestService.fetchHarvests().subscribe(res => {
       if (res && res.result) {
         this.harvestList = res.result;
+        this.store.dispatch(setHarvest(res.result));
       }
       this.blockUI.stop();
     }, () => {
@@ -79,7 +83,20 @@ export class HarvestListComponent implements OnInit {
       updateModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
         if (afterSaveRes) {
           const index = this.harvestList.findIndex((up: any) => up._id === afterSaveRes._id);
+          let harvestRefs = JSON.parse(JSON.stringify(this.harvestList));
 
+          harvestRefs[index].owner = afterSaveRes.owner;
+          harvestRefs[index].farmer = afterSaveRes.farmer;
+          harvestRefs[index].pond = afterSaveRes.pond;
+          harvestRefs[index].harvestDate = afterSaveRes.harvestDate;
+          harvestRefs[index].harvestType = afterSaveRes.harvestType;
+          harvestRefs[index].harvestQuantity = afterSaveRes.harvestQuantity;
+          harvestRefs[index].harvestAWB = afterSaveRes.harvestAWB;
+          harvestRefs[index].harvestSalePrice = afterSaveRes.harvestSalePrice;
+  
+          this.harvestList = [...harvestRefs];
+          // ** 
+          this.store.dispatch(updateHarvest(this.harvestList[index]));
         }
       });
     }
@@ -109,6 +126,7 @@ export class HarvestListComponent implements OnInit {
       if (deletedResult) {
         this.isAllChecked = false;
         harvestIds.forEach(e => { const index: number = this.harvestList.findIndex((up: any) => up._id === e); this.harvestList.splice(index, 1); });
+        this.store.dispatch(removeHarvest(harvestIds));
         this.toastrService.success('Successfully deleted.', 'Success');
       }
       this.blockUI.stop();
