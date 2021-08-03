@@ -1,86 +1,56 @@
 <div class="card card-custom">
     <div class="card-header">
         <div class="card-title">
-            <h3 class="card-label">User Management</h3>
+            <h3 class="card-label">Application Report</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-success" (click)="generateReport()">
                 <i class="fa fa-plus" aria-hidden="true"></i>
-                Add User
-            </a>
-            <a type="button" class="btn btn-danger ml-2">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-                Delete Users
-            </a>
+                Generate Report
+            </button>
         </div>
     </div>
     <div class="card-body">
         <!-- begin: Filtration form -->
         <div class="form form-label-right">
-            <div class="form-group row">
-                <div class="col-lg-6">
-                    <div class="col-lg-5">
+            <div class="form-group">
+                <div class="col-lg-4 row">
+                    <div class="col">
                         <input type="text" class="form-control" name="searchText" placeholder="Search"
                             [(ngModel)]="searchParam" />
                         <small class="form-text text-muted">
                             <b>Search</b>
                         </small>
                     </div>
-                </div>
-
-                <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
-                    <!-- begin: Grouping -->
-                    <div>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportUserList(exportTypes.PDF)">
-                            <i class="fa fa-file-text"></i>
-                            <span>PDF</span>
-                        </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportUserList(exportTypes.CSV)">
-                            <i class="fa fa-table"></i>
-                            <span>CSV</span>
-                        </button>
-                    </div>
-                    <!-- end: Grouping -->
+                    <!-- <div class="col">
+                        <ng-select [items]="test" bindLabel="name" bindValue="id" placeholder="Sample search">
+                        </ng-select>
+                    </div> -->
                 </div>
             </div>
         </div>
         <!-- end: Filtration form -->
-
         <!-- begin:Table -->
         <div class="table-responsive angular-bootstrap-table">
             <table class="table table-head-custom table-vertical-center overflow-hidden">
                 <thead>
-                    <!-- <th class="selection-cell-header" data-row-selection="true">
-                        <label class="checkbox checkbox-single">
-                            <input type="checkbox" [(ngModel)]="isAllChecked" [checked]="isAllChecked"
-                                (ngModelChange)="onSelectionChange()" />
-                            <span></span>
-                        </label>
-                    </th> -->
-                    <th> First Name </th>
-                    <th> Last Name </th>
-                    <th> Email </th>
-                    <th> NIC </th>
-                    <th> Address </th>
-                    <th> Contact No </th>
+                    <th> ApplicationType </th>
+                    <th> Name </th>
+                    <th> Unit (KG/Liters) </th>
+                    <th> Cost Per Unit </th>
                     <th> Created Date </th>
                     <th> Status </th>
-                    <th> Actions </th>
                 </thead>
                 <tbody>
                     <tr
-                        *ngFor="let user of (applicationDetailList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:searchParam; let i = index ">
-                        <td>{{ user?.firstName }}</td>
-                        <td>{{ user?.lastName }}</td>
-                        <td>{{ user?.userEmail }}</td>
-                        <td>{{ user?.nic }}</td>
-                        <td>{{ user?.userAddress }}</td>
-                        <td>{{ user?.contact }}</td>
-                        <td>{{ user?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
+                        *ngFor="let application of (applicationDetailList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:searchParam; let i = index ">
+                        <td>{{ application?.applicationType }}</td>
+                        <td>{{ application?.applicantName }}</td>
+                        <td>{{ application?.unit }}</td>
+                        <td>{{ application?.costPerUnit }}</td>
+                        <td>{{ application?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
                         <td>
-                            <span [ngClass]="user?.isActive ? 'active' : 'inactive'"></span>
+                            <span [ngClass]="application?.isActive ? 'active' : 'inactive'"></span>
                         </td>
                     </tr>
                 </tbody>
