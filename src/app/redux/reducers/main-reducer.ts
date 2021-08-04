@@ -9,6 +9,7 @@ import { stockReducer } from './stock.reducer';
 import { UserReducer } from './user.reducer';
 import { weeklyApplicationReducer } from './weekly-application.reducer';
 import { weeklySamplingReducer } from './weekly-samplig.reducer';
+import { harvestReducer } from './harvest-management.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   loggedInData: UserReducer,
@@ -19,6 +20,6 @@ export const reducers: ActionReducerMap<AppState> = {
   application: applicationReducer,
   clubMember: clubMemberReducer,
   dailyFeed: dailyFeedReducer,
-  farmManagement: farmManagmentReducer
-
+  farmManagement: farmManagmentReducer,
+  harvestManagement: harvestReducer
 }

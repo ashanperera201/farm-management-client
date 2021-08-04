@@ -9,7 +9,7 @@ import { ReportingService } from '../../../shared/services/reporting.service';
   templateUrl: './pond-brand-detail-report.component.html',
   styleUrls: ['./pond-brand-detail-report.component.scss']
 })
-export class PondBrandDetailReportComponent implements OnInit {
+export class PondBrandDetailReportComponent implements OnInit, OnDestroy {
   @BlockUI() blockUI!: NgBlockUI;
 
   searchParam!: string;

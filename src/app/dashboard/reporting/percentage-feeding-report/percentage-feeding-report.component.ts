@@ -15,7 +15,7 @@ import { FarmService } from '../../../shared/services/farm.service';
   templateUrl: './percentage-feeding-report.component.html',
   styleUrls: ['./percentage-feeding-report.component.scss']
 })
-export class PercentageFeedingReportComponent implements OnInit {
+export class PercentageFeedingReportComponent implements OnInit, OnDestroy {
   @BlockUI() blockUI!: NgBlockUI;
 
   searchParam!: string;
