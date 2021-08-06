@@ -5,6 +5,9 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ComponentsModule } from '../shared/components/components.module';
 import { DashboardRoutingModule } from './dashboard.routing';
 import { HomeComponent } from './home/home.component';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+
 @NgModule({
   declarations: [
     HomeComponent,
@@ -14,7 +17,9 @@ import { HomeComponent } from './home/home.component';
     CommonModule,
     DashboardRoutingModule,
     ComponentsModule,
-    InlineSVGModule    
+    InlineSVGModule,
+    Ng2SearchPipeModule,
+    NgbPaginationModule    
   ] 
 })
 
