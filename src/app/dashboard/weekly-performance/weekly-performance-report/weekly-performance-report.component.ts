@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
-import { AppState } from '../../../redux';
+import { AppState, selectWeeklyApplication } from '../../../redux';
 
 @Component({
   selector: 'app-weekly-performance-report',
@@ -22,6 +22,8 @@ export class WeeklyPerformanceReportComponent implements OnInit {
   farm! : any;
   pond! : any;
   week! : any;
+  reportSubscription:  Subscription[] = [];
+  applicationList: any[] = [];
 
   constructor(
     private toastrService: ToastrService,
@@ -31,6 +33,7 @@ export class WeeklyPerformanceReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchReportData();
+    this.fetchApplicationData();
   }
 
   // initOwnerForm = () => {
@@ -43,9 +46,16 @@ export class WeeklyPerformanceReportComponent implements OnInit {
   // }
 
   fetchReportData = () => {
-    debugger
     this.week = this.initialData?.weekNumber;
     let x = this.initialData;
+  }
+
+  fetchApplicationData = () => {
+    this.reportSubscription.push(this.store.select(selectWeeklyApplication).subscribe(res => {
+      if(res){
+
+      }
+    }));
   }
 
   closeModal = () => {

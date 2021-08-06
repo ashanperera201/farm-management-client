@@ -80,7 +80,6 @@ export class FeedChartListComponent implements OnInit {
 
 
   fetchDailyFeed = () => {
-    debugger;
     //Adding Date of Culture (DOC) to existing array
     let today = new Date();
     this.store.select(selectStockDetails).subscribe(res => {
