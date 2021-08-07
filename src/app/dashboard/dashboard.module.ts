@@ -7,6 +7,7 @@ import { DashboardRoutingModule } from './dashboard.routing';
 import { HomeComponent } from './home/home.component';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     ComponentsModule,
     InlineSVGModule,
     Ng2SearchPipeModule,
-    NgbPaginationModule    
+    NgbPaginationModule,
+    ChartsModule
   ] 
 })
 
