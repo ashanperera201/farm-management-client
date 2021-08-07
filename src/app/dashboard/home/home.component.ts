@@ -7,6 +7,8 @@ import { FarmService } from '../../shared/services/farm.service';
 import { ClubMemberService } from '../../shared/services/club-member.service';
 import { ApplicationsService } from '../../shared/services/applications.service';
 import { switchMap } from 'rxjs/operators';
+import { PercentageFeedingService } from '../../shared/services/percentage-feeding.service';
+import { SalesPriceService } from '../../shared/services/sales-price.service';
 
 
 @Component({
@@ -21,6 +23,10 @@ farmsCount : number = 0;
 pondsCount : number = 0;
 ApplicationsCount : number = 0;
 dashboardSubscription: Subscription[] = [];
+percentageFeedingList: any[] = [];
+salesPriceList: any[] = [];
+pageSize: number = 10;
+page: any = 1;
 
 @BlockUI() blockUI!: NgBlockUI;
 
@@ -30,10 +36,14 @@ dashboardSubscription: Subscription[] = [];
     private pondService : PondService,
     private applicationService : ApplicationsService,
     private toastrService: ToastrService,
+    private percentageFeedingService : PercentageFeedingService,
+    private salesPriceService: SalesPriceService
   ) { }
 
   ngOnInit(): void {
     this.fetchWidgetData();
+    this.fetchPercentageFeeding();
+    this.fetchSalesPrice();
   }
 
   fetchWidgetData = () => {
@@ -57,11 +67,37 @@ dashboardSubscription: Subscription[] = [];
       if (farmRes && farmRes.result) {
         this.farmsCount = farmRes.result.length ? farmRes.result.length : 0;
       }
+      this.blockUI.stop();
     }, () => {
       this.blockUI.stop();
       this.toastrService.error("Unable to load data","Error");
     }))
-    this.blockUI.stop();
+  }
+
+  fetchPercentageFeeding = () => {
+    this.blockUI.start('Fetching Data......');
+    this.dashboardSubscription.push(this.percentageFeedingService.fetchPercentageFeedings().subscribe(res=> {
+      if(res && res.result){
+        this.percentageFeedingList = res.result;
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error("Failed to load Data","Error");
+      this.blockUI.stop();
+    }));
+  }
+
+  fetchSalesPrice = () => {
+    this.blockUI.start('Fetching Data......');
+    this.dashboardSubscription.push(this.salesPriceService.fetchSalesPrice().subscribe(res => {
+      if (res && res.result) {
+        this.salesPriceList = res.result;
+      }
+      this.blockUI.stop();
+    }, () => {
+      this.toastrService.error("Failed to load Data", "Error");
+      this.blockUI.stop();
+    }));
   }
 
   ngOnDestroy() {

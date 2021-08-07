@@ -6,7 +6,7 @@ import { NavigationModes } from '../shared/enums/navigation.enum';
 import { StockService } from '../shared/services/stock.service';
 import { ClubMemberService } from '../shared/services/club-member.service';
 import { WeeklySamplingService } from '../shared/services/weekly-sampling.service';
-import { AppState, setStockDetails, setWeeklySamplings } from '../redux';
+import { AppState, selectUserDetails, setStockDetails, setWeeklySamplings } from '../redux';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   navigationModes = NavigationModes;
   asideMenuDropdown: any = 1;
   asideMenuScroll = 1;
+  loggedUserName: string = '';
 
   menuItems: any[] = [];
   currentIndex!: number;
@@ -31,7 +32,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.fetchUser()
     this.fetchInitialDataSets();
+  }
+
+  fetchUser = () => {
+    this.store.select(selectUserDetails).subscribe(user => {
+      if(user){
+        this.loggedUserName = user.firstName;
+      }
+    })
   }
 
   fetchInitialDataSets = () => {
