@@ -1,6 +1,91 @@
 <div class="col-xxl-12 order-2 order-xxl-1">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Dashboard</h3>
+        </div>
+        <div class="row widget-row">
+            <div class="card border-primary mb-3 widget">
+                <div class="card-body text-primary">
+                    <p class="widget-text">{{clubMemberCount}}</p>
+                </div>
+                <div class="card-footer bg-transparent border-primary widget-footer">Club Members</div>
+            </div>
+            <div class="card border-primary mb-3 widget">
+                <div class="card-body text-primary">
+                    <p class="widget-text">{{farmsCount}}</p>
+                </div>
+                <div class="card-footer bg-transparent border-primary widget-footer">Farms</div>
+            </div>
+            <div class="card border-primary mb-3 widget">
+                <div class="card-body text-primary">
+                    <p class="widget-text">{{pondsCount}}</p>
+                </div>
+                <div class="card-footer bg-transparent border-primary widget-footer">Ponds</div>
+            </div>
+            <div class="card border-primary mb-3 widget">
+                <div class="card-body text-primary">
+                    <p class="widget-text">{{ApplicationsCount}}</p>
+                </div>
+                <div class="card-footer bg-transparent border-primary widget-footer">Applications</div>
+            </div>
+        </div>
 
-    <h4>Page is under maintainance......., dashboard will be back soon</h4>
+        <div class="row">
+            <!-- begin:Table -->
+            <div class="table-responsive angular-bootstrap-table percentage-table">
+                <div class="row">
+                    <h3 class="table-name">Percentage of Feeding</h3>
+                </div>
+                <table class="table table-head-custom table-vertical-center overflow-hidden">
+                    <thead>
+                        <th> Club Member </th>
+                        <th> Farm </th>
+                        <th> Pond </th>
+                        <th> AWB </th>
+                        <th> Percentage </th>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let percentageFeeding of (percentageFeedingList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize)">
+                            <td>{{percentageFeeding?.owner?.firstName}}</td>
+                            <td>{{percentageFeeding?.farmer?.farmName}}</td>
+                            <td>{{percentageFeeding?.pond?.pondNo}}</td>
+                            <td>{{percentageFeeding?.averageBodyWeight}}</td>
+                            <td>{{percentageFeeding?.feedPercentage}}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ngb-pagination
+                    [collectionSize]="percentageFeedingList && percentageFeedingList.length ? percentageFeedingList.length: 0"
+                    [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+                </ngb-pagination>
+            </div>
+            <!-- begin:Table -->
+            <div class="table-responsive angular-bootstrap-table sales-table">
+                <div class="row">
+                    <h3 class="table-name">Sales Price</h3>
+                </div>
+                <table class="table table-head-custom table-vertical-center overflow-hidden">
+                    <thead>
+                        <th> AWB </th>
+                        <th> Sale Price </th>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let salePrice of (salesPriceList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize)">
+                            <td>{{salePrice?.averageBodyWeight}}</td>
+                            <td>{{salePrice?.salesPrice}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ngb-pagination [collectionSize]="salesPriceList && salesPriceList.length ? salesPriceList.length: 0"
+                    [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+                </ngb-pagination>
+            </div>
+        </div>
+    </div>
+
+    <p>Chart is under maintanance...!</p>
     <!-- <div class="card card-custom card-stretch gutter-b">
         <div class="card-header border-0 pt-5">
             <h3 class="card-title align-items-start flex-column">

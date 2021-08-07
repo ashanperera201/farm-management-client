@@ -7,7 +7,7 @@
   </div>
   
   <div class="modal-body mb-0">
-    <div class="form-row mb-4">
+    <div class="form-row mb-4 top-row">
         <div class="col">
             <label class="font-size-h7  text-dark">Club Member : {{ owner }}</label>
         </div>
@@ -23,7 +23,7 @@
     </div>
 
     <div class="form-row mb-4">
-        <h5>Weekly Sales</h5>
+        <h5 class="section-headding">Weekly Sales</h5>
     </div>
     
     <div class="form-row">
@@ -61,7 +61,24 @@
     </div>
 
     <div class="form-row mb-4">
-        <h5>Total Application Cost (Weekly)</h5>
+        <h5 class="section-headding">Total Application Cost (Weekly)</h5>
+              <!-- begin:Table -->
+      <div class="table-responsive angular-bootstrap-table">
+        <table class="table table-head-custom table-vertical-center overflow-hidden">
+            <thead>
+                <th> Type of Application </th>
+                <th> Total No of Units </th>
+                <th> Total Cost </th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let application of applicationList">
+                    <td>{{application?.firstName}}</td>
+                    <td>{{application?.farmName}}</td>
+                    <td>{{application?.pondNo}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     </div>
 
     <div class="form-row mb-4">

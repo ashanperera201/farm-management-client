@@ -1,0 +1,87 @@
+.widget{
+    padding-top: 10px;
+    margin: 10px;
+    max-width: 20%;
+    min-width: 20%;
+    text-align: center;
+    border-width: 4px;
+    border-radius: 12px;
+}
+
+.widget-row{
+    margin-bottom: 60px;
+}
+
+.widget-text{
+    font-size: 60px;
+}
+
+.widget-footer{
+    font-size: 18px;
+    font-weight: bold;
+    max-height: 40%;
+    border-width: 0px;
+    font:400 Roboto, "Helvetica Neue", sans-serif;
+}
+
+.percentage-table{
+    width: 60% !important;
+    display: block;
+    width: 100%;
+    margin-right: 20px;
+}
+
+.sales-table{
+    width: 35% !important;
+}
+
+.table-name{
+    padding-left: 12px;
+}
+
+tr {
+    border-bottom: 2.0px solid #5594e2 !important;
+    border-top: 2.0px solid #5594e2 !important;
+   }
+
+td {
+    border-bottom: 2.0px solid #5594e2 !important;
+    border-top: 2.0px solid #5594e2 !important;
+    border-left: 2.0px solid #5594e2 !important;
+    border-right: 2.0px solid #5594e2 !important;
+}
+   
+td:first-child {
+     border-left: 2.0px solid #5594e2 !important;
+     border-right: 2.0px solid #5594e2 !important;
+}
+   
+td:last-child {
+     border-right: 2.0px solid #5594e2 !important;
+     border-left: 2.0px solid #5594e2 !important;
+}
+
+th:first-child {
+    border-left: 2.0px solid #5594e2 !important;
+    border-right: 2.0px solid #5594e2 !important;
+}
+  
+th:last-child {
+    border-right: 2.0px solid #5594e2 !important;
+    border-left: 2.0px solid #5594e2 !important;
+}
+
+th{
+    border-bottom: 2.0px solid #5594e2 !important;
+    border-top: 2.0px solid #5594e2 !important;
+    border-left: 2.0px solid #5594e2 !important;
+    border-right: 2.0px solid #5594e2 !important;  
+}
+
+.table.table-head-custom thead tr, .table.table-head-custom thead th {
+    color: rgb(20, 70, 104) !important;
+}
+   
+table {
+     border-spacing: 0 8px !important;
+} 

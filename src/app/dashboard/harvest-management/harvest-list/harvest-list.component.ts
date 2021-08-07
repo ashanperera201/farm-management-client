@@ -73,7 +73,7 @@ export class HarvestListComponent implements OnInit {
       animation: true,
       keyboard: true,
       backdrop: true,
-      modalDialogClass: 'modal-md',
+      modalDialogClass: 'modal-lg',
     });
 
     updateModal.componentInstance.existingHarvest = JSON.parse(JSON.stringify(harvest));
