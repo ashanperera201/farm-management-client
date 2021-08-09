@@ -83,27 +83,30 @@
                 </ngb-pagination>
             </div>
         </div>
-        <div class="row">
+        <p style="margin-bottom:-20px; margin-top: 30px">Chart is under maintainance..</p>
+        <div class="row chart-row">
           <div class="pond-cost-pie-chart" style="display: block;">
-            <P>Pond wise cost </P>
+            <P class="chart-topic">Pond wise cost </P>
             <canvas baseChart 
               [data]="pieChartPondData" 
               [labels]="pieChartLabels" 
               [chartType]="pieChartType"
               [options]="pieChartOptions"
               [plugins]="pieChartPlugins"
-              [legend]="pieChartLegend">
+              [legend]="pieChartLegend"
+              [colors]="chartColors">
             </canvas>
           </div>
-          <div id="farm-cost-pie-chart" style="display: block;">
-            <P>Farm wise cost </P>
+          <div class="farm-cost-pie-chart" id="farm-cost-pie-chart" style="display: block;">
+            <P class="chart-topic">Farm wise cost </P>
             <canvas baseChart 
               [data]="pieChartFarmData" 
               [labels]="pieChartLabels" 
               [chartType]="pieChartType"
               [options]="pieChartOptions"
               [plugins]="pieChartPlugins"
-              [legend]="pieChartLegend">
+              [legend]="pieChartLegend"
+              [colors]="chartColors">
             </canvas>
           </div>
         </div>

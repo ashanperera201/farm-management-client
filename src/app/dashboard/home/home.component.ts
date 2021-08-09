@@ -10,7 +10,7 @@ import { switchMap } from 'rxjs/operators';
 import { PercentageFeedingService } from '../../shared/services/percentage-feeding.service';
 import { SalesPriceService } from '../../shared/services/sales-price.service';
 import { ChartOptions, ChartType } from 'chart.js';
-import { Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip, SingleDataSet } from 'ng2-charts';
+import { Color, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip, SingleDataSet } from 'ng2-charts';
 import { DailyFeedService } from 'src/app/shared/services/daily-feed.service';
 import { StockService } from 'src/app/shared/services/stock.service';
 
@@ -44,6 +44,13 @@ public pieChartFarmData: SingleDataSet = [];
 public pieChartType: ChartType = 'pie';
 public pieChartLegend = true;
 public pieChartPlugins = [];
+public chartColors: Color[] = [
+  {
+    borderColor: 'black',
+    backgroundColor: '#0074D9',
+    //backgroundColor: ["#0074D9", "#FF4136", "#2ECC40", "#FF851B"]
+  },
+];
   
   applicationPondCost = 0;
   applicationFarmCost = 0;
