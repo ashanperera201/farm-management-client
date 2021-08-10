@@ -31,7 +31,7 @@ export class NavigationMenuItemComponent implements OnInit {
     if (this.menuItems[index].subItems.length > 0) {
       this.menuItems[index].selected = !this.menuItems[index].selected;
       this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-submenu menu-item-open' : '';
-    } else {
+    } else {     
       this.menuItems[index].selected = !this.menuItems[index].selected;
       this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
       this.currentIndex = index;

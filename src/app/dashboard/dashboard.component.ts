@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { NavigationModes } from '../shared/enums/navigation.enum';
 import { StockService } from '../shared/services/stock.service';
 import { ClubMemberService } from '../shared/services/club-member.service';
+import { LoggedUserService } from '../shared/services/logged-user.service';
 import { WeeklySamplingService } from '../shared/services/weekly-sampling.service';
 import { AppState, selectUserDetails, setStockDetails, setWeeklySamplings } from '../redux';
 
@@ -28,7 +29,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private store: Store<AppState>,
     private stockService: StockService,
     private clubMemberService: ClubMemberService,
-    private weeklySamplingService: WeeklySamplingService
+    private weeklySamplingService: WeeklySamplingService,
+    private loggedUserService: LoggedUserService
   ) { }
 
   ngOnInit(): void {
@@ -38,7 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   fetchUser = () => {
     this.store.select(selectUserDetails).subscribe(user => {
-      if(user){
+      if (user) {
         this.loggedUserName = user.firstName;
       }
     })
@@ -72,6 +74,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.menuItems[index].selected = !this.menuItems[index].selected;
     this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
     this.currentIndex = index;
+  }
+
+  signOut = () => {
+    this.loggedUserService.signOut();
   }
 
   ngOnDestroy() {
