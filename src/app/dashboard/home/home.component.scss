@@ -1,106 +1,21 @@
-.widget{
-    padding-top: 10px;
-    margin: 10px;
-    max-width: 20%;
-    min-width: 20%;
-    text-align: center;
-    border-width: 4px;
-    border-radius: 12px;
+.card-height {
+    height: 10rem !important;
 }
 
-.widget-row{
-    margin-bottom: 60px;
+.card-icon {
+    margin-left: 2rem;
+    padding-top: 1rem;
 }
 
-.widget-text{
-    font-size: 60px;
+.card-text {
+    text-transform: uppercase;
+    margin-left: 2rem;
 }
 
-.widget-footer{
-    font-size: 18px;
-    font-weight: bold;
-    max-height: 40%;
-    border-width: 0px;
-    font:400 Roboto, "Helvetica Neue", sans-serif;
+.card-result-text {
+    font-size: 2rem;
 }
 
-.percentage-table{
-    width: 60% !important;
-    display: block;
-    width: 100%;
-    margin-right: 20px;
-}
-
-.sales-table{
-    width: 35% !important;
-}
-
-.table-name{
-    padding-left: 12px;
-}
-
-tr {
-    border-bottom: 2.0px solid #5594e2 !important;
-    border-top: 2.0px solid #5594e2 !important;
-   }
-
-td {
-    border-bottom: 2.0px solid #5594e2 !important;
-    border-top: 2.0px solid #5594e2 !important;
-    border-left: 2.0px solid #5594e2 !important;
-    border-right: 2.0px solid #5594e2 !important;
-}
-   
-td:first-child {
-     border-left: 2.0px solid #5594e2 !important;
-     border-right: 2.0px solid #5594e2 !important;
-}
-   
-td:last-child {
-     border-right: 2.0px solid #5594e2 !important;
-     border-left: 2.0px solid #5594e2 !important;
-}
-
-th:first-child {
-    border-left: 2.0px solid #5594e2 !important;
-    border-right: 2.0px solid #5594e2 !important;
-}
-  
-th:last-child {
-    border-right: 2.0px solid #5594e2 !important;
-    border-left: 2.0px solid #5594e2 !important;
-}
-
-th{
-    border-bottom: 2.0px solid #5594e2 !important;
-    border-top: 2.0px solid #5594e2 !important;
-    border-left: 2.0px solid #5594e2 !important;
-    border-right: 2.0px solid #5594e2 !important;  
-}
-
-.table.table-head-custom thead tr, .table.table-head-custom thead th {
-    color: rgb(20, 70, 104) !important;
-}
-   
-table {
-     border-spacing: 0 8px !important;
-} 
-
-.pond-cost-pie-chart{
-    width: 50%;
-}
-
-.farm-cost-pie-chart{
-    width: 50%;
-}
-
-.chart-row{
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
-
-.chart-topic{
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
+.card-custom{
+    margin-top: 1rem !important;
 }

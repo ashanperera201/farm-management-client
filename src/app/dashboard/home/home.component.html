@@ -1,115 +1,351 @@
-<div class="col-xxl-12 order-2 order-xxl-1">
-    <div class="card-header">
-        <div class="card-title">
-            <h3 class="card-label">Dashboard</h3>
-        </div>
-        <div class="row widget-row">
-            <div class="card border-primary mb-3 widget">
-                <div class="card-body text-primary">
-                    <p class="widget-text">{{clubMemberCount}}</p>
+<div class="row">
+    <div class="col-lg-3">
+        <div class="card-height bg-light-primary rounded-xl">
+            <span [inlineSVG]="'./assets/media/svg/icons/Communication/Add-user.svg'"
+                class="card-icon svg-icon svg-icon-5x svg-icon-primary d-block my-2"></span>
+            <div class="mt-3 d-flex justify-content-between">
+                <a class="card-text text-primary font-weight-bold font-size-h6">
+                    Club Member Count
+                </a>
+                <div class="pr-4">
+                    <span class="card-result-text">{{clubMemberCount}}</span>
                 </div>
-                <div class="card-footer bg-transparent border-primary widget-footer">Club Members</div>
             </div>
-            <div class="card border-primary mb-3 widget">
-                <div class="card-body text-primary">
-                    <p class="widget-text">{{farmsCount}}</p>
-                </div>
-                <div class="card-footer bg-transparent border-primary widget-footer">Farms</div>
-            </div>
-            <div class="card border-primary mb-3 widget">
-                <div class="card-body text-primary">
-                    <p class="widget-text">{{pondsCount}}</p>
-                </div>
-                <div class="card-footer bg-transparent border-primary widget-footer">Ponds</div>
-            </div>
-            <div class="card border-primary mb-3 widget">
-                <div class="card-body text-primary">
-                    <p class="widget-text">{{ApplicationsCount}}</p>
-                </div>
-                <div class="card-footer bg-transparent border-primary widget-footer">Applications</div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- begin:Table -->
-            <div class="table-responsive angular-bootstrap-table percentage-table">
-                <div class="row">
-                    <h3 class="table-name">Percentage of Feeding</h3>
-                </div>
-                <table class="table table-head-custom table-vertical-center overflow-hidden">
-                    <thead>
-                        <th> Club Member </th>
-                        <th> Farm </th>
-                        <th> Pond </th>
-                        <th> AWB </th>
-                        <th> Percentage </th>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let percentageFeeding of (percentageFeedingList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize)">
-                            <td>{{percentageFeeding?.owner?.firstName}}</td>
-                            <td>{{percentageFeeding?.farmer?.farmName}}</td>
-                            <td>{{percentageFeeding?.pond?.pondNo}}</td>
-                            <td>{{percentageFeeding?.averageBodyWeight}}</td>
-                            <td>{{percentageFeeding?.feedPercentage}}%</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <ngb-pagination
-                    [collectionSize]="percentageFeedingList && percentageFeedingList.length ? percentageFeedingList.length: 0"
-                    [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-                </ngb-pagination>
-            </div>
-            <!-- begin:Table -->
-            <div class="table-responsive angular-bootstrap-table sales-table">
-                <div class="row">
-                    <h3 class="table-name">Sales Price</h3>
-                </div>
-                <table class="table table-head-custom table-vertical-center overflow-hidden">
-                    <thead>
-                        <th> AWB </th>
-                        <th> Sale Price </th>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let salePrice of (salesPriceList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize)">
-                            <td>{{salePrice?.averageBodyWeight}}</td>
-                            <td>{{salePrice?.salesPrice}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <ngb-pagination [collectionSize]="salesPriceList && salesPriceList.length ? salesPriceList.length: 0"
-                    [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-                </ngb-pagination>
-            </div>
-        </div>
-        <p style="margin-bottom:-20px; margin-top: 30px">Chart is under maintainance..</p>
-        <div class="row chart-row">
-          <div class="pond-cost-pie-chart" style="display: block;">
-            <P class="chart-topic">Pond wise cost </P>
-            <canvas baseChart 
-              [data]="pieChartPondData" 
-              [labels]="pieChartLabels" 
-              [chartType]="pieChartType"
-              [options]="pieChartOptions"
-              [plugins]="pieChartPlugins"
-              [legend]="pieChartLegend"
-              [colors]="chartColors">
-            </canvas>
-          </div>
-          <div class="farm-cost-pie-chart" id="farm-cost-pie-chart" style="display: block;">
-            <P class="chart-topic">Farm wise cost </P>
-            <canvas baseChart 
-              [data]="pieChartFarmData" 
-              [labels]="pieChartLabels" 
-              [chartType]="pieChartType"
-              [options]="pieChartOptions"
-              [plugins]="pieChartPlugins"
-              [legend]="pieChartLegend"
-              [colors]="chartColors">
-            </canvas>
-          </div>
         </div>
     </div>
+    <div class="col-lg-3">
+        <div class="card-height bg-light-warning rounded-xl">
+            <span [inlineSVG]="'./assets/media/svg/icons/Media/Equalizer.svg'"
+                class="card-icon svg-icon svg-icon-5x svg-icon-warning d-block my-2"></span>
+            <div class="mt-3 d-flex justify-content-between">
+                <a class="card-text text-warning font-weight-bold font-size-h6 mt-2">
+                    Farms Count
+                </a>
+                <div class="pr-4">
+                    <span class="card-result-text">{{farmsCount}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card-height bg-light-danger rounded-xl">
+            <span [inlineSVG]="'./assets/media/svg/icons/Design/Layers.svg'"
+                class="card-icon svg-icon svg-icon-5x svg-icon-danger d-block my-2"></span>
+            <div class="mt-3 d-flex justify-content-between">
+                <a class="card-text text-danger font-weight-bold font-size-h6 mt-2">
+                    Ponds Count
+                </a>
+                <div class="pr-4">
+                    <span class="card-result-text">{{pondsCount}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card-height bg-light-success rounded-xl">
+            <span [inlineSVG]="
+            './assets/media/svg/icons/Communication/Urgent-mail.svg'
+          " class="card-icon svg-icon svg-icon-5x svg-icon-success d-block my-2"></span>
 
+            <div class="mt-3 d-flex justify-content-between">
+                <a class="card-text text-success font-weight-bold font-size-h6 mt-2">
+                    Applications Count
+                </a>
+                <div class="pr-4">
+                    <span class="card-result-text">{{ApplicationsCount}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- add this differnt one -->
+
+<div class="card card-custom">
+    <!-- Header -->
+    <div class="card-header border-0 py-5">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label font-weight-bolder text-dark">Agents Stats</span>
+            <span class="text-muted mt-3 font-weight-bold font-size-sm">More than 400+ new members</span>
+        </h3>
+        <div class="card-toolbar">
+            <a href="#" class="btn btn-success font-weight-bolder font-size-sm">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Add-user.svg'"
+                    class="svg-icon svg-icon-md svg-icon-white"></span>Add New Member
+            </a>
+        </div>
+    </div>
+    <!--begin::Body-->
+    <div class="card-body py-0">
+        <!--begin::Table-->
+        <div class="table-responsive">
+            <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_1">
+                <thead>
+                    <tr class="text-left">
+                        <th class="pl-0" style="width: 20px">
+                            <label class="checkbox checkbox-lg checkbox-inline">
+                                <input type="checkbox" value="1" />
+                                <span></span>
+                            </label>
+                        </th>
+                        <th class="pr-0" style="width: 50px">authors</th>
+                        <th style="min-width: 200px"></th>
+                        <th style="min-width: 150px">company</th>
+                        <th style="min-width: 150px">progress</th>
+                        <th class="pr-0 text-right" style="min-width: 150px">action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="pl-0">
+                            <label class="checkbox checkbox-lg checkbox-inline">
+                                <input type="checkbox" value="1" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td class="pr-0">
+                            <div class="symbol symbol-50 symbol-light mt-1">
+                                <span class="symbol-label">
+                                    <span [inlineSVG]="'./assets/media/svg/avatars/001-boy.svg'"
+                                        class="svg-icon h-75 align-self-end"></span>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="pl-0">
+                            <a href="#"
+                                class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Brad
+                                Simmons</a>
+                            <span class="text-muted font-weight-bold text-muted d-block">HTML, JS, ReactJS</span>
+                        </td>
+                        <td>
+                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                Intertico
+                            </span>
+                            <span class="text-muted font-weight-bold">
+                                Web, UI/UX Design
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column w-100 mr-2">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted mr-2 font-size-sm font-weight-bold">
+                                        65%
+                                    </span>
+                                    <span class="text-muted font-size-sm font-weight-bold">
+                                        Progress
+                                    </span>
+                                </div>
+                                <div class="progress progress-xs w-100">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 65%"
+                                        aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="pr-0 text-right">
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                <span [inlineSVG]="
+                      './assets/media/svg/icons/General/Settings-1.svg'
+                    " class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3">
+                                <span [inlineSVG]="
+                      './assets/media/svg/icons/Communication/Write.svg'
+                    " class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                    class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pl-0">
+                            <label class="checkbox checkbox-lg checkbox-inline">
+                                <input type="checkbox" value="1" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td class="pr-0">
+                            <div class="symbol symbol-50 symbol-light mt-1">
+                                <span class="symbol-label">
+                                    <span [inlineSVG]="'./assets/media/svg/avatars/018-girl-9.svg'"
+                                        class="svg-icon h-75 align-self-end"></span>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="pl-0">
+                            <a href="#"
+                                class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Jessie
+                                Clarcson</a>
+                            <span class="text-muted font-weight-bold text-muted d-block">C#, ASP.NET, MS SQL</span>
+                        </td>
+                        <td>
+                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                Agoda
+                            </span>
+                            <span class="text-muted font-weight-bold"> Houses & Hotels </span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column w-100 mr-2">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted mr-2 font-size-sm font-weight-bold">
+                                        83%
+                                    </span>
+                                    <span class="text-muted font-size-sm font-weight-bold">
+                                        Progress
+                                    </span>
+                                </div>
+                                <div class="progress progress-xs w-100">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 83%"
+                                        aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="pr-0 text-right">
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                <span [inlineSVG]="
+                      './assets/media/svg/icons/General/Settings-1.svg'
+                    " class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3">
+                                <span [inlineSVG]="
+                      './assets/media/svg/icons/Communication/Write.svg'
+                    " class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                    class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pl-0">
+                            <label class="checkbox checkbox-lg checkbox-inline">
+                                <input type="checkbox" value="1" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td class="pr-0">
+                            <div class="symbol symbol-50 symbol-lightv mt-1">
+                                <span class="symbol-label">
+                                    <span [inlineSVG]="'./assets/media/svg/avatars/047-girl-25.svg'"
+                                        class="svg-icon h-75 align-self-end"></span>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="pl-0">
+                            <a href="#"
+                                class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Lebron
+                                Wayde</a>
+                            <span class="text-muted font-weight-bold text-muted d-block">PHP, Laravel, VueJS</span>
+                        </td>
+                        <td>
+                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                RoadGee
+                            </span>
+                            <span class="text-muted font-weight-bold"> Transportation </span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column w-100 mr-2">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted mr-2 font-size-sm font-weight-bold">
+                                        47%
+                                    </span>
+                                    <span class="text-muted font-size-sm font-weight-bold">
+                                        Progress
+                                    </span>
+                                </div>
+                                <div class="progress progress-xs w-100">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 83%"
+                                        aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="pr-0 text-right">
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                <span [inlineSVG]="
+                      './assets/media/svg/icons/General/Settings-1.svg'
+                    " class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3">
+                                <span [inlineSVG]="
+                      './assets/media/svg/icons/Communication/Write.svg'
+                    " class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                    class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="pl-0">
+                            <label class="checkbox checkbox-lg checkbox-inline">
+                                <input type="checkbox" value="1" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td class="pr-0">
+                            <div class="symbol symbol-50 symbol-light mt-1">
+                                <span class="symbol-label">
+                                    <span [inlineSVG]="'./assets/media/svg/avatars/014-girl-7.svg'"
+                                        class="svg-icon h-75 align-self-end"></span>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="pl-0">
+                            <a href="#"
+                                class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Natali
+                                Trump</a>
+                            <span class="text-muted font-weight-bold text-muted d-block">Python, PostgreSQL,
+                                ReactJS</span>
+                        </td>
+                        <td>
+                            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                The Hill
+                            </span>
+                            <span class="text-muted font-weight-bold"> Insurance </span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column w-100 mr-2">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="text-muted mr-2 font-size-sm font-weight-bold">
+                                        71%
+                                    </span>
+                                    <span class="text-muted font-size-sm font-weight-bold">
+                                        Progress
+                                    </span>
+                                </div>
+                                <div class="progress progress-xs w-100">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 71%"
+                                        aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="pr-0 text-right">
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                <span [inlineSVG]="
+                      './assets/media/svg/icons/General/Settings-1.svg'
+                    " class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3">
+                                <span [inlineSVG]="
+                      './assets/media/svg/icons/Communication/Write.svg'
+                    " class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                            <a href="#" class="btn btn-icon btn-light btn-hover-primary btn-sm">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                    class="svg-icon svg-icon-md svg-icon-primary"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--end::Table-->
+    </div>
+    <!--end::Body-->
 </div>
