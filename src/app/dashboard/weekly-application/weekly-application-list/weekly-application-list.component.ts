@@ -62,8 +62,13 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  filterChange = (event: any) => {
+  resetFilters = () => {
+    this.filterForm.reset();
     this.weeklyApplicationList = this.initialWeeklyApplicationList;
+  }
+
+  filterChange = (event: any) => {
+    this.weeklyApplicationList = this.weeklyApplicationList;
     const owner = this.filterForm.get("owner")?.value;
     const farmer = this.filterForm.get("farmer")?.value;
     const pond = this.filterForm.get("pond")?.value;

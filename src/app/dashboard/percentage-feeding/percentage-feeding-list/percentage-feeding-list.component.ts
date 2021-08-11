@@ -60,6 +60,11 @@ export class PercentageFeedingListComponent implements OnInit {
     });
   }
 
+  resetFilters = () => {
+    this.filterForm.reset();
+    this.percentageFeedingList = this.initialPercentageFeedingList;
+  }
+
   filterChange = (event: any) => {
     this.percentageFeedingList = this.initialPercentageFeedingList;
     const owner = this.filterForm.get("owner")?.value;
