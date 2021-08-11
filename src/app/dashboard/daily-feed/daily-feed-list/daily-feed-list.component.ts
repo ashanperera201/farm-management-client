@@ -63,6 +63,12 @@ export class DailyFeedListComponent implements OnInit {
     });
   }
 
+  resetFilters = () => {
+    this.filterForm.reset();
+    this.dailyFeedList = this.initialDailyFeedList;
+  }
+
+
   filterChange = (event: any) => {
     this.dailyFeedList = this.initialDailyFeedList;
     const owner = this.filterForm.get("owner")?.value;

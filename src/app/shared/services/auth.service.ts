@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
 import { UserModel } from '../models/user-model';
-import { loginUserModel } from '../models/login-user';
+import { changePasswordModel, loginUserModel } from '../models/login-user';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +29,8 @@ export class AuthService {
     return this.http.post(url, userData)
   }
 
-  resetPassword(userData: any): Observable<any> {
-    const url: string = `${this.baseUrl}/api/v1/user/change-password`;
+  resetPassword(userData: changePasswordModel): Observable<any> {
+    const url: string = `${this.baseUrl}/api/v1/user/user-manager/change-password`;
     return this.http.post(url, userData)
   }
 }

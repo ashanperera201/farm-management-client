@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { changePasswordModel } from '../../shared/models/login-user';
 import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
@@ -35,16 +36,19 @@ export class ForgetPasswordComponent implements OnInit {
   
 
   resetPassword = () => {
-    if(this.passwordResetForm.valid){
-      this.authService.resetPassword(this.passwordResetForm.value).subscribe(res =>{
-        if(res){
-          this.toastrService.success("Password Reset Successfull.","Success");
+    if (this.passwordResetForm.valid) {
+      let userModel = new changePasswordModel();
+      userModel.email = this.passwordResetForm.value.email;
+      userModel.password = this.passwordResetForm.value.password;
+      this.authService.resetPassword(userModel).subscribe(res => {
+        if (res) {
+          this.toastrService.success("Password Reset Successfull.", "Success");
           this.redirectToLogin();
         }
       },
-      () => {
-        this.toastrService.error("Password Reset was Unsuccessfull.","Rest Failed");
-      });
+        () => {
+          this.toastrService.error("Password Reset was Unsuccessfull.", "Rest Failed");
+        });
     }
   }
 
