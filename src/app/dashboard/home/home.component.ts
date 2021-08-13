@@ -191,8 +191,6 @@ export class HomeComponent implements OnInit {
   }
 
   initializePondChartConfig = () => {
-    console.log(this.pondSeries);
-    
     this.pondChartConfig = {
       series: this.pondSeries,
       chart: {
@@ -203,11 +201,11 @@ export class HomeComponent implements OnInit {
       labels: ["Total Feed Cost", "Total Application Cost", "PL Cost", "Oher Cost"],
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 1300,
           options: {
             chart: {
-              width: 1000,
-              height: 1000
+              width: 300,
+              height: 300
             },
             legend: {
               position: "bottom"
@@ -219,7 +217,6 @@ export class HomeComponent implements OnInit {
   }
 
   initializeFarmChartConfig = () => {
-    console.log(this.farmSeries);
     this.farmChartConfig = {
       series: this.farmSeries,
       chart: {
@@ -230,11 +227,11 @@ export class HomeComponent implements OnInit {
       labels: ["Total Feed Cost", "Total Application Cost", "PL Cost", "Oher Cost"],
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 1300,
           options: {
             chart: {
-              width: 1000,
-              height: 1000
+              width: 300,
+              height: 300
             },
             legend: {
               position: "bottom"

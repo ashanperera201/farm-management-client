@@ -4,14 +4,14 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import {switchMap} from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { FarmService } from '../../../shared/services/farm.service';
 import { keyPressNumbers } from '../../../shared/utils';
-import {DailyFeedModel} from '../../../shared/models/daily-feed-model';
-import {PondService} from '../../../shared/services/pond.service';
-import {HarvestService} from '../../../shared/services/harvest.service';
+import { DailyFeedModel } from '../../../shared/models/daily-feed-model';
+import { PondService } from '../../../shared/services/pond.service';
+import { HarvestService } from '../../../shared/services/harvest.service';
 import { Store } from '@ngrx/store';
 import { addHarvest, AppState, updateHarvest } from '../../../redux';
 
@@ -54,9 +54,9 @@ export class HarvestAddComponent implements OnInit {
   }
 
   constructor(
-    private clubMemberService : ClubMemberService,
-    private farmService : FarmService,
-    private pondService : PondService,
+    private clubMemberService: ClubMemberService,
+    private farmService: FarmService,
+    private pondService: PondService,
     private harvestService: HarvestService,
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal,
@@ -126,11 +126,12 @@ export class HarvestAddComponent implements OnInit {
 
   saveHarvest = () => {
     this.blockUI.start('Start processing');
-    const request = this.harvestForm.value;
+    const request = this.harvestForm.getRawValue();
 
-    if(this.isEditMode) {
+    if (this.isEditMode) {
       request._id = this.existingHarvest._id;
-      const harvestManagement = this.existingHarvest;
+      let harvestManagement = JSON.parse(JSON.stringify(this.existingHarvest));
+
       harvestManagement.owner = this.harvestForm.value.owner;
       harvestManagement.farmer = this.harvestForm.value.farmer;
       harvestManagement.pond = this.harvestForm.value.pond;
@@ -139,13 +140,15 @@ export class HarvestAddComponent implements OnInit {
       harvestManagement.harvestQuantity = this.harvestForm.value.harvestQuantity;
       harvestManagement.harvestAWB = this.harvestForm.value.harvestAWB;
       harvestManagement.harvestSalePrice = this.harvestForm.value.harvestSalePrice;
+
       this.harvestService.updateHarvest(harvestManagement).subscribe(res => {
         if (res && res.validity) {
-          const harvest = this.setOtherData(harvestManagement);
-          this.afterSave.emit(harvest);
           this.closeModal();
           this.store.dispatch(updateHarvest(harvestManagement));
           this.toastrService.success("Harvest updated successfully", "Success");
+          
+          const emittingRes = this.setOtherData({ ...harvestManagement });
+          this.afterSave.emit({ ...emittingRes });
         }
         this.blockUI.stop();
       }, error => {

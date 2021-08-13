@@ -56,7 +56,7 @@ export class HarvestListComponent implements OnInit {
       animation: true,
       keyboard: true,
       backdrop: true,
-      modalDialogClass: 'modal-md',
+      modalDialogClass: 'modal-lg',
     });
     if (addFarmModal.componentInstance.afterSave) {
       addFarmModal.componentInstance.afterSave.subscribe((res: any) => {

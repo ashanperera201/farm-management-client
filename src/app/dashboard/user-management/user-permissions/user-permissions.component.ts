@@ -45,7 +45,6 @@ export class UserPermissionsComponent implements OnInit, OnDestroy {
       }
       this.blockUI.stop();
     }, () => {
-      console.log("Failed to load user permission.");
       this.blockUI.stop();
     }))
   }

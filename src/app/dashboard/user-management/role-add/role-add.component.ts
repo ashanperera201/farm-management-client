@@ -148,7 +148,6 @@ export class RoleAddComponent implements OnInit {
         clearTimeout(servTimer);
       }, 500);
     }, () => {
-      console.log("Unable to load Role permission data");
       this.blockUI.stop();
     });
   }

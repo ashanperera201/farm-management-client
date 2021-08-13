@@ -44,7 +44,6 @@ export class CanActivateGuard implements CanActivate {
                     obs.complete();
                 }
             }, () => {
-                console.log("Failed load user.");
                 obs.next(false);
                 obs.error();
                 obs.complete();

@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { ChartsModule } from 'ng2-charts';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { PerfectScrollbarModule, PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { DashboardComponent } from '../dashboard/dashboard.component';
@@ -30,7 +29,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     InlineSVGModule,
     Ng2SearchPipeModule,
     NgbPaginationModule,
-    ChartsModule,
     PerfectScrollbarModule,
     NgApexchartsModule
   ],

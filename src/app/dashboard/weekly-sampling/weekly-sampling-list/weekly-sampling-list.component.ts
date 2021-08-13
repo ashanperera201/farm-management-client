@@ -93,7 +93,6 @@ export class WeeklySamplingListComponent implements OnInit {
       }
       this.blockUI.stop();
     }, () => {
-      console.log('Failed to fetch weekly sampling data.');
       this.blockUI.stop();
     }))
   }

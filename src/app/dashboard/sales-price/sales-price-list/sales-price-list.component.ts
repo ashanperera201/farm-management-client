@@ -6,9 +6,9 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AppState } from '../../../redux/application-state';
-import { ExportTypes } from 'src/app/shared/enums/export-type';
-import { FileService } from 'src/app/shared/services/file.service';
-import { SalesPriceService } from 'src/app/shared/services/sales-price.service';
+import { ExportTypes } from '../../../shared/enums/export-type';
+import { FileService } from '../../../shared/services/file.service';
+import { SalesPriceService } from '../../../shared/services/sales-price.service';
 import { SalesPriceAddComponent } from '../sales-price-add/sales-price-add.component';
 import { removeSalesPrice } from '../../../redux/actions/sales-price.actions';
 
@@ -78,15 +78,16 @@ export class SalesPriceListComponent implements OnInit {
     updateSalesPriceModal.componentInstance.existingSalesPrice = salesPrice;
     updateSalesPriceModal.componentInstance.isEditMode = true;
     if (updateSalesPriceModal.componentInstance.afterSave) {
-      updateSalesPriceModal.componentInstance.afterSave.subscribe((res: any) => {
-        // if (res) {
-        //   const index = this.salesPriceList.findIndex((up: any) => up._id === res._id);
-        //   this.salesPriceList[index].owner = res.owner;
-        // }
-      });
+
+      this.salesPriceSubscriptions.push(updateSalesPriceModal.componentInstance.afterSave.subscribe((res: any) => {
+        if (res) {
+          const index = this.salesPriceList.findIndex((sp: any) => sp._id === res._id);
+          this.salesPriceList[index].salesPrice = res.salesPrice;
+          this.salesPriceList[index].averageBodyWeight = res.averageBodyWeight;
+        }
+      }));
     }
   }
-
 
   deleteSelected = () => {
     this.blockUI.start('Deleting....');
@@ -154,7 +155,5 @@ export class SalesPriceListComponent implements OnInit {
   }
 
   importWeeklySampling = () => {
-
   }
-
 }

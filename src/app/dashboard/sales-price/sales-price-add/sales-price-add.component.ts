@@ -66,7 +66,7 @@ export class SalesPriceAddComponent implements OnInit, OnDestroy {
 
 
       if (this.isEditMode) {
-        const existsSalesPrice = this.existingSalesPrice;
+        const existsSalesPrice = Object.assign({}, this.existingSalesPrice);
         existsSalesPrice.averageBodyWeight = formRawValues.averageBodyWeight;
         existsSalesPrice.salesPrice = formRawValues.salesPrice;
 

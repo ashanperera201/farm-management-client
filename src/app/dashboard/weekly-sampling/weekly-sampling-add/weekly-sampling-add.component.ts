@@ -98,7 +98,6 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
         this.configValues();
         this.blockUI.stop();
       }, (e) => {
-        console.log(e)
         this.blockUI.stop();
       }));
   }

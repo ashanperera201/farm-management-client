@@ -34,7 +34,6 @@ export class WeeklyApplicationReportComponent implements OnInit, OnDestroy {
       }
       this.blockUI.stop();
     }, (e) => {
-      console.log(e);
       this.blockUI.stop();
     }));
   }

@@ -152,7 +152,6 @@ export class StockAddComponent implements OnInit, DoCheck {
       this.configValues();
       this.blockUI.stop();
     }, () => {
-      console.log('Failed to load initial data.');
       this.blockUI.stop();
     }))
   }
