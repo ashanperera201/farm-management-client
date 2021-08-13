@@ -1,57 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { ChartComponent } from "ng-apexcharts";
+import { PercentageFeedingService } from '../../shared/services/percentage-feeding.service';
+import { SalesPriceService } from '../../shared/services/sales-price.service';
+import { DailyFeedService } from '../../shared/services/daily-feed.service';
+import { StockService } from '../../shared/services/stock.service';
 import { PondService } from '../../shared/services/pond.service';
 import { FarmService } from '../../shared/services/farm.service';
 import { ClubMemberService } from '../../shared/services/club-member.service';
 import { ApplicationsService } from '../../shared/services/applications.service';
-import { switchMap } from 'rxjs/operators';
-import { PercentageFeedingService } from '../../shared/services/percentage-feeding.service';
-import { SalesPriceService } from '../../shared/services/sales-price.service';
-import { ChartOptions, ChartType } from 'chart.js';
-import { Color, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip, SingleDataSet } from 'ng2-charts';
-import { DailyFeedService } from 'src/app/shared/services/daily-feed.service';
-import { StockService } from 'src/app/shared/services/stock.service';
-
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+
 export class HomeComponent implements OnInit {
 
-clubMemberCount : number = 0;
-farmsCount : number = 0;
-pondsCount : number = 0;
-ApplicationsCount : number = 0;
-dashboardSubscription: Subscription[] = [];
-percentageFeedingList: any[] = [];
-salesPriceList: any[] = [];
-pageSize: number = 10;
-page: any = 1;
+  @ViewChild("chart") chart!: ChartComponent;
+  @BlockUI() blockUI!: NgBlockUI;
 
-@BlockUI() blockUI!: NgBlockUI;
+  clubMemberCount: number = 0;
+  farmsCount: number = 0;
+  pondsCount: number = 0;
+  ApplicationsCount: number = 0;
+  dashboardSubscription: Subscription[] = [];
+  percentageFeedingList: any[] = [];
+  salesPriceList: any[] = [];
 
-// Pie
-public pieChartOptions: ChartOptions = {
-  responsive: true,
-};
-public pieChartLabels: Label[] = [['Other', 'Cost'], ['Total', 'Feed', 'Cost'], ['Total', 'Application', 'Cost'], ['PL', 'Cost']];
-public pieChartPondData: SingleDataSet = [];
-public pieChartFarmData: SingleDataSet = [];  
-public pieChartType: ChartType = 'pie';
-public pieChartLegend = true;
-public pieChartPlugins = [];
-public chartColors: Color[] = [
-  {
-    borderColor: 'black',
-    backgroundColor: '#0074D9',
-    //backgroundColor: ["#0074D9", "#FF4136", "#2ECC40", "#FF851B"]
-  },
-];
-  
+
+  // POND RELATED CHART CONFIGS
+  pondChartConfig!: any;
+  pondSeries: number[] = [];
+
+  // FARM RELATED CHART CONFIGS
+  farmChartConfig!: any;
+  farmSeries: number[] = [];
+
   applicationPondCost = 0;
   applicationFarmCost = 0;
   applicationList = [];
@@ -66,19 +55,17 @@ public chartColors: Color[] = [
   pondList = [];
 
   constructor(
-    private clubMemberService : ClubMemberService,
-    private farmService : FarmService,
-    private pondService : PondService,
-    private applicationService : ApplicationsService,
+    private clubMemberService: ClubMemberService,
+    private farmService: FarmService,
+    private pondService: PondService,
+    private applicationService: ApplicationsService,
     private toastrService: ToastrService,
-    private percentageFeedingService : PercentageFeedingService,
+    private percentageFeedingService: PercentageFeedingService,
     private salesPriceService: SalesPriceService,
     private dailyFeedService: DailyFeedService,
     private stockService: StockService
   ) {
-    monkeyPatchChartJsTooltip();
-    monkeyPatchChartJsLegend();
-   }
+  }
 
   ngOnInit(): void {
     this.fetchWidgetData();
@@ -122,23 +109,25 @@ public chartColors: Color[] = [
       if (resStock && resStock.result) {
         this.stockList = resStock.result;
         this.calculateTotalPLCost();
+        this.initializePondChartConfig();
+        this.initializeFarmChartConfig();
       }
       this.blockUI.stop();
     }, () => {
       this.blockUI.stop();
-      this.toastrService.error("Unable to load data","Error");
+      this.toastrService.error("Unable to load data", "Error");
     }))
   }
 
   fetchPercentageFeeding = () => {
     this.blockUI.start('Fetching Data......');
-    this.dashboardSubscription.push(this.percentageFeedingService.fetchPercentageFeedings().subscribe(res=> {
-      if(res && res.result){
+    this.dashboardSubscription.push(this.percentageFeedingService.fetchPercentageFeedings().subscribe(res => {
+      if (res && res.result) {
         this.percentageFeedingList = res.result;
       }
       this.blockUI.stop();
     }, () => {
-      this.toastrService.error("Failed to load Data","Error");
+      this.toastrService.error("Failed to load Data", "Error");
       this.blockUI.stop();
     }));
   }
@@ -163,8 +152,8 @@ public chartColors: Color[] = [
       this.feedPondCost = this.feedPondCost / this.pondsCount;
       this.feedFarmCost = this.feedFarmCost / this.farmsCount;
     });
-    this.pieChartPondData.push(this.feedPondCost);
-    this.pieChartFarmData.push(this.feedFarmCost);
+    this.pondSeries.push(this.feedPondCost);
+    this.farmSeries.push(this.feedFarmCost);
   }
 
   calculateTotalApplicationCost() {
@@ -175,8 +164,8 @@ public chartColors: Color[] = [
       this.applicationFarmCost = this.applicationFarmCost / this.farmsCount;
     });
 
-    this.pieChartPondData.push(this.applicationPondCost);
-    this.pieChartFarmData.push(this.applicationFarmCost);
+    this.pondSeries.push(+this.applicationPondCost.toFixed());
+    this.farmSeries.push(+this.applicationFarmCost.toFixed());
   }
 
   calculateTotalPLCost() {
@@ -186,8 +175,8 @@ public chartColors: Color[] = [
       this.plPondCost = this.plPondCost / this.pondsCount;
       this.plFarmCost = this.plFarmCost / this.farmsCount;
     });
-    this.pieChartPondData.push(this.plPondCost);
-    this.pieChartFarmData.push(this.plFarmCost);
+    this.pondSeries.push(+this.plPondCost.toFixed());
+    this.farmSeries.push(+this.plFarmCost.toFixed());
   }
 
   calculateotherCost() {
@@ -197,8 +186,63 @@ public chartColors: Color[] = [
       this.otherPondCost = this.otherPondCost / this.pondsCount;
       this.otherFarmCost = this.otherFarmCost / this.farmsCount;
     });
-    this.pieChartPondData.push(this.otherPondCost);
-    this.pieChartFarmData.push(this.otherFarmCost);
+    this.pondSeries.push(+this.otherPondCost.toFixed());
+    this.farmSeries.push(+this.otherFarmCost.toFixed());
+  }
+
+  initializePondChartConfig = () => {
+    console.log(this.pondSeries);
+    
+    this.pondChartConfig = {
+      series: this.pondSeries,
+      chart: {
+        width: 600,
+        height: 600,
+        type: "pie"
+      },
+      labels: ["Total Feed Cost", "Total Application Cost", "PL Cost", "Oher Cost"],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 1000,
+              height: 1000
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ]
+    };
+  }
+
+  initializeFarmChartConfig = () => {
+    console.log(this.farmSeries);
+    this.farmChartConfig = {
+      series: this.farmSeries,
+      chart: {
+        width: 600,
+        height: 600,
+        type: "pie"
+      },
+      labels: ["Total Feed Cost", "Total Application Cost", "PL Cost", "Oher Cost"],
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 1000,
+              height: 1000
+            },
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      ]
+    };
   }
 
   ngOnDestroy() {

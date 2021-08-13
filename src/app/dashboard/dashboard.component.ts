@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { Store } from '@ngrx/store';
 import { NavigationModes } from '../shared/enums/navigation.enum';
 import { StockService } from '../shared/services/stock.service';
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   menuItems: any[] = [];
   currentIndex!: number;
   dashboardSubscriptions: Subscription[] = [];
+  config: PerfectScrollbarConfigInterface = {};
 
   constructor(
     private store: Store<AppState>,
