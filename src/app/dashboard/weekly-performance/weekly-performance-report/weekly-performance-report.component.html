@@ -36,7 +36,7 @@
     </div>
     <div class="form-row">
         <div class="col">
-            <label class="font-size-h7  text-dark report-data">Total Bio Mass Gain : {{ totalBioMass }}</label>
+            <label class="font-size-h7  text-dark report-data">Total Bio Mass Gain : {{ prevWeekBioMass - totalBioMass }}</label>
         </div>
         <div class="col">
             <label class="font-size-h7  text-dark report-data">Bio Mass on Average : {{ bioMassOnAverage }}</label>
@@ -44,7 +44,7 @@
     </div>
     <div class="form-row">
         <div class="col">
-            <label class="font-size-h7  text-dark report-data">Weekly Bio Mass Value Gain : {{ totalBioMass }}</label>
+            <label class="font-size-h7  text-dark report-data">Weekly Bio Mass Value Gain : {{ preWeekBioMassOnAverage - bioMassOnAverage }}</label>
         </div>
     </div>
 

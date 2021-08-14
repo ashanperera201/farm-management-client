@@ -33,14 +33,14 @@
         <label class="font-size-h7  text-dark required">Farm</label>
         <select name="farm" id="farm" formControlName="farmer" class="form-control" (change)="farmOnChange()">
           <option value=null disabled selected>Select Farm</option>
-          <option *ngFor="let f of initialData?.farmList" [value]="f._id">{{f.farmName}}</option>
+          <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
         </select>
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Pond</label>
         <select name="farm" id="farm" formControlName="pond" class="form-control">
           <option value=null disabled selected>Select Pond</option>
-          <option *ngFor="let pond of initialData?.pondList" [value]="pond._id">{{pond.pondNo}}</option>
+          <option *ngFor="let pond of pondList" [value]="pond._id">{{pond.pondNo}}</option>
         </select>
       </div>
     </div>
