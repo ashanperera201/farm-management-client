@@ -31,6 +31,10 @@
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="resetFilters()">
+                            <i class="fa fa-filter"></i>
+                            <span>Reset Filters</span>
+                        </button>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
                             (click)="exportWeeklySampling(exportTypes.PDF)">
                             <i class="fa fa-file-text"></i>
