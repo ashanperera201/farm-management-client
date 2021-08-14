@@ -1,7 +1,7 @@
 <div class="modal-header">
     <div class="row">
       <div class="col-md-12">
-        <h4 class="modal-title mb-1">Weekly Performance Report</h4>
+        <h3 class="modal-title mb-1">Weekly Performance Report</h3>
       </div>
     </div>
   </div>
@@ -9,16 +9,16 @@
   <div class="modal-body mb-0">
     <div class="form-row mb-4 top-row">
         <div class="col">
-            <label class="font-size-h7  text-dark">Club Member : {{ owner }}</label>
+            <label class="font-size-h7  text-dark report-data">Club Member : {{ owner?.firstName }} {{ owner?.lastName }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark">Farm : {{ farm }}</label>
+            <label class="font-size-h7  text-dark report-data">Farm : {{ farm?.farmName }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark">Pond : {{ pond }}</label>
+            <label class="font-size-h7  text-dark report-data">Pond No : {{ pond?.pondNo }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark">Week No : {{ week }}</label>
+            <label class="font-size-h7  text-dark report-data">Week No : {{ week }}</label>
         </div>
     </div>
 
@@ -28,35 +28,45 @@
     
     <div class="form-row">
         <div class="col">
-            <label class="font-size-h7  text-dark">Gain in Weight : {{ owner }}</label>
+            <label class="font-size-h7  text-dark report-data">Gain in Weight : {{ gainInWeight }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark">Total Bio Mass : {{ farm }}</label>
-        </div>
-        <div class="col">
-            <label class="font-size-h7  text-dark">Total Bio Mass Gain : {{ pond }}</label>
-        </div>
-        <div class="col">
-            <label class="font-size-h7  text-dark">Bio Mass on Average : {{ week }}</label>
+            <label class="font-size-h7  text-dark report-data">Total Bio Mass : {{ totalBioMass }}</label>
         </div>
     </div>
     <div class="form-row">
         <div class="col">
-            <label class="font-size-h7  text-dark">Weekly Bio Mass Value Gain : {{ owner }}</label>
+            <label class="font-size-h7  text-dark report-data">Total Bio Mass Gain : {{ totalBioMass }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark">Total Feed : {{ farm }}</label>
+            <label class="font-size-h7  text-dark report-data">Bio Mass on Average : {{ bioMassOnAverage }}</label>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <label class="font-size-h7  text-dark report-data">Weekly Bio Mass Value Gain : {{ totalBioMass }}</label>
+        </div>
+    </div>
+
+
+    <div class="form-row mb-4">
+        <h5 class="section-headding">Weekly Cost</h5>
+        <h5 class="section-headding">Total Feed Cost (Weekly)</h5>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <label class="font-size-h7  text-dark report-data">Total Feed : {{ totalFeed }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark">Weekly FCR : {{ pond }}</label>
-        </div>
-        <div class="col">
-            <label class="font-size-h7  text-dark">FCR To Date : {{ week }}</label>
+            <label class="font-size-h7  text-dark report-data">Weekly FCR : {{ weeklyFcr }}</label>
         </div>
     </div>
     <div class="form-row mb-4">
         <div class="col">
-            <label class="font-size-h7  text-dark">Total Feed Cost : {{ week }}</label>
+            <label class="font-size-h7  text-dark report-data">FCR To Date : {{ FcrToDate }}</label>
+        </div>
+        <div class="col">
+            <label class="font-size-h7  text-dark report-data">Total Feed Cost : {{ totalFeedCostWeekly }}</label>
         </div>
     </div>
 
@@ -64,17 +74,17 @@
         <h5 class="section-headding">Total Application Cost (Weekly)</h5>
               <!-- begin:Table -->
       <div class="table-responsive angular-bootstrap-table">
-        <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <table class="table table-head-custom table-vertical-center overflow-hidden applications-table">
             <thead>
                 <th> Type of Application </th>
                 <th> Total No of Units </th>
                 <th> Total Cost </th>
             </thead>
             <tbody>
-                <tr *ngFor="let application of applicationList">
-                    <td>{{application?.firstName}}</td>
-                    <td>{{application?.farmName}}</td>
-                    <td>{{application?.pondNo}}</td>
+                <tr *ngFor="let application of weeklyApplicationList">
+                    <td>{{application?.application?.applicationType}}</td>
+                    <td>{{application?.numberOfUnit}}</td>
+                    <td>{{application?.application?.costPerUnit * application?.numberOfUnit}}</td>
                 </tr>
             </tbody>
         </table>
@@ -82,26 +92,29 @@
     </div>
 
     <div class="form-row mb-4">
-        <h5>Other Cost</h5>
+        <h5 class="section-headding">Total Application Cost (Weekly)</h5>
+    </div>
+    <div class="form-row mb-4">
+        <h5 class="report-data">Other Cost : {{otherCost}}</h5>
     </div>
 
     <div class="form-row mb-4">
-        <h5>PL Cost</h5>
+        <h5 class="report-data">PL Cost : {{plCost}}</h5>
     </div>
 
     <div class="form-row mb-4">
-        <h5>Total Cost</h5>
+        <h5 class="report-data">Total Cost : {{plCost}}</h5>
     </div>
 
     <div class="form-row mb-4">
-        <h5>Weekly Profit/Loss</h5>
+        <h5 class="report-data">Weekly Profit/Loss : {{plCost}}</h5>
     </div>
 
     <div class="form-row mb-4">
-        <h5>Profit/Loss Per Kg</h5>
+        <h5 class="report-data">Profit/Loss Per Kg : {{plCost}}</h5>
     </div>
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Close Report</button>
   </div>

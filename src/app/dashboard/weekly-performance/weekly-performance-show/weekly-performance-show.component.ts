@@ -8,9 +8,10 @@ import { Store } from '@ngrx/store';
 import { FarmService } from '../../../shared/services/farm.service';
 import { PondService } from '../../../shared/services/pond.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
-import { keyPressNumbers } from './../../../shared/utils/keyboard-event';
+import { keyPressPositiveNumbers } from './../../../shared/utils/keyboard-event';
 import { WeeklyPerformanceReportComponent } from '../weekly-performance-report/weekly-performance-report.component';
 import { AppState, selectsalesPrice, selectStockDetails, selectWeeklySamplings } from '../../../redux';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
     private farmService : FarmService,
     private pondService : PondService,
     private modalService : NgbModal,
+    private toastrService : ToastrService,
     private store: Store<AppState>
   ) { }
 
@@ -57,7 +59,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
       farmer: new FormControl(null, Validators.compose([Validators.required])),
       owner: new FormControl(null, Validators.compose([Validators.required])),
       pondNo: new FormControl(null, Validators.compose([Validators.required])),
-      weekNumber: new FormControl(null, Validators.compose([Validators.required])),
+      weekNumber: new FormControl(1, Validators.compose([Validators.required])),
     });
   }
 
@@ -108,7 +110,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   showWeeklyPerformance = () => {
-    if(this.weeklyPerformanceForm.valid){
+    if(this.weeklyPerformanceForm.valid && this.weeklyPerformanceForm.value.weekNumber > 0){
       const performanceReportModal = this.modalService.open(WeeklyPerformanceReportComponent, {
         animation: true,
         keyboard: true,
@@ -116,6 +118,9 @@ export class WeeklyPerformanceShowComponent implements OnInit {
         modalDialogClass: 'modal-xl',
       });
       performanceReportModal.componentInstance.initialData = this.weeklyPerformanceForm.value;
+    }
+    else {
+      this.toastrService.error("Please enter valid values","Error");
     }
     //TO DO
     this.store.select(selectWeeklySamplings).subscribe(res => {
@@ -141,7 +146,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   onKeyPressChanges = (event: any): boolean => {
-    return keyPressNumbers(event);
+    return keyPressPositiveNumbers(event);
   }
 
   ngOnDestroy() {

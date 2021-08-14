@@ -1,3 +1,5 @@
+import { DailyFeedService } from './../shared/services/daily-feed.service';
+import { FarmService } from './../shared/services/farm.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -8,7 +10,8 @@ import { StockService } from '../shared/services/stock.service';
 import { ClubMemberService } from '../shared/services/club-member.service';
 import { LoggedUserService } from '../shared/services/logged-user.service';
 import { WeeklySamplingService } from '../shared/services/weekly-sampling.service';
-import { AppState, selectUserDetails, setStockDetails, setWeeklySamplings } from '../redux';
+import { AppState, selectUserDetails, setClubMember, setDailyFeed, setFarmManagement, setSalesPrice, setStockDetails, setWeeklySamplings } from '../redux';
+import { SalesPriceService } from '../shared/services/sales-price.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,7 +35,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private stockService: StockService,
     private clubMemberService: ClubMemberService,
     private weeklySamplingService: WeeklySamplingService,
-    private loggedUserService: LoggedUserService
+    private loggedUserService: LoggedUserService,
+    private salesPriceService: SalesPriceService,
+    private dailyFeedService: DailyFeedService,
+    private farmService: FarmService,
   ) { }
 
   ngOnInit(): void {
@@ -60,11 +66,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const samplingDetails = weeklySampling.result;
         this.store.dispatch(setWeeklySamplings(samplingDetails));
       }
+      return this.farmService.fetchFarms()
+    })).pipe(switchMap((farmData: any) => {
+      if (farmData) {
+        this.store.dispatch(setFarmManagement(farmData));
+      }
+      return this.salesPriceService.fetchSalesPrice()
+    })).pipe(switchMap((salesData: any) => {
+      if (salesData) {
+        this.store.dispatch(setSalesPrice(salesData));
+      }
+      return this.dailyFeedService.fetchDailyFeeds()
+    })).pipe(switchMap((dailyFeedData: any) => {
+      if(dailyFeedData){
+        this.store.dispatch(setDailyFeed(dailyFeedData));
+      }
       return this.clubMemberService.fetchClubMembers()
-    }))
-      .subscribe((clubMemberServiceRes: any) => {
-        // TODO dispatch later.
-      }));
+    })).subscribe((clubMembersData: any) => {
+      this.store.dispatch(setClubMember(clubMembersData));
+    }));
   }
 
   onMenuItemClick = (index: number) => {
