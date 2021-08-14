@@ -1,3 +1,4 @@
+import { FeedBrandService } from './../../../shared/services/feed-brand.service';
 import { SalesPriceService } from './../../../shared/services/sales-price.service';
 import { selectApplication } from './../../../redux/selectors/applications.selector';
 import { Component, Input, OnInit } from '@angular/core';
@@ -51,6 +52,8 @@ export class WeeklyPerformanceReportComponent implements OnInit {
   bioMassOnAverage : number = 0;
   weeklyBioMassValueGain : any;
   fromDate! : any;
+  previousWeekFromDate! : any;
+  previousWeekToDate! : any;
 
   //Report Data Weekly Cost
   totalFeed : number = 0;
@@ -61,9 +64,9 @@ export class WeeklyPerformanceReportComponent implements OnInit {
   applicationGrandTotal : number = 0;
   dailyFeedTotal : number = 0;
   totalFeedKilloPerWeek : number = 0;
-  totalFeedUpToDate : number = 0;
+  totalFeedUptoDate : number = 0;
   totalFeedCost : number = 0;
-  feedBrandUnitPrice : number = 0;
+  feedBrandUnitPrice : number = 1;
 
   //Report Data after Application table
   otherCost : number = 0;
@@ -72,12 +75,14 @@ export class WeeklyPerformanceReportComponent implements OnInit {
   weeklyProfit : number = 0;
   profit : number = 0;
   plPrice : number = 0;
+  totalApllicationCost : number = 0;
 
   constructor(
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal,
     private pondService: PondService,
     private salesPriceService: SalesPriceService,
+    private feedBrandService : FeedBrandService,
     private weeklyApplicationsService: WeeklyApplicationsService,
     private store: Store<AppState>
   ) { }
@@ -92,8 +97,8 @@ export class WeeklyPerformanceReportComponent implements OnInit {
   fetchInitialData = () => {
     this.blockUI.start('Fetching Data...');
     this.reportSubscription.push(this.store.select(selectClubMember).pipe(switchMap((ownerRes: any) => {
-      if (ownerRes && ownerRes.result) {
-        this.ownerList = ownerRes.result;
+      if (ownerRes) {
+        this.ownerList = ownerRes;
         this.owner = this.ownerList.filter(x => x._id == this.initialData?.owner)[0];
       }
       return this.pondService.fetchPonds()
@@ -105,7 +110,12 @@ export class WeeklyPerformanceReportComponent implements OnInit {
       return this.store.select(selectStockDetails)
     })).pipe(switchMap((resStock: any) => {
       if (resStock) {
-       this.stock = resStock.filter((x:any)=> x.pond?._id == this.initialData?.pondNo)[0];// && x.createdOn > new Date(this.fromDate))[0];
+        // resStock.array.forEach((z:any) => {
+        //   this.otherCost = this.otherCost + z.otherCost;
+        //   this.plCost = this.plCost + z.plPrice;
+        // });
+       this.stockList = resStock.filter((x:any)=> x.pond?._id == this.initialData?.pondNo && new Date(x.createdOn) > new Date(this.fromDate));
+       this.stock = this.stockList[0];
       }
       return this.salesPriceService.fetchSalesPrice()
     })).pipe(switchMap((resSales: any) => {
@@ -115,15 +125,24 @@ export class WeeklyPerformanceReportComponent implements OnInit {
       return this.store.select(selectDailyFeed)
     })).pipe(switchMap((resDailyFeed:any) => {
       if(resDailyFeed){
-        this.dailyFeedList = resDailyFeed;
+        resDailyFeed.forEach((x:any) => {
+         this.totalFeedUptoDate = this.totalFeedUptoDate + x.calculatedDailyFeed;
+         this.totalFeedCost = this.totalFeed + x.calculatedDailyFeed;
+        });
+        this.dailyFeedList = resDailyFeed.filter((x:any) => x.pond?._id == this.initialData?.pondNo && new Date(x.createdOn) > new Date(this.fromDate));
+      }
+      return this.feedBrandService.fetchFeedBands();
+    })).pipe(switchMap((resFeedBrand:any) => {
+      if(resFeedBrand && resFeedBrand.result){
       }
     return this.store.select(selectFarmManagement)
     })).subscribe((farmRes: any) => {
-      if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
+      if (farmRes) {
+        this.farmList = farmRes;
         this.farm = this.farmList.filter(x => x._id == this.initialData?.farmer)[0];
-        this.fetchApplicationData();
       }
+      this.fetchApplicationData();
+      this.calcWeeklyCost();
     }, () => {
       this.blockUI.stop();
       this.toastrService.error("Unable to fetch data", "Error");
@@ -136,18 +155,41 @@ export class WeeklyPerformanceReportComponent implements OnInit {
     let today = new Date();
     let days = this.initialData?.weekNumber * 7;
     today.setDate(today.getDate() - days);
+ 
     this.fromDate = moment(today).format('YYYY-MM-DD');
+    this.previousWeekFromDate = moment(today.setDate(today.getDate() - 14)).format('YYYY-MM-DD');
+    this.previousWeekToDate = moment(today).format('YYYY-MM-DD');
   }
 
   fetchApplicationData = () => {
     this.blockUI.start('Fetching Data...');
     this.reportSubscription.push(this.store.select(selectWeeklySamplings).subscribe(res => {
       if(res){
+        res = res.filter((z:any) => z.pond?._id == this.initialData?.pondNo && new Date(z.createdOn) > new Date(this.fromDate));
         res.forEach((x:any) => {
           this.gainInWeight = this.gainInWeight + Number.parseInt(x.gainInWeight);
           this.expectedSurvivalPercentage = this.expectedSurvivalPercentage + x.expectedSurvivalPercentage;
           this.averageBodyWeight = this.averageBodyWeight + x.averageBodyWeight;
+          let awb = this.salesList.filter(y => y.averageBodyWeight == x.averageBodyWeight)[0];
+          if(awb){
+            this.salesPricePerABW =  this.salesPricePerABW + awb.salesPrice;
+          }
         }); 
+
+        const prevWeek = res.filter((z:any) => z.pond?._id == this.initialData?.pondNo && new Date(z.createdOn) > new Date(this.previousWeekFromDate)
+        && new Date(z.createdOn) < new Date(this.previousWeekToDate));
+
+        if(prevWeek){
+          prevWeek.forEach((x:any) => {
+            this.gainInWeight = this.gainInWeight + Number.parseInt(x.gainInWeight);
+            this.expectedSurvivalPercentage = this.expectedSurvivalPercentage + x.expectedSurvivalPercentage;
+            this.averageBodyWeight = this.averageBodyWeight + x.averageBodyWeight;
+            let awb = this.salesList.filter(y => y.averageBodyWeight == x.averageBodyWeight)[0];
+            if(awb){
+              this.salesPricePerABW =  this.salesPricePerABW + awb.salesPrice;
+            }
+          });
+        }
       }
       this.blockUI.stop();
     }, () => {
@@ -160,7 +202,7 @@ export class WeeklyPerformanceReportComponent implements OnInit {
     // });
 
     this.totalBioMass = (this.expectedSurvivalPercentage * this.averageBodyWeight * this.stock.plCount);
-    this.salesPricePerABW = this.salesList.filter(y => y.averageBodyWeight == this.averageBodyWeight)[0].salesPrice;
+    //this.salesPricePerABW = this.salesList.filter(y => y.averageBodyWeight == this.averageBodyWeight)[0].salesPrice;
     this.bioMassOnAverage = this.salesPricePerABW * this.totalBioMass;
     this.otherCost = this.totalBioMass * this.pond.fixedCost;
     this.plCost = this.stock.plCount * this.stock.plPrice;
@@ -169,10 +211,24 @@ export class WeeklyPerformanceReportComponent implements OnInit {
 
   fetchWeeklyApplications = () => {
     this.reportSubscription.push(this.weeklyApplicationsService.getAllWeeklyApplication().subscribe((res: any) => {
-      if(res){
+      if(res && res.result){
+        res.result.forEach((z:any) => {
+          if(res.result){
+            let cost = z.application.costPerUnit * z.application.unit;
+            this.totalApllicationCost = this.totalApllicationCost + cost;
+          }
+        });
         this.weeklyApplicationList = res.result.filter((x:any) => x.createdOn > this.fromDate);
       }
     }));
+  }
+
+  calcWeeklyCost = () => {
+    if(this.dailyFeedList.length > 0){
+      this.dailyFeedList.forEach((x:any) => {
+        this.dailyFeedTotal = this.dailyFeedTotal + x.calculatedDailyFeed;
+      })
+    }
   }
 
   closeModal = () => {

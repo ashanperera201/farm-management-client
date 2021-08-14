@@ -68,22 +68,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       return this.farmService.fetchFarms()
     })).pipe(switchMap((farmData: any) => {
-      if (farmData) {
-        this.store.dispatch(setFarmManagement(farmData));
+      if (farmData && farmData.result) {
+        this.store.dispatch(setFarmManagement(farmData.result));
       }
       return this.salesPriceService.fetchSalesPrice()
     })).pipe(switchMap((salesData: any) => {
-      if (salesData) {
-        this.store.dispatch(setSalesPrice(salesData));
+      if (salesData && salesData.result) {
+        this.store.dispatch(setSalesPrice(salesData.result));
       }
       return this.dailyFeedService.fetchDailyFeeds()
     })).pipe(switchMap((dailyFeedData: any) => {
-      if(dailyFeedData){
-        this.store.dispatch(setDailyFeed(dailyFeedData));
+      if(dailyFeedData && dailyFeedData.result){
+        this.store.dispatch(setDailyFeed(dailyFeedData.result));
       }
       return this.clubMemberService.fetchClubMembers()
     })).subscribe((clubMembersData: any) => {
-      this.store.dispatch(setClubMember(clubMembersData));
+      if(clubMembersData && clubMembersData.result){
+        this.store.dispatch(setClubMember(clubMembersData.result));
+      }
     }));
   }
 

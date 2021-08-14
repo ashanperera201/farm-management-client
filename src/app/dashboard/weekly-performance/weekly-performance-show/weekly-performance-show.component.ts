@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { FarmService } from '../../../shared/services/farm.service';
 import { PondService } from '../../../shared/services/pond.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
-import { keyPressPositiveNumbers } from './../../../shared/utils/keyboard-event';
+import { keyPressNumbers } from '../../../shared/utils/keyboard-event';
 import { WeeklyPerformanceReportComponent } from '../weekly-performance-report/weekly-performance-report.component';
 import { AppState, selectsalesPrice, selectStockDetails, selectWeeklySamplings } from '../../../redux';
 import { ToastrService } from 'ngx-toastr';
@@ -146,7 +146,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   onKeyPressChanges = (event: any): boolean => {
-    return keyPressPositiveNumbers(event);
+    return keyPressNumbers(event);
   }
 
   ngOnDestroy() {

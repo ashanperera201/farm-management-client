@@ -235,6 +235,11 @@ export class WeeklySamplingListComponent implements OnInit {
     }
   }
 
+  resetFilters = () => {
+    this.filterForm.reset();
+    this.weelySamplingList = this.initialWeelySamplingList;
+  }
+
   importWeeklySampling = () => {
 
   }

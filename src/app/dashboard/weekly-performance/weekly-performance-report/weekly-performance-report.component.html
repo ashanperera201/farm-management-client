@@ -55,18 +55,18 @@
     </div>
     <div class="form-row">
         <div class="col">
-            <label class="font-size-h7  text-dark report-data">Total Feed : {{ totalFeed }}</label>
+            <label class="font-size-h7  text-dark report-data">Total Feed : {{ dailyFeedTotal }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark report-data">Weekly FCR : {{ weeklyFcr }}</label>
+            <label class="font-size-h7  text-dark report-data">Weekly FCR : {{ dailyFeedTotal/ (gainInWeight * expectedSurvivalPercentage * stock?.plCount) }}</label>
         </div>
     </div>
     <div class="form-row mb-4">
         <div class="col">
-            <label class="font-size-h7  text-dark report-data">FCR To Date : {{ FcrToDate }}</label>
+            <label class="font-size-h7  text-dark report-data">FCR To Date : {{ totalFeedUptoDate / totalBioMass }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark report-data">Total Feed Cost : {{ totalFeedCostWeekly }}</label>
+            <label class="font-size-h7  text-dark report-data">Total Feed Cost : {{ dailyFeedTotal * feedBrandUnitPrice }}</label>
         </div>
     </div>
 
@@ -95,23 +95,27 @@
         <h5 class="section-headding">Total Application Cost (Weekly)</h5>
     </div>
     <div class="form-row mb-4">
+        <h5 class="report-data">Total Feed Cost : {{totalFeedCost}}</h5>
+    </div>
+    <div class="form-row mb-4">
+        <h5 class="report-data">Total Application Cost : {{totalApllicationCost}}</h5>
+    </div>
+    <div class="form-row mb-4">
         <h5 class="report-data">Other Cost : {{otherCost}}</h5>
     </div>
 
     <div class="form-row mb-4">
-        <h5 class="report-data">PL Cost : {{plCost}}</h5>
+        <h5 class="report-data">PL Cost : {{stock?.plCount}}</h5>
+    </div>
+    <div class="form-row mb-4">
+        <h5 class="report-data"> <b>Total : {{totalFeedCost + totalApllicationCost + otherCost + stock?.plCount }}</b></h5>
+    </div>
+    <div class="form-row mb-4">
+        <h5 class="report-data">Weekly Profit/Loss : {{totalBioMass - (totalFeedCost + totalApllicationCost + otherCost + stock?.plCount) }}</h5>
     </div>
 
     <div class="form-row mb-4">
-        <h5 class="report-data">Total Cost : {{plCost}}</h5>
-    </div>
-
-    <div class="form-row mb-4">
-        <h5 class="report-data">Weekly Profit/Loss : {{plCost}}</h5>
-    </div>
-
-    <div class="form-row mb-4">
-        <h5 class="report-data">Profit/Loss Per Kg : {{plCost}}</h5>
+        <h5 class="report-data">Profit/Loss Per Kg : {{ (totalBioMass - (totalFeedCost + totalApllicationCost + otherCost + stock?.plCount)) / totalBioMass }}</h5>
     </div>
 
   </div>
