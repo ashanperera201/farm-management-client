@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,8 @@ import { PondService } from '../../../shared/services/pond.service';
 import { FileService } from '../../../shared/services/file.service';
 import { FeedChartService } from '../../../shared/services/feed-chart.service';
 import { AppState, selectStockDetails } from '../../../redux';
+import { PercentageFeedingService } from 'src/app/shared/services/percentage-feeding.service';
+import { WeeklySamplingService } from 'src/app/shared/services/weekly-sampling.service';
 
 @Component({
   selector: 'app-feed-chart-list',
@@ -34,6 +36,14 @@ export class FeedChartListComponent implements OnInit {
   feedChartSubscription: Subscription[] = [];
   filterForm!: FormGroup;
   dateOfCulture!: any;
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+    pondList: []
+  }
+  stockDetails: any[] = [];
+  percentageFeedingList: any[] = [];
+  weelySamplingList: any[] = [];
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -44,7 +54,9 @@ export class FeedChartListComponent implements OnInit {
     private pondService : PondService,
     private toastrService: ToastrService,
     private fileService: FileService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private percentageFeedingService: PercentageFeedingService,
+    private weeklySamplingService: WeeklySamplingService
   ) { }
 
   ngOnInit(): void {
@@ -58,7 +70,11 @@ export class FeedChartListComponent implements OnInit {
       owner: new FormControl(null),
       farmer: new FormControl(null),
       pond: new FormControl(null),
+      dateOfCulture: new FormControl(null),
+      feedFrequency: new FormControl(null, Validators.compose([Validators.required]))
     });
+
+    this.filterForm.controls['dateOfCulture'].disable();
   }
 
   filterChange = (event: any) => {
@@ -68,14 +84,170 @@ export class FeedChartListComponent implements OnInit {
     const pond = this.filterForm.get("pond")?.value;
 
     if(owner){
-      this.feedChartList = this.feedChartList.filter(x => x.owner._id === owner);
+      this.farmList = this.initialData.farmList.filter((x: any) => x.owner._id === owner);
     }
     if(farmer){
-      this.feedChartList = this.feedChartList.filter(x => x.farmer._id === farmer);
+      this.pondList = this.initialData.pondList.filter((x: any) => x.farmer._id === farmer);
     }
-    if(pond){
-      this.feedChartList = this.feedChartList.filter(x => x.pond._id === pond);
+
+    if (pond) {
+      const stock = this.stockDetails.find(sd => sd.farmer._id === farmer && sd.pond._id === pond);
+      this.percentageFeedingList = this.percentageFeedingList.filter((x: any) => x.pond._id === pond);
+      this.weelySamplingList = this.weelySamplingList.filter((x: any) =>  x.pond._id === pond);
+      if (this.filterForm.get("feedFrequency")?.value) {
+        this.calculateDateOfCulture(stock);
+      }      
     }
+  }
+
+  calculateDateOfCulture = (stock: any) => {
+    if (stock) {
+      const currentDate = new Date();
+      const stockDate = new Date(stock.dateOfStocking);
+      const subtractedDate = currentDate.getDate() - stockDate.getDate();
+      currentDate.setDate(subtractedDate);
+      this.filterForm.get("dateOfCulture")?.setValue(moment(currentDate).format('M/D/YYYY'));
+      this.calculateData(currentDate); 
+    }
+  }
+
+  calculateData(doc: any) {
+    const currentDate: any = new Date();
+    if (currentDate.getTime() > doc.getTime()) {
+      const diffTime = Math.abs(currentDate - doc);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (diffDays < 28) {
+        const iterateDays = (n: any) => (f: any) => {
+          let iter = (i: any) => {
+            if (i === n) return
+            f (i)
+            iter (i + 1)
+          }
+          return iter (0)
+        }
+        iterateDays(diffDays-1)((i: any) => {
+          doc.setDate(doc.getDate() + 1);
+          const gridDataObj = {
+            date: '',
+            totalFeedDay: 0,
+            numKiloFeed: 0,
+            numOfTimesFeed: 0
+          };
+          gridDataObj.date = doc.toString();
+          const totalFeedDay = 2 + 0.2 * i;
+          gridDataObj.totalFeedDay = totalFeedDay;
+          gridDataObj.numKiloFeed = totalFeedDay / this.filterForm.get("feedFrequency")?.value;
+          gridDataObj.numOfTimesFeed = 24 / totalFeedDay
+          this.feedChartList.push(gridDataObj);
+        });
+      } else {
+        const iterateDays = (n: any) => (f: any) => {
+          let iter = (i: any) => {
+            if (i === n) return
+            f (i)
+            iter (i + 1)
+          }
+          return iter (0)
+        }
+
+        iterateDays(diffDays -1)((i: any) => {
+          const gridDataObj = {
+            date: '',
+            totalFeedDay: 0,
+            numKiloFeed: 0,
+            numOfTimesFeed: 0
+          };
+
+          doc.setDate(doc.getDate() + 1);
+          gridDataObj.date = doc.toString();
+          const filterData = this.filterPercentageBydate(doc);
+          const filterWeeeklySampling = this.filterWeeeklySamplingBydate(doc);
+          if (filterData.length > 0 && filterWeeeklySampling.length > 0) {
+            const totalFeedDay = filterData[0].averageBodyWeight * filterWeeeklySampling[0].expectedSurvivalPercentage * filterData[0].feedPercentage;
+            gridDataObj.totalFeedDay = totalFeedDay;
+            gridDataObj.numKiloFeed = totalFeedDay / this.filterForm.get("feedFrequency")?.value;
+            gridDataObj.numOfTimesFeed = 24 / totalFeedDay
+            this.feedChartList.push(gridDataObj); 
+          }
+        })
+      }
+      
+    } else {
+      const diffTime = Math.abs(doc - currentDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (diffDays > 28) {
+        const iterateDays = (n: any) => (f: any) => {
+          let iter = (i: any) => {
+            if (i === n) return
+            f (i)
+            iter (i + 1)
+          }
+          return iter (0)
+        }
+        iterateDays(diffDays-1)((i: any) => {
+          doc.setDate(doc.getDate() + 1);
+          const gridDataObj = {
+            date: '',
+            totalFeedDay: 0,
+            numKiloFeed: 0,
+            numOfTimesFeed: 0
+          };
+          gridDataObj.date = doc.toString();
+          const totalFeedDay = 2 + 0.2 * i;
+          gridDataObj.totalFeedDay = totalFeedDay;
+          gridDataObj.numKiloFeed = totalFeedDay / this.filterForm.get("feedFrequency")?.value;
+          gridDataObj.numOfTimesFeed = 24 / totalFeedDay
+          this.feedChartList.push(gridDataObj);
+        });
+      } else {
+        const iterateDays = (n: any) => (f: any) => {
+          let iter = (i: any) => {
+            if (i === n) return
+            f (i)
+            iter (i + 1)
+          }
+          return iter (0)
+        }
+
+        iterateDays(diffDays -1)((i: any) => {
+          const gridDataObj = {
+            date: '',
+            totalFeedDay: 0,
+            numKiloFeed: 0,
+            numOfTimesFeed: 0
+          };
+
+          doc.setDate(doc.getDate() + 1);
+          gridDataObj.date = doc.toString();
+          const filterData = this.filterPercentageBydate(doc);
+          const filterWeeeklySampling = this.filterWeeeklySamplingBydate(doc);
+          if (filterData.length > 0 && filterWeeeklySampling.length > 0) {
+            const totalFeedDay = filterData[0].averageBodyWeight * filterWeeeklySampling[0].expectedSurvivalPercentage * filterData[0].feedPercentage;
+            gridDataObj.totalFeedDay = totalFeedDay;
+            gridDataObj.numKiloFeed = totalFeedDay / this.filterForm.get("feedFrequency")?.value;
+            gridDataObj.numOfTimesFeed = 24 / totalFeedDay
+            this.feedChartList.push(gridDataObj); 
+          }
+        })
+      }
+    }
+
+  }
+
+  filterPercentageBydate(date: any) {
+    const percentageFeedingData = this.percentageFeedingList.filter((x: any) => {
+      x.createdOn = date
+    })
+
+    return percentageFeedingData;
+  }
+
+  filterWeeeklySamplingBydate(date: any) {
+    const weeklySamplingData = this.weelySamplingList.filter((x: any) => {
+      x.createdOn = date
+    })
+
+    return weeklySamplingData;
   }
 
 
@@ -108,19 +280,34 @@ export class FeedChartListComponent implements OnInit {
 
   fetchInitialData = () => {
     this.blockUI.start('Fetching Data...');
-    this.feedChartSubscription.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
+    this.feedChartSubscription.push(this.store.select(selectStockDetails).pipe(switchMap(stockDetails => {
+      if (stockDetails) {
+        this.stockDetails = stockDetails;
+      }
+      return this.clubMemberService.fetchClubMembers()
+    })).pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
         this.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.pondList = resPonds.result;
+        this.initialData.pondList = resPonds.result;
+      }
+      return this.percentageFeedingService.fetchPercentageFeedings()
+    })).pipe(switchMap((percentageFeed: any) => {
+      if (percentageFeed && percentageFeed.result) {
+        this.percentageFeedingList = percentageFeed.result;
+      }
+      return this.weeklySamplingService.getAllWeeklySamplings()
+    })).pipe(switchMap((samplingResponse: any) => {
+      if (samplingResponse && samplingResponse.result) {
+        this.weelySamplingList = samplingResponse.result;
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
+        this.initialData.farmList = farmRes.result;
       }
     }))
     this.blockUI.stop();

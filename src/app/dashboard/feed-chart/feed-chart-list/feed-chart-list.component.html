@@ -37,10 +37,6 @@
         </div>
         <div class="form-row mb-4"  [formGroup]="filterForm">
             <div class="col">
-                <label class="font-size-h7  text-dark" readonly>DOC</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col">
                 <label class="font-size-h7  text-dark">Club Member</label>
                 <select name="firstName" id="_id" class="form-control" formControlName="owner" (change)="filterChange($event)">
                     <option value=null disabled selected>Select Owner</option>
@@ -63,7 +59,11 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark">Feed Frequency</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" placeholder="Feed Frequency" formControlName="feedFrequency" (change)="filterChange($event)">
+            </div>
+            <div class="col">
+              <label class="font-size-h7  text-dark" readonly>DOC</label>
+              <input type="text" class="form-control" placeholder="Date of Culture" formControlName="dateOfCulture">
             </div>
         </div>
         <!-- end: Filtration form -->
@@ -93,10 +93,10 @@
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{feedChart?.date}}</td>
-                        <td>{{feedChart?.calculatedDailyFeed}}</td>
-                        <td>{{feedChart?.percentage}}</td>
-                        <td>{{feedChart?.actualNoOfKillos}}</td>
+                        <td>{{feedChart?.date | date: 'yyyy-MM-dd'}}</td>
+                        <td>{{feedChart?.totalFeedDay}}</td>
+                        <td>{{feedChart?.numKiloFeed}}</td>
+                        <td>{{feedChart?.numOfTimesFeed}}</td>
                        <td>
                             <!-- <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateDailyFeed(feedChart)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
