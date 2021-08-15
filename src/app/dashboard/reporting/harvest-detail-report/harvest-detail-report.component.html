@@ -7,7 +7,7 @@
             <button type="button" class="btn btn-secondary">
                 Clear Filteration
             </button>
-            <button type="button" class="ml-3 btn btn-success" (click)="generateReport()">
+            <button type="button" class="ml-3 btn btn-success" (click)="generateReport()" *ngxPermissionsOnly="['SHOW_REPORT']">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 Generate Report
             </button>

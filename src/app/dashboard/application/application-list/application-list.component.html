@@ -4,11 +4,16 @@
             <h3 class="card-label">Application Management</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addNewApplication()"><i class="fa fa-plus"
-                    aria-hidden="true"></i> Add Application</a>
+            <a type="button" class="btn btn-primary" (click)="addNewApplication()" *ngxPermissionsOnly="['ADD_FEED_BRAND']">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Add Application
+            </a>
             <!-- <a type="button" class="btn btn-success m-1" (click)="importApplications()"><i class="fa fa-files-o"
                     aria-hidden="true"></i> Import Applications</a> -->
-            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"><i class="fa fa-trash" aria-hidden="true"></i>Delete Applications</a>
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()" *ngxPermissionsOnly="['DELETE_FEED_BRANDS']">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+                Delete Applications
+            </a>
         </div>
     </div>
     <div class="card-body">
@@ -25,12 +30,12 @@
                     <!-- begin: Grouping -->
                     <div>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportApplicationList(exportTypes.PDF)">
+                            (click)="exportApplicationList(exportTypes.PDF)" *ngxPermissionsOnly="['DOWNLOAD_PDF_FEED_BRAND']">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportApplicationList(exportTypes.CSV)">
+                            (click)="exportApplicationList(exportTypes.CSV)" *ngxPermissionsOnly="['DOWNLOAD_EXCEL_FEED_BRAND']">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -73,13 +78,13 @@
                         <td>{{ app?.costPerUnit }}</td>
                         <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
-                                (click)="updateApplication(app)">
+                                (click)="updateApplication(app)" *ngxPermissionsOnly="['EDIT_FEED_BRAND']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
                             <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
-                                (click)="deleteRecord(app._id)">
+                                (click)="deleteRecord(app._id)" *ngxPermissionsOnly="['DELETE_FEED_BRAND']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>
@@ -88,8 +93,7 @@
                     </tr>
                 </tbody>
             </table>
-            <ngb-pagination
-                [collectionSize]="applicationList && applicationList.length ? applicationList.length: 0"
+            <ngb-pagination [collectionSize]="applicationList && applicationList.length ? applicationList.length: 0"
                 [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
             </ngb-pagination>
         </div>

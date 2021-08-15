@@ -4,7 +4,7 @@
             <h3 class="card-label">Application Report</h3>
         </div>
         <div class="card-toolbar">
-            <button type="button" class="btn btn-success" (click)="generateReport()">
+            <button type="button" class="btn btn-success" (click)="generateReport()" *ngxPermissionsOnly="['SHOW_REPORT']">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 Generate Report
             </button>

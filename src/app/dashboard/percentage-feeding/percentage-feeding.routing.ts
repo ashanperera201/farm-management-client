@@ -7,7 +7,7 @@ import { PercentageFeedingAddComponent } from './percentage-feeding-add/percenta
 
 const routes: Routes = [
     {
-        path: '', component: PercentageFeedingListComponent,
+        path: '', component: PercentageFeedingComponent,
         children: [
             { path: 'view-all', redirectTo: 'view-all', pathMatch: 'full' },
             { path: 'view-all', component: PercentageFeedingListComponent },

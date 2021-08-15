@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { StockManagementComponent } from './stock-management.component';
 import { StockRoutingModule } from './stock-management.routing';
 import { StockListComponent } from './stock-list/stock-list.component';
@@ -23,7 +24,8 @@ import { StockAddComponent } from './stock-add/stock-add.component';
     InlineSVGModule,
     Ng2SearchPipeModule,
     NgbPaginationModule,
-    NgbModule
+    NgbModule,
+    NgxPermissionsModule.forChild()
   ]
 })
 export class StockManagementModule { }

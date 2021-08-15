@@ -4,7 +4,7 @@
             <h3 class="card-label">Weekly Sampling</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addNewWeeklySampling()">
+            <a type="button" class="btn btn-primary" (click)="addNewWeeklySampling()" *ngxPermissionsOnly="['ADD_WEEKLY_SAMPLING']">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 Add Weekly Sampling
             </a>
@@ -12,7 +12,7 @@
                 <i class="fa fa-files-o" aria-hidden="true"></i>
                 Import Weekly Sampling
             </a> -->
-            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()">
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()" *ngxPermissionsOnly="['DELETE_WEEKLY_SAMPLINGS']">
                 <i class="fa fa-trash" aria-hidden="true"></i>
                 Delete Weekly Sampling
             </a>
@@ -36,12 +36,12 @@
                             <span>Reset Filters</span>
                         </button>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportWeeklySampling(exportTypes.PDF)">
+                            (click)="exportWeeklySampling(exportTypes.PDF)" *ngxPermissionsOnly="['DOWNLOAD_PDF_WEEKLY_SAMPLING']">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportWeeklySampling(exportTypes.CSV)">
+                            (click)="exportWeeklySampling(exportTypes.CSV)" *ngxPermissionsOnly="['DOWNLOAD_EXCEL_WEEKLY_SAMPLING']">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -119,13 +119,13 @@
                         <!-- <td>{{ weeklySample?.createdOn | date: 'EEEE, MMMM d, y' }}</td> -->
                         <td>
                             <a title=" Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
-                                (click)="updateWeelySampling(weeklySample)">
+                                (click)="updateWeelySampling(weeklySample)" *ngxPermissionsOnly="['EDIT_WEEKLY_SAMPLING']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
                             <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
-                                (click)="deleteWeeklySamplingRecord(weeklySample._id)">
+                                (click)="deleteWeeklySamplingRecord(weeklySample?._id)" *ngxPermissionsOnly="['DELETE_WEEKLY_SAMPLING']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

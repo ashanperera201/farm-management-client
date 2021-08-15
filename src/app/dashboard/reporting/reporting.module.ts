@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { ReportingComponent } from './reporting.component';
 import { ReportingRouterModule } from './reporting.routing';
 import { ClubMemberReportComponent } from './club-member-report/club-member-report.component';
@@ -40,7 +41,8 @@ import { AwbDetailReportComponent } from './awb-detail-report/awb-detail-report.
     NgbModule,
     Ng2SearchPipeModule,
     NgSelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPermissionsModule.forChild()
   ]
 })
 export class ReportingModule { }

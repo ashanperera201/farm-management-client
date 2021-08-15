@@ -4,7 +4,7 @@
             <h3 class="card-label">Stock Management</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addNewStock()">
+            <a type="button" class="btn btn-primary" (click)="addNewStock()" *ngxPermissionsOnly="['ADD_STOCK']">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 Add Stocking
             </a>
@@ -12,7 +12,7 @@
                 <i class="fa fa-files-o" aria-hidden="true"></i>
                 Import Stocking
             </a> -->
-            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()">
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()" *ngxPermissionsOnly="['DELETE_STOCKS']">
                 <i class="fa fa-trash" aria-hidden="true"></i>
                 Delete Stock
             </a>
@@ -32,12 +32,12 @@
                     <!-- begin: Grouping -->
                     <div>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportStockList(exportTypes.PDF)">
+                            (click)="exportStockList(exportTypes.PDF)" *ngxPermissionsOnly="['DOWNLOAD_PDF_STOCK']">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportStockList(exportTypes.CSV)">
+                            (click)="exportStockList(exportTypes.CSV)" *ngxPermissionsOnly="['DOWNLOAD_EXCEL_STOCK']">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -92,13 +92,13 @@
                         <!-- <td>{{ stock?.createdOn | date: 'EEEE, MMMM d, y' }}</td> -->
                         <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
-                                (click)="updateStock(stock)">
+                                (click)="updateStock(stock)" *ngxPermissionsOnly="['EDIT_STOCK']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
                             <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
-                                (click)="deleteFarmRecord(stock._id)">
+                                (click)="deleteFarmRecord(stock?._id)" *ngxPermissionsOnly="['DELETE_STOCK']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

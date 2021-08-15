@@ -4,10 +4,10 @@
             <h3 class="card-label">Pond Management</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary" (click)="addNewPond()"><i class="fa fa-plus"
+            <a type="button" class="btn btn-primary" (click)="addNewPond()" *ngxPermissionsOnly="['ADD_POND']"><i class="fa fa-plus"
                     aria-hidden="true"></i> Add Pond</a>
             <!-- <a type="button" class="btn btn-success m-1" (click)="importPonds()"><i class="fa fa-files-o" aria-hidden="true"></i> Import Ponds</a> -->
-            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"><i class="fa fa-trash"
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()" *ngxPermissionsOnly="['DELETE_PONDS']"><i class="fa fa-trash"
                     aria-hidden="true"></i>Delete Ponds</a>
         </div>
     </div>
@@ -25,12 +25,12 @@
                     <!-- begin: Grouping -->
                     <div>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportPondList(exportTypes.PDF)">
+                            (click)="exportPondList(exportTypes.PDF)" *ngxPermissionsOnly="['DOWNLOAD_PDF_POND']">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
                         <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportPondList(exportTypes.CSV)">
+                            (click)="exportPondList(exportTypes.CSV)" *ngxPermissionsOnly="['DOWNLOAD_EXCEL_POND']">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -77,13 +77,13 @@
                         <td>{{ pond?.fixedCost }}</td>
                         <td>
                             <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
-                                (click)="updatePond(pond)">
+                                (click)="updatePond(pond)" *ngxPermissionsOnly="['EDIT_POND']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
                             <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
-                                (click)="deleteRecord(pond._id)">
+                                (click)="deleteRecord(pond._id)" *ngxPermissionsOnly="['DELETE_POND']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>

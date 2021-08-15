@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { WeeklyApplicationAddComponent } from './weekly-application-add/weekly-application-add.component';
 import { WeeklyApplicationListComponent } from './weekly-application-list/weekly-application-list.component';
 import { WeeklyApplicationComponent } from './weekly-application.component';
@@ -23,7 +24,8 @@ import { WeeklyApplicationRoutingModule } from './weekly-application.routing';
     InlineSVGModule,
     Ng2SearchPipeModule,
     NgbPaginationModule,
-    NgbModule
+    NgbModule,
+    NgxPermissionsModule.forChild()
   ]
 })
 export class WeeklyApplicationModule { }

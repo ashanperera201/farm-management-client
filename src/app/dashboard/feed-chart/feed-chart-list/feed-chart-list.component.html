@@ -1,4 +1,3 @@
-
 <div class="card card-custom">
     <div class="card-header">
         <div class="card-title">
@@ -6,7 +5,11 @@
         </div>
         <div class="card-toolbar">
             <!-- <a type="button" class="btn btn-primary m-1" (click)="addNewDailyFeed()"><i class="fa fa-plus" aria-hidden="true"></i> Add New Daily Feed</a> -->
-            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"><i class="fa fa-trash" aria-hidden="true"></i>Delete Percentage of Feeding</a>
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"
+                *ngxPermissionsOnly="['DELETE_RECORDS']">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+                Delete Percentage of Feeding
+            </a>
         </div>
     </div>
     <div class="card-body">
@@ -22,11 +25,13 @@
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportFeedChartList(exportTypes.PDF)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
+                            (click)="exportFeedChartList(exportTypes.PDF)" *ngxPermissionsOnly="['DOWNLOAD_PDF']">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportFeedChartList(exportTypes.CSV)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
+                            (click)="exportFeedChartList(exportTypes.CSV)" *ngxPermissionsOnly="['DOWNLOAD_EXCEL']">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -35,35 +40,39 @@
                 </div>
             </div>
         </div>
-        <div class="form-row mb-4"  [formGroup]="filterForm">
+        <div class="form-row mb-4" [formGroup]="filterForm">
             <div class="col">
                 <label class="font-size-h7  text-dark">Club Member</label>
-                <select name="firstName" id="_id" class="form-control" formControlName="owner" (change)="filterChange($event)">
+                <select name="firstName" id="_id" class="form-control" formControlName="owner"
+                    (change)="filterChange($event)">
                     <option value=null disabled selected>Select Owner</option>
                     <option *ngFor="let o of ownerList" [value]="o._id">{{o.firstName}} {{o.lastName}}</option>
                 </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark">Farm</label>
-                <select name="firstName" id="_id" class="form-control" formControlName="farmer" (change)="filterChange($event)">
+                <select name="firstName" id="_id" class="form-control" formControlName="farmer"
+                    (change)="filterChange($event)">
                     <option value=null disabled selected>Select Farm</option>
                     <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
                 </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark">Pond</label>
-                <select name="firstName" id="_id" class="form-control" formControlName="pond" (change)="filterChange($event)">
+                <select name="firstName" id="_id" class="form-control" formControlName="pond"
+                    (change)="filterChange($event)">
                     <option value=null disabled selected>Select Pond</option>
                     <option *ngFor="let p of pondList" [value]="p._id">{{p.pondNo}}</option>
                 </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark">Feed Frequency</label>
-                <input type="text" class="form-control" placeholder="Feed Frequency" formControlName="feedFrequency" (change)="filterChange($event)">
+                <input type="text" class="form-control" placeholder="Feed Frequency" formControlName="feedFrequency"
+                    (change)="filterChange($event)">
             </div>
             <div class="col">
-              <label class="font-size-h7  text-dark" readonly>DOC</label>
-              <input type="text" class="form-control" placeholder="Date of Culture" formControlName="dateOfCulture">
+                <label class="font-size-h7  text-dark" readonly>DOC</label>
+                <input type="text" class="form-control" placeholder="Date of Culture" formControlName="dateOfCulture">
             </div>
         </div>
         <!-- end: Filtration form -->
@@ -86,10 +95,12 @@
                     <th> Action </th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let feedChart of (feedChartList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:filterParam;let i = index">
+                    <tr
+                        *ngFor="let feedChart of (feedChartList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) | filter:filterParam;let i = index">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single">
-                                <input type="checkbox" [checked]="feedChart.isChecked" (change)="singleSelectionChange(i)" />
+                                <input type="checkbox" [checked]="feedChart.isChecked"
+                                    (change)="singleSelectionChange(i)" />
                                 <span></span>
                             </label>
                         </td>
@@ -97,13 +108,14 @@
                         <td>{{feedChart?.totalFeedDay}}</td>
                         <td>{{feedChart?.numKiloFeed}}</td>
                         <td>{{feedChart?.numOfTimesFeed}}</td>
-                       <td>
+                        <td>
                             <!-- <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateDailyFeed(feedChart)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a> -->
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteRecord(feedChart._id)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2"
+                                (click)="deleteRecord(feedChart?._id)">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>
@@ -112,10 +124,9 @@
                     </tr>
                 </tbody>
             </table>
-            <ngb-pagination
-            [collectionSize]="feedChartList && feedChartList.length ? feedChartList.length: 0"
-            [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-        </ngb-pagination>
+            <ngb-pagination [collectionSize]="feedChartList && feedChartList.length ? feedChartList.length: 0"
+                [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+            </ngb-pagination>
         </div>
     </div>
 </div>
