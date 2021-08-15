@@ -50,7 +50,7 @@ export class WeeklyApplicationReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['Week Number', 'Application Type', 'Unit', 'Number Of Unit', 'Created On',];
-    this.fileService.exportToPDF("Weekly Application Report Data", headers, pdfData, 'weekly_application_report', 'Weekly Application Report Details xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Weekly Application Report Data", headers, pdfData, 'weekly_application_report', 'Weekly Application Report Details - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

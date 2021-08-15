@@ -119,7 +119,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
         animation: true,
         keyboard: true,
         backdrop: true,
-        modalDialogClass: 'modal-xl',
+        modalDialogClass: 'modal-lg',
       });
       performanceReportModal.componentInstance.initialData = this.weeklyPerformanceForm.value;
     }

@@ -13,8 +13,8 @@ import { PondService } from '../../../shared/services/pond.service';
 import { FileService } from '../../../shared/services/file.service';
 import { FeedChartService } from '../../../shared/services/feed-chart.service';
 import { AppState, selectStockDetails } from '../../../redux';
-import { PercentageFeedingService } from 'src/app/shared/services/percentage-feeding.service';
-import { WeeklySamplingService } from 'src/app/shared/services/weekly-sampling.service';
+import { PercentageFeedingService } from '../../../shared/services/percentage-feeding.service';
+import { WeeklySamplingService } from '../../../shared/services/weekly-sampling.service';
 
 @Component({
   selector: 'app-feed-chart-list',
@@ -22,6 +22,8 @@ import { WeeklySamplingService } from 'src/app/shared/services/weekly-sampling.s
   styleUrls: ['./feed-chart-list.component.scss']
 })
 export class FeedChartListComponent implements OnInit {
+  
+  @BlockUI() blockUI!: NgBlockUI;
 
   isAllChecked! : boolean;
   feedChartList: any[] = [];
@@ -44,8 +46,6 @@ export class FeedChartListComponent implements OnInit {
   stockDetails: any[] = [];
   percentageFeedingList: any[] = [];
   weelySamplingList: any[] = [];
-
-  @BlockUI() blockUI!: NgBlockUI;
 
   constructor(
     private feedChartService : FeedChartService,
@@ -102,6 +102,7 @@ export class FeedChartListComponent implements OnInit {
 
   calculateDateOfCulture = (stock: any) => {
     if (stock) {
+      this.blockUI.start('Fetching data........');
       const currentDate = new Date();
       const stockDate = new Date(stock.dateOfStocking);
       const subtractedDate = currentDate.getDate() - stockDate.getDate();
@@ -140,6 +141,7 @@ export class FeedChartListComponent implements OnInit {
           gridDataObj.numOfTimesFeed = 24 / totalFeedDay
           this.feedChartList.push(gridDataObj);
         });
+        this.blockUI.stop();
       } else {
         const iterateDays = (n: any) => (f: any) => {
           let iter = (i: any) => {
@@ -170,6 +172,7 @@ export class FeedChartListComponent implements OnInit {
             this.feedChartList.push(gridDataObj); 
           }
         })
+        this.blockUI.stop();
       }
       
     } else {
@@ -331,19 +334,22 @@ export class FeedChartListComponent implements OnInit {
   
   proceedDelete = (pfIds: string[]) => {
     let form = new FormData();
-    form.append("dailyFeedIds", JSON.stringify(pfIds));
+
+    this.toastrService.warning('Record deletion is under maintainance', 'Warning');
+
+    // form.append("dailyFeedIds", JSON.stringify(pfIds));
   
-    this.feedChartSubscription.push(this.feedChartService.deleteFeedCharts(form).subscribe((deletedResult: any) => {
-      if (deletedResult) {
-        this.isAllChecked = false;
-        pfIds.forEach(e => { const index: number = this.feedChartList.findIndex((up: any) => up._id === e); this.feedChartList.splice(index, 1); });
-        this.toastrService.success('Successfully deleted.', 'Success');
-      }
-      this.blockUI.stop();
-    }, () => {
-      this.toastrService.error('Failed to delete', 'Error');
-      this.blockUI.stop();
-    }));
+    // this.feedChartSubscription.push(this.feedChartService.deleteFeedCharts(form).subscribe((deletedResult: any) => {
+    //   if (deletedResult) {
+    //     this.isAllChecked = false;
+    //     pfIds.forEach(e => { const index: number = this.feedChartList.findIndex((up: any) => up._id === e); this.feedChartList.splice(index, 1); });
+    //     this.toastrService.success('Successfully deleted.', 'Success');
+    //   }
+    //   this.blockUI.stop();
+    // }, () => {
+    //   this.toastrService.error('Failed to delete', 'Error');
+    //   this.blockUI.stop();
+    // }));
   }
   
   onSelectionChange = () => {
@@ -360,7 +366,6 @@ export class FeedChartListComponent implements OnInit {
   }
 
   exportFeedChartList = (type: any) => {
-    /////////////TO DO
     if (type === ExportTypes.CSV) {
       this.blockUI.start('Exporting Excel...');
       const csvData: any[] = this.feedChartList.map(x => {

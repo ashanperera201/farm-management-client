@@ -53,7 +53,7 @@ export class ApplicationDetailReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['Application Type', 'Name', 'Unit (KG/Liters)', 'Cost Per Unit', 'Created On',];
-    this.fileService.exportToPDF("Application Data", headers, pdfData, 'application_data', 'application details xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Application Data", headers, pdfData, 'application_data', 'application details - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

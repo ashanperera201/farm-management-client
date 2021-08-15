@@ -54,7 +54,7 @@ export class PondDetailReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['Owner First Name', 'Owner Last Name', 'Farm Name', 'Area of pond', 'Grade Of pond', 'Fixed Cost', 'status', 'Created On'];
-    this.fileService.exportToPDF("Pond Detail Report", headers, pdfData, 'pond_details_report', 'Pond details, xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Pond Detail Report", headers, pdfData, 'pond_details_report', 'Pond details, - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

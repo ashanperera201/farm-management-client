@@ -51,7 +51,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['AWB', 'Sales Price', 'Created On',];
-    this.fileService.exportToPDF("Sales Report Data", headers, pdfData, 'sales_data', 'sales details xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Sales Report Data", headers, pdfData, 'sales_data', 'sales details - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

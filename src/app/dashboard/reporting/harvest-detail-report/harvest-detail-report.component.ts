@@ -118,7 +118,7 @@ export class HarvestDetailReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['Harvest Date', 'Harvest Type', 'Harvest Qty', 'Harvest AWB', 'No.of PL\'s Harvested', 'sales price', 'Created On'];
-    this.fileService.exportToPDF("Harvest Report Data", headers, pdfData, 'harvest_report', 'Harvest Report Details xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Harvest Report Data", headers, pdfData, 'harvest_report', 'Harvest Report Details - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

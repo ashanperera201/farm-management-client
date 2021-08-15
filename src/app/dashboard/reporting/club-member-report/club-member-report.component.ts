@@ -85,7 +85,7 @@ export class ClubMemberReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['First Name', 'Last Name', 'Email', 'Contact No', 'Nic', 'Created On',];
-    this.fileService.exportToPDF("Club Members Data", headers, pdfData, 'Club_Members_Data', 'club member details xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Club Members Data", headers, pdfData, 'Club_Members_Data', 'club member details - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

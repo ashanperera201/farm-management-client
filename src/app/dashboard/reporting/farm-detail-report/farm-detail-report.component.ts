@@ -54,7 +54,7 @@ export class FarmDetailReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['First Name', 'Last Name', 'Contact', 'Address', 'Pond Count', 'status', 'Created On',];
-    this.fileService.exportToPDF("Farm Detail Data", headers, pdfData, 'farm_details_report', 'Farm details, xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Farm Detail Data", headers, pdfData, 'farm_details_report', 'Farm details, - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

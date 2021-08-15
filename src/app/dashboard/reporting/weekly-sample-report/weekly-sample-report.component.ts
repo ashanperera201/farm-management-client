@@ -53,7 +53,7 @@ export class WeeklySampleReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['DOC', 'Total Weight', 'Total Shrimp', 'Previous AWB', 'Gain in Weight', 'Expected Survival %', 'Created On',];
-    this.fileService.exportToPDF("Weekly Sample Report Data", headers, pdfData, 'weekly_sample_report', 'Weekly Sample Report Details xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Weekly Sample Report Data", headers, pdfData, 'weekly_sample_report', 'Weekly Sample Report Details - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

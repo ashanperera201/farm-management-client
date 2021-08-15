@@ -51,7 +51,7 @@ export class PondBrandDetailReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['Brand Name', 'Grades', 'Shrimp Weight', 'Price', 'status', 'Created On'];
-    this.fileService.exportToPDF("Brand Detail Report", headers, pdfData, 'brand_details_report', 'brand details, xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Brand Detail Report", headers, pdfData, 'brand_details_report', 'brand details, - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

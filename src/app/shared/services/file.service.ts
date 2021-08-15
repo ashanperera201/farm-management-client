@@ -13,7 +13,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class FileService {
 
-  logo: string = `../../../assets/media/logos/sample.png`;
+  logo: string = `../../../assets/media/logos/logo-taprobane.png`;
 
   constructor() { }
 

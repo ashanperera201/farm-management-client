@@ -95,7 +95,7 @@ export class PercentageFeedingReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['AWB', 'Sales Price', 'Created On',];
-    this.fileService.exportToPDF("Feeding Percentage Data", headers, pdfData, 'Feeding Percentage_data', 'Feeding Percentage details xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Feeding Percentage Data", headers, pdfData, 'Feeding Percentage_data', 'Feeding Percentage details - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 

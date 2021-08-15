@@ -51,7 +51,7 @@ export class AwbDetailReportComponent implements OnInit, OnDestroy {
       }
     });
     const headers: any[] = ['Club Member', 'Farm', 'Pond Number', 'AWB', 'DOC', 'Total Bio Mass', 'Created On',];
-    this.fileService.exportToPDF("Weekly Sample Report Data", headers, pdfData, 'weekly_sample_report', 'Weekly Sample Report Details xxxx pvt ltd', true);
+    this.fileService.exportToPDF("Weekly Sample Report Data", headers, pdfData, 'weekly_sample_report', 'Weekly Sample Report Details - Taprobane Seafood (Pvt) Ltd', true);
     this.blockUI.stop();
   }
 
