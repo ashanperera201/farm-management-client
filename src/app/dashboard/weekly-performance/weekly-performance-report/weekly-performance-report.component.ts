@@ -83,6 +83,8 @@ export class WeeklyPerformanceReportComponent implements OnInit {
   weeklyProfit: number = 0;
   profit: number = 0;
   plPrice: number = 0;
+  plCount: number = 0;
+  preWeekPlCount: number = 0;
   totalApllicationCost: number = 0;
 
   constructor(
@@ -136,6 +138,18 @@ export class WeeklyPerformanceReportComponent implements OnInit {
           && new Date(z.createdOn) < new Date(this.previousWeekToDate));
         this.stock = this.stockList[0];
         this.preWeekStock = this.preWeekStockList[0];
+        if(this.stock){
+          this.plCount = this.stock.plCount;
+          this.plPrice = this.stock.plPrice;
+        }
+        if(this.preWeekStock){
+          this.preWeekPlCount = this.preWeekStock.plCount;
+        }
+        if(!this.stock){
+          this.toastrService.warning("No Stock Data for Selected inputs","No Data Available");
+          this.closeModal();
+          this.blockUI.stop();
+        }
       }
       return this.salesPriceService.fetchSalesPrice()
     })).pipe(switchMap((resSales: any) => {
@@ -160,7 +174,9 @@ export class WeeklyPerformanceReportComponent implements OnInit {
     })).subscribe((farmRes: any) => {
       if (farmRes) {
         this.farmList = farmRes;
-        this.farm = this.farmList.filter(x => x._id == this.initialData?.farmer)[0];
+        if(this.farmList && this.farmList.length > 0){
+          this.farm = this.farmList.filter(x => x._id == this.initialData?.farmer)[0];
+        }
       }
       this.fetchApplicationData();
       this.calcWeeklyCost();
@@ -188,6 +204,7 @@ export class WeeklyPerformanceReportComponent implements OnInit {
         const prevWeek = res.filter((z: any) => z.pond?._id == this.initialData?.pondNo && new Date(z.createdOn) > new Date(this.previousWeekFromDate)
           && new Date(z.createdOn) < new Date(this.previousWeekToDate));
 
+        //Previous Week Data
         if (prevWeek && prevWeek.length > 0) {
           prevWeek.forEach((x: any) => {
             this.prevWeekExpectedSurvivalPercentage = this.prevWeekExpectedSurvivalPercentage + x.expectedSurvivalPercentage;
@@ -199,18 +216,23 @@ export class WeeklyPerformanceReportComponent implements OnInit {
           });
         }
       }
+      else{
+        this.toastrService.warning("No Weekly Sampling Data for Selected inputs","No Data Available");
+        this.closeModal();
+        this.blockUI.stop();
+      }
     }, () => {
       this.toastrService.error("Unable to fetch Application data", "Error");
     }));
 
-    this.totalBioMass = (this.expectedSurvivalPercentage * this.averageBodyWeight * this.stock.plCount);
+    this.totalBioMass = (this.expectedSurvivalPercentage * this.averageBodyWeight * this.plCount);
     //this.salesPricePerABW = this.salesList.filter(y => y.averageBodyWeight == this.averageBodyWeight)[0].salesPrice;
     this.bioMassOnAverage = this.salesPricePerABW * this.totalBioMass;
     this.otherCost = this.totalBioMass * this.pond.fixedCost;
-    this.plCost = this.stock.plCount * this.stock.plPrice;
+    this.plCost = this.plCount * this.plPrice;
     this.preWeekBioMassOnAverage = this.salesPricePerABW * this.prevWeekBioMass;
     if(this.preWeekStock){
-      this.prevWeekBioMass = (this.prevWeekExpectedSurvivalPercentage * this.preWeekAverageBodyWeight * this.preWeekStock.plCount);
+      this.prevWeekBioMass = (this.prevWeekExpectedSurvivalPercentage * this.preWeekAverageBodyWeight * this.preWeekPlCount);
     }
   }
 
