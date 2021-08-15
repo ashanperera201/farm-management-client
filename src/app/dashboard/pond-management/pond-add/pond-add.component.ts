@@ -112,9 +112,9 @@ export class PondAddComponent implements OnInit {
     if (owner) {
       const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
       if (filteredFarmList && filteredFarmList.length > 0) {
-        this.initialData.farmList = filteredFarmList;
+        this.farmList = filteredFarmList;
       } else {
-        this.initialData.farmList = [];
+        this.farmList = [];
       }
     }
   }

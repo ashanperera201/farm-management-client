@@ -128,7 +128,7 @@ export class DailyFeedAddComponent implements OnInit {
     this.model.day = +dateFormat[2];
     
     if (this.existingDailyFeed) {
-      const feed = Object.assign({}, this.existingDailyFeed);
+      const feed = JSON.parse(JSON.stringify(this.existingDailyFeed));
       feed.owner = this.existingDailyFeed.owner._id;
       feed.farmer = this.existingDailyFeed.farmer._id;
       feed.pond = this.existingDailyFeed.pond._id;

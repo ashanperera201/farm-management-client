@@ -78,7 +78,7 @@ export class ClubMemberAddComponent implements OnInit {
     this.blockUI.start('Processing.....');
     if (this.addClubmembersForm.valid) {
       if (this.isEditMode) {
-        const clubMember = this.existingClubMember;
+        const clubMember = JSON.parse(JSON.stringify(this.existingClubMember));
         clubMember.firstName = this.addClubmembersForm.value.firstName;
         clubMember.lastName = this.addClubmembersForm.value.lastName;
         clubMember.email = this.addClubmembersForm.value.email;
@@ -92,6 +92,7 @@ export class ClubMemberAddComponent implements OnInit {
         this.clubMemberService.updateClubMember(clubMember).subscribe(res => {
           if (res) {
             this.closeModal();
+            this.afterSave.emit(clubMember);
             this.store.dispatch(updateClubMember(clubMember));
             this.toastrService.success("Club Member updated successfully.", "Successfully Saved");
           }

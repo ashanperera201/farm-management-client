@@ -70,7 +70,7 @@ export class ApplicationAddComponent implements OnInit {
     this.blockUI.start('Processing.....');
     if(this.isEditMode){
       if(this.addApplicationForm.valid){
-        const application = this.existingApplication;
+        const application = JSON.parse(JSON.stringify(this.existingApplication));
         application.applicationType = this.addApplicationForm.value.applicationType;
         application.applicantName = this.addApplicationForm.value.applicantName;
         application.unit = this.addApplicationForm.value.unit;
@@ -78,6 +78,7 @@ export class ApplicationAddComponent implements OnInit {
         this.applicationService.updateApplication(application).subscribe(res => {
           if(res){
             this.closeModal();
+            this.afterSave.emit(application);
             this.store.dispatch(updateApplication(application));
             this.toastrService.success("Application data updated successfully","Success");
           }

@@ -141,7 +141,8 @@ export class HarvestAddComponent implements OnInit {
       harvestManagement.harvestSalePrice = this.harvestForm.value.harvestSalePrice;
       this.harvestService.updateHarvest(harvestManagement).subscribe(res => {
         if (res && res.validity) {
-          this.afterSave.emit(request);
+          const harvest = this.setOtherData(harvestManagement);
+          this.afterSave.emit(harvest);
           this.closeModal();
           this.store.dispatch(updateHarvest(harvestManagement));
           this.toastrService.success("Harvest updated successfully", "Success");

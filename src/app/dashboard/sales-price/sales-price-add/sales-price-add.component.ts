@@ -5,11 +5,11 @@ import { Store } from '@ngrx/store';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { AppState } from 'src/app/redux';
-import { addSalesPrice, updateSalesPrice } from 'src/app/redux/actions/sales-price.actions';
-import { SalesPriceModel } from 'src/app/shared/models/sales-price-model';
-import { SalesPriceService } from 'src/app/shared/services/sales-price.service';
-import { keyPressDecimals, keyPressNumbers } from 'src/app/shared/utils';
+import { AppState } from '../../../redux';
+import { addSalesPrice, updateSalesPrice } from '../../../redux/actions/sales-price.actions';
+import { SalesPriceModel } from '../../../shared/models/sales-price-model';
+import { SalesPriceService } from '../../../shared/services/sales-price.service';
+import { keyPressDecimals, keyPressNumbers } from '../../../shared/utils';
 
 @Component({
   selector: 'app-sales-price-add',

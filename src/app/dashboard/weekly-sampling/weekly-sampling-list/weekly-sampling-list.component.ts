@@ -147,18 +147,21 @@ export class WeeklySamplingListComponent implements OnInit {
       addWeeklySamplingModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
           const index = this.weelySamplingList.findIndex((up: any) => up._id === res._id);
+          let samplingRef = JSON.parse(JSON.stringify(this.weelySamplingList));
 
-          this.weelySamplingList[index].samplingDate = res.samplingDate;
-          this.weelySamplingList[index].farmer = res.farmer;
-          this.weelySamplingList[index].owner = res.owner;
-          this.weelySamplingList[index].pond = res.pond;
-          this.weelySamplingList[index].dateOfCulture = res.dateOfCulture;
-          this.weelySamplingList[index].totalWeight = res.totalWeight;
-          this.weelySamplingList[index].totalShrimp = res.totalShrimp;
-          this.weelySamplingList[index].averageBodyWeight = res.averageBodyWeight;
-          this.weelySamplingList[index].previousAwb = res.previousAwb;
-          this.weelySamplingList[index].gainInWeight = res.gainInWeight;
-          this.weelySamplingList[index].expectedSurvivalPercentage = res.expectedSurvivalPercentage;
+          samplingRef[index].samplingDate = res.samplingDate;
+          samplingRef[index].farmer = res.farmer;
+          samplingRef[index].owner = res.owner;
+          samplingRef[index].pond = res.pond;
+          samplingRef[index].dateOfCulture = res.dateOfCulture;
+          samplingRef[index].totalWeight = res.totalWeight;
+          samplingRef[index].totalShrimp = res.totalShrimp;
+          samplingRef[index].averageBodyWeight = res.averageBodyWeight;
+          samplingRef[index].previousAwb = res.previousAwb;
+          samplingRef[index].gainInWeight = res.gainInWeight;
+          samplingRef[index].expectedSurvivalPercentage = res.expectedSurvivalPercentage;
+
+          this.weelySamplingList = [...samplingRef];
         }
       });
     }

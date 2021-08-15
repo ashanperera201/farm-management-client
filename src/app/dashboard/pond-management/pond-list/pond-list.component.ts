@@ -81,12 +81,15 @@ export class PondListComponent implements OnInit {
         if (res) {
           
           const index = this.pondList.findIndex((up: any) => up._id === res._id);
-          this.pondList[index].owner = res.owner;
-          this.pondList[index].farmer = res.farmer;
-          this.pondList[index].areaOfPond = res.areaOfPond;
-          this.pondList[index].pondNo = res.pondNo;
-          this.pondList[index].gradeOfPond = res.gradeOfPond;
-          this.pondList[index].fixedCost = res.fixedCost;
+          let pondRefs = JSON.parse(JSON.stringify(this.pondList));         
+          pondRefs[index].owner = res.owner;
+          pondRefs[index].farmer = res.farmer;
+          pondRefs[index].areaOfPond = res.areaOfPond;
+          pondRefs[index].pondNo = res.pondNo;
+          pondRefs[index].gradeOfPond = res.gradeOfPond;
+          pondRefs[index].fixedCost = res.fixedCost;
+
+          this.pondList = [...pondRefs]
         }
       });
     }

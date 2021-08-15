@@ -160,6 +160,7 @@ export class DailyFeedListComponent implements OnInit {
           feedRef[index].actualNumberOfKilos = res.actualNumberOfKilos;
           feedRef[index].remark = res.remark;
 
+          this.dailyFeedList = [...feedRef];
           this.store.dispatch(updateDailyFeed(this.dailyFeedList[index]));
         }
       });

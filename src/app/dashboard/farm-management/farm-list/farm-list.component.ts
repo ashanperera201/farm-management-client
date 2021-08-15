@@ -84,11 +84,13 @@ export class FarmListComponent implements OnInit, OnDestroy {
       updateModal.componentInstance.afterSave.subscribe((afterSaveRes: any) => {
         if (afterSaveRes) {
           const index = this.farmList.findIndex((up: any) => up._id === afterSaveRes._id);
-          this.farmList[index].farmName = afterSaveRes.farmName;
-          this.farmList[index].contactNo = afterSaveRes.contactNo;
-          this.farmList[index].address = afterSaveRes.address;
-          this.farmList[index].pondCount = afterSaveRes.pondCount;
-          this.farmList[index].owner = afterSaveRes.owner;
+          let farmRefs = JSON.parse(JSON.stringify(this.farmList));          
+          farmRefs[index].farmName = afterSaveRes.farmName;
+          farmRefs[index].contactNo = afterSaveRes.contactNo;
+          farmRefs[index].address = afterSaveRes.address;
+          farmRefs[index].pondCount = afterSaveRes.pondCount;
+          farmRefs[index].owner = afterSaveRes.owner;
+          this.farmList = [...farmRefs]
 
           this.store.dispatch(updateFarmManagement(this.farmList[index]));
         }

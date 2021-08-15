@@ -65,7 +65,7 @@
                     <th> Contact No </th>
                     <th> Address</th>
                     <th> No of Ponds </th>
-                    <th> Created Date </th>
+                    <!-- <th> Created Date </th> -->
                     <th> Action </th>
                 </thead>
                 <tbody>
@@ -83,7 +83,7 @@
                         <td>{{ farm?.contactNo }}</td>
                         <td>{{ farm?.address }}</td>
                         <td>{{ farm?.pondCount }}</td>
-                        <td>{{ farm?.createdOn | date: 'EEEE, MMMM d, y' }}</td>
+                        <!-- <td>{{ farm?.createdOn | date: 'EEEE, MMMM d, y' }}</td> -->
                         <td>
                             <a title=" Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm"
                                 (click)="updateFarm(farm)">
