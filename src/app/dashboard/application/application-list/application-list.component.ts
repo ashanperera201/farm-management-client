@@ -91,7 +91,6 @@ fetchApplicationsList = () => {
         applicationRefs[index].costPerUnit = res.costPerUnit;
 
         this.applicationList = [...applicationRefs];
-        // ** 
         this.store.dispatch(updateApplication(this.applicationList[index]));
       }
     });
