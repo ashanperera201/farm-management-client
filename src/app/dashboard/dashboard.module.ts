@@ -5,6 +5,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { PerfectScrollbarModule, PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ComponentsModule } from '../shared/components/components.module';
 import { DashboardRoutingModule } from './dashboard.routing';
@@ -30,7 +31,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     Ng2SearchPipeModule,
     NgbPaginationModule,
     PerfectScrollbarModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    NgxPermissionsModule.forChild()
   ],
   providers: [
     {

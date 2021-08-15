@@ -10,6 +10,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 import { reducers } from './redux/reducers/main-reducer';
 import { AppRoutingModule } from './app-routing.module';
@@ -34,7 +35,8 @@ import { AuthInterceptorService } from './shared/services/auth-interceptor.servi
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({
       maxAge: false,
-    })
+    }),
+    NgxPermissionsModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },

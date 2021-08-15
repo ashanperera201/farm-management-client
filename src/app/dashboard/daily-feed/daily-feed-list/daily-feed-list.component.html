@@ -5,8 +5,8 @@
             <h3 class="card-label">Daily Feed</h3>
         </div>
         <div class="card-toolbar">
-            <a type="button" class="btn btn-primary m-1" (click)="addNewDailyFeed()"><i class="fa fa-plus" aria-hidden="true"></i> Add New Daily Feed</a>
-            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"><i class="fa fa-trash" aria-hidden="true"></i>Delete Percentage of Feeding</a>
+            <a type="button" class="btn btn-primary m-1" (click)="addNewDailyFeed()" *ngxPermissionsOnly="['']"><i class="fa fa-plus" aria-hidden="true"></i> Add New Daily Feed</a>
+            <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()" *ngxPermissionsOnly="['']"><i class="fa fa-trash" aria-hidden="true"></i>Delete Percentage of Feeding</a>
         </div>
     </div>
     <div class="card-body">
@@ -26,11 +26,11 @@
                             <i class="fa fa-filter"></i>
                             <span>Reset Filters</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportDailyFeedList(exportTypes.PDF)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" *ngxPermissionsOnly="['']" (click)="exportDailyFeedList(exportTypes.PDF)">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportDailyFeedList(exportTypes.CSV)">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" *ngxPermissionsOnly="['']" (click)="exportDailyFeedList(exportTypes.CSV)">
                             <i class="fa fa-table"></i>
                             <span>CSV</span>
                         </button>
@@ -100,12 +100,12 @@
                         <td>{{dailyFeed?.actualNumberOfKilos}}</td>
                         <td>{{dailyFeed?.remark}}</td>
                        <td>
-                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateDailyFeed(dailyFeed)">
+                            <a title="Edit Role" class="btn btn-icon btn-light btn-hover-primary btn-sm" (click)="updateDailyFeed(dailyFeed)" *ngxPermissionsOnly="['']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                                     class="svg-icon svg-icon-md svg-icon-primary">
                                 </span>
                             </a>
-                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteRecord(dailyFeed)">
+                            <a title="Delete item" class="btn btn-icon btn-light btn-hover-danger btn-sm ml-2" (click)="deleteRecord(dailyFeed)" *ngxPermissionsOnly="['']">
                                 <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
                                     class="svg-icon svg-icon-md svg-icon-danger">
                                 </span>
