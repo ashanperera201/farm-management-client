@@ -58,12 +58,13 @@
             <label class="font-size-h7  text-dark report-data">Total Feed : {{ dailyFeedTotal }}</label>
         </div>
         <div class="col">
-            <label class="font-size-h7  text-dark report-data">Weekly FCR : {{ dailyFeedTotal/ (gainInWeight * expectedSurvivalPercentage * stock?.plCount) }}</label>
+            <label class="font-size-h7  text-dark report-data">Weekly FCR : {{ dailyFeedTotal/ (gainInWeight * expectedSurvivalPercentage * plCount) }}</label>
         </div>
     </div>
     <div class="form-row mb-4">
         <div class="col">
-            <label class="font-size-h7  text-dark report-data">FCR To Date : {{ totalFeedUptoDate / totalBioMass }}</label>
+            <label *ngIf="totalBioMass > 0" class="font-size-h7  text-dark report-data">FCR To Date : {{ totalFeedUptoDate / totalBioMass }}</label>
+            <label *ngIf="totalBioMass == 0" class="font-size-h7  text-dark report-data">FCR To Date : 0 </label>
         </div>
         <div class="col">
             <label class="font-size-h7  text-dark report-data">Total Feed Cost : {{ dailyFeedTotal * feedBrandUnitPrice }}</label>
@@ -105,17 +106,18 @@
     </div>
 
     <div class="form-row mb-4">
-        <h5 class="report-data">PL Cost : {{stock?.plCount}}</h5>
+        <h5 class="report-data">PL Cost : {{plCount}}</h5>
     </div>
     <div class="form-row mb-4">
-        <h5 class="report-data"> <b>Total : {{totalFeedCost + totalApllicationCost + otherCost + stock?.plCount }}</b></h5>
+        <h5 class="report-data"> <b>Total : {{totalFeedCost + totalApllicationCost + otherCost + plCount }}</b></h5>
     </div>
     <div class="form-row mb-4">
-        <h5 class="report-data">Weekly Profit/Loss : {{totalBioMass - (totalFeedCost + totalApllicationCost + otherCost + stock?.plCount) }}</h5>
+        <h5 class="report-data">Weekly Profit/Loss : {{totalBioMass - (totalFeedCost + totalApllicationCost + otherCost + plCount) }}</h5>
     </div>
 
     <div class="form-row mb-4">
-        <h5 class="report-data">Profit/Loss Per Kg : {{ (totalBioMass - (totalFeedCost + totalApllicationCost + otherCost + stock?.plCount)) / totalBioMass }}</h5>
+        <h5 *ngIf="totalBioMass > 0" class="report-data">Profit/Loss Per Kg : {{ (totalBioMass - (totalFeedCost + totalApllicationCost + otherCost + plCount)) / totalBioMass }}</h5>
+        <h5 *ngIf="totalBioMass == 0" class="report-data">Profit/Loss Per Kg : 0 </h5>
     </div>
 
   </div>
