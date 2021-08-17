@@ -25,8 +25,11 @@
                 <div class="col-lg-6 d-flex justify-content-lg-end justify-content-md-center justify-content-sm-start">
                     <!-- begin: Grouping -->
                     <div>
-                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2"
-                            (click)="exportFeedChartList(exportTypes.PDF)" *ngxPermissionsOnly="['DOWNLOAD_PDF']">
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="resetFilters()">
+                            <i class="fa fa-filter"></i>
+                            <span>Reset Filters</span>
+                        </button>
+                        <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-2" (click)="exportFeedChartList(exportTypes.PDF)" *ngxPermissionsOnly="['DOWNLOAD_PDF']">
                             <i class="fa fa-file-text"></i>
                             <span>PDF</span>
                         </button>
@@ -67,13 +70,16 @@
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark">Feed Frequency</label>
-                <input type="text" class="form-control" placeholder="Feed Frequency" formControlName="feedFrequency"
-                    (change)="filterChange($event)">
+                <input type="text" class="form-control" placeholder="Feed Frequency" formControlName="feedFrequency" (change)="filterChange($event)" (keypress)="enableShowButton($event)"
+                onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false">
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark" readonly>DOC</label>
                 <input type="text" class="form-control" placeholder="Date of Culture" formControlName="dateOfCulture">
             </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary font-weight-bolder font-size-sm mr-2 btn-show" [disabled]="disableShowButton" (click)="calculateData(currentDate)">Show Data</button>
+              </div>
         </div>
         <!-- end: Filtration form -->
 

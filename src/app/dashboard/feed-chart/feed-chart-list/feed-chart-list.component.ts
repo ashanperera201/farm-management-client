@@ -13,8 +13,9 @@ import { PondService } from '../../../shared/services/pond.service';
 import { FileService } from '../../../shared/services/file.service';
 import { FeedChartService } from '../../../shared/services/feed-chart.service';
 import { AppState, selectStockDetails } from '../../../redux';
-import { PercentageFeedingService } from '../../../shared/services/percentage-feeding.service';
-import { WeeklySamplingService } from '../../../shared/services/weekly-sampling.service';
+import { PercentageFeedingService } from 'src/app/shared/services/percentage-feeding.service';
+import { WeeklySamplingService } from 'src/app/shared/services/weekly-sampling.service';
+import { keyPressNumbers } from 'src/app/shared/utils';
 
 @Component({
   selector: 'app-feed-chart-list',
@@ -46,6 +47,8 @@ export class FeedChartListComponent implements OnInit {
   stockDetails: any[] = [];
   percentageFeedingList: any[] = [];
   weelySamplingList: any[] = [];
+  currentDate = new Date();
+  disableShowButton : boolean = true;
 
   constructor(
     private feedChartService : FeedChartService,
@@ -103,13 +106,30 @@ export class FeedChartListComponent implements OnInit {
   calculateDateOfCulture = (stock: any) => {
     if (stock) {
       this.blockUI.start('Fetching data........');
-      const currentDate = new Date();
+      //const currentDate = new Date();
       const stockDate = new Date(stock.dateOfStocking);
-      const subtractedDate = currentDate.getDate() - stockDate.getDate();
-      currentDate.setDate(subtractedDate);
-      this.filterForm.get("dateOfCulture")?.setValue(moment(currentDate).format('M/D/YYYY'));
-      this.calculateData(currentDate); 
+      const subtractedDate = this.currentDate.getDate() - stockDate.getDate();
+      this.currentDate.setDate(subtractedDate);
+      this.filterForm.get("dateOfCulture")?.setValue(moment(this.currentDate).format('M/D/YYYY'));
+      //this.calculateData(this.currentDate);
     }
+  }
+
+  enableShowButton =(event: any) => {
+    if(keyPressNumbers(event)){
+      this.disableShowButton = false; 
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  resetFilters = () => {
+    this.filterForm.reset();
+    this.feedChartList = [];
+    this.initialFeedChartList = [];
+    this.disableShowButton = true;
   }
 
   calculateData(doc: any) {
@@ -233,6 +253,14 @@ export class FeedChartListComponent implements OnInit {
           }
         })
       }
+    }
+
+    if(this.feedChartList && this.feedChartList.length > 0){
+      this.toastrService.success("Data Generated Successfully","Success");
+    }
+    else{
+      this.toastrService.warning("No data for selected inputs","No  Data");
+      this.filterForm.reset();
     }
 
   }
