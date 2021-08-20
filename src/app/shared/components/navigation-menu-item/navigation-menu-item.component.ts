@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItemService } from '../../services/menu-item.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class NavigationMenuItemComponent implements OnInit {
   menuItems: any[] = [];
   currentIndex!: number;
 
-  constructor(private menuItemService: MenuItemService) { }
+  constructor(private menuItemService: MenuItemService, private router: Router) { }
 
   ngOnInit(): void {
     this.menuItems = this.menuItemService.getMenuItems();
@@ -27,14 +28,20 @@ export class NavigationMenuItemComponent implements OnInit {
       this.menuItems[this.currentIndex].activeClass = '';
       this.currentIndex = -1;
     }
-    
+
     if (this.menuItems[index].subItems.length > 0) {
       this.menuItems[index].selected = !this.menuItems[index].selected;
       this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-submenu menu-item-open' : '';
-    } else {     
+    } else {
       this.menuItems[index].selected = !this.menuItems[index].selected;
       this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
       this.currentIndex = index;
+    }
+  }
+
+  proceedNavigation = (menuItem: any) => {
+    if (menuItem && (!menuItem.subItems || !menuItem.subItems.length)) {
+      this.router.navigate([menuItem.route]);
     }
   }
 
