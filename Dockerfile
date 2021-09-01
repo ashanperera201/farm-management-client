@@ -18,6 +18,6 @@ COPY --from=builder /usr/src/app/dist/farm-management-client /usr/share/nginx/ht
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 4150
 
 CMD ["nginx", "-g", "daemon off;"]
