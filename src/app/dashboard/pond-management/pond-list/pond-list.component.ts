@@ -150,7 +150,7 @@ export class PondListComponent implements OnInit {
           'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
           'Farm': `${x.farmer.farmName}`,
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
-          'Pond Count': x.pondNo,
+          'Pond Number': x.pondNo,
           'Area Of Pond': x.areaOfPond,
           'Grade of Pond': x.gradeOfPond,
           'Fixed Cost': x.fixedCost
@@ -166,7 +166,7 @@ export class PondListComponent implements OnInit {
           'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
           'Farm': `${x.farmer.farmName}`,
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
-          'Pond Count': x.pondNo,
+          'Pond Number': x.pondNo,
           'Area Of Pond': x.areaOfPond,
           'Grade of Pond': x.gradeOfPond,
           'Fixed Cost': x.fixedCost
@@ -176,6 +176,7 @@ export class PondListComponent implements OnInit {
       this.fileService.exportToPDF("Ponds Data", headers, pdfData, 'Pond_Data');
       this.blockUI.stop();
     }
+    this.blockUI.stop();
   }
 
   importPonds = () => {

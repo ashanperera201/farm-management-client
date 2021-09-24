@@ -165,7 +165,7 @@ export class StockListComponent implements OnInit {
           'Date of Stocking': moment(x.dateOfStocking).format('YYYY-MM-DD'),
           'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
           'Full Stocked': x.fullStocked,
-          'PL Price': x.plPrice,
+          'PL Price (Rs)': x.plPrice,
           'Actual PL`s Remain': x.actualPlRemains
         }
       });

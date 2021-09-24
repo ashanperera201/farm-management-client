@@ -170,7 +170,7 @@ singleSelectionChange = (index: number) => {
         'Created On':  moment(x.createdOn).format('YYYY-MM-DD')
       }
     });
-    const headers: any[] = ['Application Type', 'Unit', 'Cost Per Unit', 'Created On'];
+    const headers: any[] = ['Application Name','Application Type', 'Unit', 'Cost Per Unit', 'Created On'];
     this.fileService.exportToPDF("Applications", headers, pdfData, 'Applications');
     this.blockUI.stop();
  }
