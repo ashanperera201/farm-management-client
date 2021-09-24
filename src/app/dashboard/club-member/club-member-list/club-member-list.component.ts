@@ -102,21 +102,24 @@ export class ClubMemberListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    this.blockUI.start('Deleting....');
-    const clubMemberIds: string[] = (this.clubMemberList.filter(x => x.isChecked === true)).map(x => x._id);
-    if (clubMemberIds && clubMemberIds.length > 0) {
-      this.proceedDelete(clubMemberIds);
-    } else {
-      this.toastrService.error("Please select items to delete.", "Error");
-      this.blockUI.stop();
+    if(confirm("Are you sure to delete ?")) {
+      this.blockUI.start('Deleting....');
+      const clubMemberIds: string[] = (this.clubMemberList.filter(x => x.isChecked === true)).map(x => x._id);
+      if (clubMemberIds && clubMemberIds.length > 0) {
+        this.proceedDelete(clubMemberIds);
+      } else {
+        this.toastrService.error("Please select items to delete.", "Error");
+        this.blockUI.stop();
+      }
     }
   }
 
   deleteClubMemberRecord = (clubMemberId: any) => {
-    this.blockUI.start('Deleting....');
-    this.proceedDelete([].concat(clubMemberId));
+      if(confirm("Are you sure to delete ?")) {
+        this.blockUI.start('Deleting....');
+        this.proceedDelete([].concat(clubMemberId));
+      }
   }
-
 
   proceedDelete = (clubMemberIds: string[]) => {
     let form = new FormData();
@@ -125,6 +128,7 @@ export class ClubMemberListComponent implements OnInit {
     this.memberListSubscriptions.push(this.clubMemberService.deleteClubMember(form).subscribe((deletedResult: any) => {
       if (deletedResult) {
         this.isAllChecked = false;
+        this.blockUI.stop();
         clubMemberIds.forEach(e => { const index: number = this.clubMemberList.findIndex((up: any) => up._id === e); this.clubMemberList.splice(index, 1); });
         this.store.dispatch(removeClubMember(clubMemberIds));
         this.toastrService.success('Successfully deleted.', 'Success');

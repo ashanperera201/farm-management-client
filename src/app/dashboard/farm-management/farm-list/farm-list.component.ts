@@ -62,7 +62,7 @@ export class FarmListComponent implements OnInit, OnDestroy {
     if (addFarmModal.componentInstance.afterSave) {
       this.farmListSubscriptions.push(addFarmModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
-          this.farmList.unshift(res);
+            this.farmList.unshift(res);
         }
       }));
     }
@@ -99,19 +99,23 @@ export class FarmListComponent implements OnInit, OnDestroy {
   }
 
   deleteSelected = () => {
-    this.blockUI.start('Deleting....');
-    const farmIds: string[] = (this.farmList.filter(x => x.isChecked === true)).map(x => x._id);
-    if (farmIds && farmIds.length > 0) {
-      this.proceedDelete(farmIds);
-    } else {
-      this.toastrService.error("Please select farms to delete.", "Error");
-      this.blockUI.stop();
+    if(confirm("Are you sure to delete ?")) {
+      this.blockUI.start('Deleting....');
+      const farmIds: string[] = (this.farmList.filter(x => x.isChecked === true)).map(x => x._id);
+      if (farmIds && farmIds.length > 0) {
+        this.proceedDelete(farmIds);
+      } else {
+        this.toastrService.error("Please select farms to delete.", "Error");
+        this.blockUI.stop();
+      }
     }
   }
 
   deleteFarmRecord = (farmerId: any) => {
-    this.blockUI.start('Deleting....');
-    this.proceedDelete([].concat(farmerId));
+    if(confirm("Are you sure to delete ?")) {
+      this.blockUI.start('Deleting....');
+      this.proceedDelete([].concat(farmerId));
+    }
   }
 
   proceedDelete = (farmIds: string[]) => {
@@ -121,6 +125,7 @@ export class FarmListComponent implements OnInit, OnDestroy {
     this.farmListSubscriptions.push(this.farmService.deleteFarms(form).subscribe((deletedResult: any) => {
       if (deletedResult) {
         this.isAllChecked = false;
+        this.blockUI.stop();
         farmIds.forEach(e => { const index: number = this.farmList.findIndex((up: any) => up._id === e); this.farmList.splice(index, 1); });
         this.store.dispatch(removeFarmManagement(farmIds));
         this.toastrService.success('Successfully deleted.', 'Success');
@@ -149,15 +154,12 @@ export class FarmListComponent implements OnInit, OnDestroy {
     if (type === ExportTypes.CSV) {
       const csvData: any[] = this.farmList.map(x => {
         return {
-          'Owner': x.owner,
+          'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
           'Farm': x.farmName,
-          'Client Tenent': x.clientTenentId,
-          'Country Code': x.countryCode,
+          'No of Pond' : x.pondCount,
           'Created By': x.createdBy,
-          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
           'Contact No': x.contactNo,
           'Address': x.address,
-          'Pond Count': x.pondNo
         }
       });
       this.fileService.exportAsExcelFile(csvData, "Farms_Data");
@@ -167,12 +169,12 @@ export class FarmListComponent implements OnInit, OnDestroy {
         return {
           'Owner': `${x.owner.firstName} ${x.owner.lastName}`,
           'Farm': `${x.farmName}`,
-          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
+          'No of Pond' : x.pondCount,
           'Contact No': x.contactNo,
           'Address': x.address
         }
       });
-      const headers: any[] = ['Owner', 'Farm', 'Created On', 'Contact No', 'Address'];
+      const headers: any[] = ['Owner', 'Farm',  'No of Pond', 'Contact No', 'Address'];
       this.fileService.exportToPDF("Farms Data", headers, pdfData, 'Farms_Data');
     }
   }
