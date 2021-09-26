@@ -40,6 +40,9 @@ export class WeeklySamplingListComponent implements OnInit {
     pondList: []
   }
   filterForm!: FormGroup;
+  clubMemberList : any;
+  farmList : any;
+  pondList : any;
 
   constructor(
     private pondService: PondService,
@@ -73,13 +76,26 @@ export class WeeklySamplingListComponent implements OnInit {
     const pond = this.filterForm.get("pond")?.value;
 
     if(owner){
-      this.weelySamplingList = this.weelySamplingList.filter(x => x.owner._id === owner);
+      this.weelySamplingList = this.weelySamplingList.filter(x => x.owner?._id === owner);
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
+      if (filteredFarmList && filteredFarmList.length > 0) {
+        this.farmList = filteredFarmList;
+      } else {
+        this.farmList = [];
+      }
     }
     if(farmer){
-      this.weelySamplingList = this.weelySamplingList.filter(x => x.farmer._id === farmer);
+      this.weelySamplingList = this.weelySamplingList.filter(x => x.farmer?._id === farmer);
+      const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farmer) && (x.owner && x.owner._id === owner));
+      if (pondList && pondList.length > 0) {
+        this.pondList = pondList;
+      } else {
+        this.pondList = [];
+      }
+
     }
     if(pond){
-      this.weelySamplingList = this.weelySamplingList.filter(x => x.pond._id === pond);
+      this.weelySamplingList = this.initialWeelySamplingList.filter(x => x.pond?._id === pond);
     }
   }
 
@@ -102,16 +118,19 @@ export class WeeklySamplingListComponent implements OnInit {
     this.weeklySamplingSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
         this.initialData.ownerList = ownerRes.result;
+        this.clubMemberList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
         this.initialData.pondList = resPonds.result;
+        this.pondList = [];
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
         this.initialData.farmList = farmRes.result;
+        this.farmList = [];
       }
     }))
     this.blockUI.stop();
@@ -240,6 +259,9 @@ export class WeeklySamplingListComponent implements OnInit {
   resetFilters = () => {
     this.filterForm.reset();
     this.weelySamplingList = this.initialWeelySamplingList;
+    this.farmList =   [];
+    this.pondList =   [];
+    this.clubMemberList = this.initialData.ownerList;
   }
 
   importWeeklySampling = () => {

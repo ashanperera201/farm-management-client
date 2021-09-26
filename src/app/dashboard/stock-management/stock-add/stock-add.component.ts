@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { count, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs';
 import { StockModel } from '../../../shared/models/stock-model';
@@ -11,9 +11,9 @@ import { ClubMemberService } from '../../../shared/services/club-member.service'
 import { FarmService } from '../../../shared/services/farm.service';
 import { PondService } from '../../../shared/services/pond.service';
 import { StockService } from '../../../shared/services/stock.service';
-import { keyPressNumbers } from '../../../shared/utils';
+import { keyPressDecimals } from '../../../shared/utils';
 import { Store } from '@ngrx/store';
-import { AppState, selectCycleCount, updateCycleValue } from '../../../redux';
+import { AppState, updateCycleValue } from '../../../redux';
 
 @Component({
   selector: 'app-stock-add',
@@ -290,7 +290,7 @@ export class StockAddComponent implements OnInit, DoCheck {
   }
 
   onKeyPressChanges = (event: any): boolean => {
-    return keyPressNumbers(event);
+    return keyPressDecimals(event);
   }
 
   closeModal = () => {

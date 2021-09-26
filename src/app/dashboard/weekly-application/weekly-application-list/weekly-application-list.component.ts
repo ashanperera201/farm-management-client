@@ -38,6 +38,11 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
   farmList: any[] = [];
   pondList: any[] = [];
   filterForm!: FormGroup;
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+    pondList: []
+  }
 
   constructor(private weeklyApplicationsService: WeeklyApplicationsService,
     private toastrService: ToastrService,
@@ -65,6 +70,9 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
   resetFilters = () => {
     this.filterForm.reset();
     this.weeklyApplicationList = this.initialWeeklyApplicationList;
+    this.farmList =   [];
+    this.pondList =   [];
+    this.ownerList = this.initialData.ownerList;
   }
 
   filterChange = (event: any) => {
@@ -74,13 +82,25 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     const pond = this.filterForm.get("pond")?.value;
 
     if(owner){
-      this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.owner._id === owner);
+      this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.owner?._id === owner);
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
+      if (filteredFarmList && filteredFarmList.length > 0) {
+        this.farmList = filteredFarmList;
+      } else {
+        this.farmList = [];
+      }
     }
     if(farmer){
-      this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.farmer._id === farmer);
+      this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.farmer?._id === farmer);
+      const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farmer) && (x.owner && x.owner._id === owner));
+      if (pondList && pondList.length > 0) {
+        this.pondList = pondList;
+      } else {
+        this.pondList = [];
+      }
     }
     if(pond){
-      this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.pond._id === pond);
+      this.weeklyApplicationList = this.initialWeeklyApplicationList.filter(x => x.pond?._id === pond);
     }
   }
 
@@ -108,16 +128,19 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     this.weeklyApplicationSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
         this.ownerList = ownerRes.result;
+        this.initialData.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.pondList = resPonds.result;
+        this.initialData.pondList = resPonds.result;
+        this.pondList = [];
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
+        this.initialData.farmList = farmRes.result;
+        this.farmList = [];
       }
     }))
     this.blockUI.stop();
