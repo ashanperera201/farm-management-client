@@ -10,6 +10,8 @@ import { ApplicationAddComponent } from '../application-add/application-add.comp
 import { FileService } from '../../../shared/services/file.service';
 import { Store } from '@ngrx/store';
 import { AppState, removeApplication, setApplication, updateApplication } from '../../../redux';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 
 @Component({
   selector: 'app-application-list',
@@ -33,7 +35,8 @@ export class ApplicationListComponent implements OnInit {
     private toastrService:ToastrService,
     private modalService: NgbModal,
     private fileService: FileService,
-    private store: Store<AppState>) { }
+    private store: Store<AppState>,
+    private customAlertService: CustomAlertService) { }
 
  ngOnInit(): void {
   this.fetchApplicationsList();
@@ -97,20 +100,38 @@ fetchApplicationsList = () => {
   }
  }
 
- deleteSelected = () => {
-  this.blockUI.start('Deleting....');
-  const appIds: string[] = (this.applicationList.filter(x => x.isChecked === true)).map(x => x._id);
-  if (appIds && appIds.length > 0) {
-    this.proceedDelete(appIds);
-  } else {
-    this.toastrService.error("Please select items to delete.", "Error");
-    this.blockUI.stop();
-  }
+  deleteSelected = () => {
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      const appIds: string[] = (this.applicationList.filter(x => x.isChecked === true)).map(x => x._id);
+      if (appIds && appIds.length > 0) {
+        this.proceedDelete(appIds);
+      } else {
+        this.toastrService.error("Please select items to delete.", "Error");
+        this.blockUI.stop();
+      }
+      deleteModal.close();
+    });
 }
 
 deleteRecord = (appId: any) => {
-  this.blockUI.start('Deleting....');
-  this.proceedDelete([].concat(appId));
+  const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+  (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+    deleteModal.close();
+  });
+
+  (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+    this.blockUI.start('Deleting....');
+    this.proceedDelete([].concat(appId));
+    deleteModal.close();
+  });
 }
 
 proceedDelete = (appIds: string[]) => {

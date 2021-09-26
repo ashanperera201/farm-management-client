@@ -8,6 +8,8 @@ import { ExportTypes } from '../../../shared/enums/export-type';
 import { FeedBrandService } from '../../../shared/services/feed-brand.service';
 import { FeedBrandAddComponent } from '../feed-brand-add/feed-brand-add.component';
 import { FileService } from '../../../shared/services/file.service';
+import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
 
 @Component({
   selector: 'app-feed-brand-list',
@@ -31,7 +33,8 @@ export class FeedBrandListComponent implements OnInit {
     private feedbandService: FeedBrandService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService) { }
+    private fileService: FileService,
+    private customAlertService: CustomAlertService) { }
 
   ngOnInit(): void {
     this.fetchFeedBrandsList();
@@ -78,19 +81,37 @@ export class FeedBrandListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    this.blockUI.start('Deleting....');
-    const feedBrandIds: string[] = (this.feedBrandList.filter(x => x.isChecked === true)).map(x => x._id);
-    if (feedBrandIds && feedBrandIds.length > 0) {
-      this.proceedDelete(feedBrandIds);
-    } else {
-      this.toastrService.error("Please select items to delete.", "Error");
-      this.blockUI.stop();
-    }
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      const feedBrandIds: string[] = (this.feedBrandList.filter(x => x.isChecked === true)).map(x => x._id);
+      if (feedBrandIds && feedBrandIds.length > 0) {
+        this.proceedDelete(feedBrandIds);
+      } else {
+        this.toastrService.error("Please select items to delete.", "Error");
+        this.blockUI.stop();
+      }
+      deleteModal.close();
+    });
   }
 
   deleteRecord = (feedId: any) => {
-    this.blockUI.start('Deleting....');
-    this.proceedDelete([].concat(feedId));
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      this.proceedDelete([].concat(feedId));
+      deleteModal.close();
+    });
   }
 
   proceedDelete = (feedBrandIds: string[]) => {

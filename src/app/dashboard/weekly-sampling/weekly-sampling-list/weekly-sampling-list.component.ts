@@ -15,6 +15,8 @@ import { FarmService } from '../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
 import { PondService } from '../../../shared/services/pond.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 
 @Component({
   selector: 'app-weekly-sampling-list',
@@ -49,7 +51,8 @@ export class WeeklySamplingListComponent implements OnInit {
     private modalService: NgbModal,
     private fileService: FileService,
     private weeklySamplingService: WeeklySamplingService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private customAlertService: CustomAlertService
   ) { }
 
   ngOnInit(): void {
@@ -167,19 +170,37 @@ export class WeeklySamplingListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    this.blockUI.start('Deleting....');
-    const weeklySamplingIds: string[] = (this.weelySamplingList.filter(x => x.isChecked === true)).map(x => x._id);
-    if (weeklySamplingIds && weeklySamplingIds.length > 0) {
-      this.proceedDelete(weeklySamplingIds);
-    } else {
-      this.toastrService.error("Please select weekly samplings to delete.", "Error");
-      this.blockUI.stop();
-    }
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      const weeklySamplingIds: string[] = (this.weelySamplingList.filter(x => x.isChecked === true)).map(x => x._id);
+      if (weeklySamplingIds && weeklySamplingIds.length > 0) {
+        this.proceedDelete(weeklySamplingIds);
+      } else {
+        this.toastrService.error("Please select weekly samplings to delete.", "Error");
+        this.blockUI.stop();
+      }
+      deleteModal.close();
+    });
   }
 
   deleteWeeklySamplingRecord = (weeklySamplingIds: any) => {
-    this.blockUI.start('Deleting....');
-    this.proceedDelete([].concat(weeklySamplingIds));
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      this.proceedDelete([].concat(weeklySamplingIds));
+      deleteModal.close();
+    });
   }
 
   proceedDelete = (weeklySamplingIds: string[]) => {

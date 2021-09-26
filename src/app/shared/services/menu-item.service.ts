@@ -95,7 +95,7 @@ export class MenuItemService {
       },
       {
         id: 7,
-        displayName: 'Stock Management',
+        displayName: 'PL Stocking',
         route: '/dashboard/stock-management/view-all',
         svgIconPath: './assets/media/svg/icons/Devices/Homepod.svg',
         classes: 'menu-item',

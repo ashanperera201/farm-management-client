@@ -10,6 +10,8 @@ import { FarmAddComponent } from '../farm-add/farm-add.component';
 import * as moment from 'moment';
 import { Store } from '@ngrx/store';
 import { AppState, removeFarmManagement, setFarmManagement, updateFarmManagement } from '../../../redux';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 
 @Component({
   selector: 'app-farm-list',
@@ -32,7 +34,8 @@ export class FarmListComponent implements OnInit, OnDestroy {
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fileService: FileService,
-    private store: Store<AppState>) { }
+    private store: Store<AppState>,
+    private customAlertService: CustomAlertService) { }
 
   ngOnInit(): void {
     this.fetchFarmList();
@@ -99,7 +102,13 @@ export class FarmListComponent implements OnInit, OnDestroy {
   }
 
   deleteSelected = () => {
-    if(confirm("Are you sure to delete ?")) {
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
       this.blockUI.start('Deleting....');
       const farmIds: string[] = (this.farmList.filter(x => x.isChecked === true)).map(x => x._id);
       if (farmIds && farmIds.length > 0) {
@@ -108,14 +117,22 @@ export class FarmListComponent implements OnInit, OnDestroy {
         this.toastrService.error("Please select farms to delete.", "Error");
         this.blockUI.stop();
       }
-    }
+      deleteModal.close();
+    });
   }
 
   deleteFarmRecord = (farmerId: any) => {
-    if(confirm("Are you sure to delete ?")) {
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+  
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
       this.blockUI.start('Deleting....');
       this.proceedDelete([].concat(farmerId));
-    }
+      deleteModal.close();
+    });
   }
 
   proceedDelete = (farmIds: string[]) => {
