@@ -35,6 +35,11 @@ export class PercentageFeedingListComponent implements OnInit {
   page: any = 1;
   percentageFeedSubscriptions: Subscription[] = [];
   filterForm! : FormGroup;
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+    pondList: []
+  }
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -66,6 +71,9 @@ export class PercentageFeedingListComponent implements OnInit {
   resetFilters = () => {
     this.filterForm.reset();
     this.percentageFeedingList = this.initialPercentageFeedingList;
+    this.farmList = [];
+    this.pondList = [];
+    this.ownerList = this.initialData.ownerList;
   }
 
   filterChange = (event: any) => {
@@ -76,12 +84,24 @@ export class PercentageFeedingListComponent implements OnInit {
 
     if(owner){
       this.percentageFeedingList = this.percentageFeedingList.filter(x => x.owner._id === owner);
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
+      if (filteredFarmList && filteredFarmList.length > 0) {
+        this.farmList = filteredFarmList;
+      } else {
+        this.farmList = [];
+      }
     }
     if(farmer){
       this.percentageFeedingList = this.percentageFeedingList.filter(x => x.farmer._id === farmer);
+      const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farmer) && (x.owner && x.owner._id === owner));
+      if (pondList && pondList.length > 0) {
+        this.pondList = pondList;
+      } else {
+        this.pondList = [];
+      }
     }
     if(pond){
-      this.percentageFeedingList = this.percentageFeedingList.filter(x => x.pond._id === pond);
+      this.percentageFeedingList = this.initialPercentageFeedingList.filter(x => x.pond?._id === pond);
     }
   }
 
@@ -107,16 +127,19 @@ export class PercentageFeedingListComponent implements OnInit {
     this.percentageFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
         this.ownerList = ownerRes.result;
+        this.initialData.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.pondList = resPonds.result;
+        this.initialData.pondList = resPonds.result;
+        this.pondList = [];
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
+        this.initialData.farmList = farmRes.result;
+        this.farmList = [];
       }
     }))
     this.blockUI.stop();
@@ -229,9 +252,9 @@ export class PercentageFeedingListComponent implements OnInit {
       this.blockUI.start('Exporting Excel...');
       const csvData: any[] = this.percentageFeedingList.map(x => {
         return {
-          'Owner': x.owner.firstName,
-          'Farm': x.farmer.farmName,
-          'Pond': x.pond.pondNo,
+          'Owner': x.owner?.firstName,
+          'Farm': x.farmer?.farmName,
+          'Pond': x.pond?.pondNo,
           'Average Body Weight': x.averageBodyWeight,
           'Feed Percentage' : x.feedPercentage,
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD')
@@ -244,9 +267,9 @@ export class PercentageFeedingListComponent implements OnInit {
       this.blockUI.start('Exporting Pdf...');
       const pdfData: any[] = this.percentageFeedingList.map(x => {
         return {
-          'Owner': x.owner.firstName,
-          'Farm': x.farmer.farmName,
-          'Pond': x.pond.pondNo,
+          'Owner': x.owner?.firstName,
+          'Farm': x.farmer?.farmName,
+          'Pond': x.pond?.pondNo,
           'Average Body Weight': x.averageBodyWeight,
           'Feed Percentage' : x.feedPercentage,
           'Created On':  moment(x.createdOn).format('YYYY-MM-DD')

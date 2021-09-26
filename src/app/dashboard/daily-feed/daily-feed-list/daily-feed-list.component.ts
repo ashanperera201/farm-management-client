@@ -37,6 +37,11 @@ export class DailyFeedListComponent implements OnInit {
   page: any = 1;
   dailyFeedSubscriptions: Subscription[] = [];
   filterForm!: FormGroup;
+  initialData: any = {
+    farmList: [],
+    ownerList: [],
+    pondList: []
+  }
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -69,6 +74,9 @@ export class DailyFeedListComponent implements OnInit {
   resetFilters = () => {
     this.filterForm.reset();
     this.dailyFeedList = this.initialDailyFeedList;
+    this.farmList =   [];
+    this.pondList =   [];
+    this.ownerList = this.initialData.ownerList;
   }
 
 
@@ -80,12 +88,24 @@ export class DailyFeedListComponent implements OnInit {
 
     if(owner){
       this.dailyFeedList = this.dailyFeedList.filter(x => x.owner._id === owner);
+      const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
+      if (filteredFarmList && filteredFarmList.length > 0) {
+        this.farmList = filteredFarmList;
+      } else {
+        this.farmList = [];
+      }
     }
     if(farmer){
       this.dailyFeedList = this.dailyFeedList.filter(x => x.farmer._id === farmer);
+      const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farmer) && (x.owner && x.owner._id === owner));
+      if (pondList && pondList.length > 0) {
+        this.pondList = pondList;
+      } else {
+        this.pondList = [];
+      }
     }
     if(pond){
-      this.dailyFeedList = this.dailyFeedList.filter(x => x.pond._id === pond);
+      this.dailyFeedList = this.initialDailyFeedList.filter(x => x.pond?._id === pond);
     }
   }
 
@@ -108,19 +128,22 @@ export class DailyFeedListComponent implements OnInit {
     this.blockUI.start('Fetching Data...');
     this.dailyFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
+        this.initialData.ownerList = ownerRes.result;
         this.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.pondList = resPonds.result;
+        this.initialData.pondList = resPonds.result;
+        this.pondList = [];
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.farmList = farmRes.result;
+        this.initialData.farmList = farmRes.result;
+        this.farmList = [];
       }
-    }))
+    }));
     this.blockUI.stop();
   }
 

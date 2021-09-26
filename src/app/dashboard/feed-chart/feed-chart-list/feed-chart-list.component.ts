@@ -90,16 +90,16 @@ export class FeedChartListComponent implements OnInit {
     const pond = this.filterForm.get("pond")?.value;
 
     if(owner){
-      this.farmList = this.initialData.farmList.filter((x: any) => x.owner._id === owner);
+      this.farmList = this.initialData.farmList.filter((x: any) => x.owner?._id === owner);
     }
     if(farmer){
-      this.pondList = this.initialData.pondList.filter((x: any) => x.farmer._id === farmer);
+      this.pondList = this.initialData.pondList.filter((x: any) => x.farmer?._id === farmer);
     }
 
     if (pond) {
-      const stock = this.stockDetails.find(sd => sd.farmer._id === farmer && sd.pond._id === pond);
-      this.percentageFeedingList = this.percentageFeedingList.filter((x: any) => x.pond._id === pond);
-      this.weelySamplingList = this.weelySamplingList.filter((x: any) =>  x.pond._id === pond);
+      const stock = this.stockDetails.find(sd => sd.farmer?._id === farmer && sd.pond?._id === pond);
+      this.percentageFeedingList = this.percentageFeedingList.filter((x: any) => x.pond?._id === pond);
+      this.weelySamplingList = this.weelySamplingList.filter((x: any) =>  x.pond?._id === pond);
       if (this.filterForm.get("feedFrequency")?.value) {
         this.calculateDateOfCulture(stock);
       }      
