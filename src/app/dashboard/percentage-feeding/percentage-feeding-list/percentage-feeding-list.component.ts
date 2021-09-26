@@ -13,6 +13,8 @@ import { PercentageFeedingService } from '../../../shared/services/percentage-fe
 import { PondService } from './../../../shared/services/pond.service';
 import { FarmService } from './../../../shared/services/farm.service';
 import { ClubMemberService } from '../../../shared/services/club-member.service';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 
 @Component({
   selector: 'app-percentage-feeding-list',
@@ -43,7 +45,8 @@ export class PercentageFeedingListComponent implements OnInit {
     private pondService : PondService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService
+    private fileService: FileService,
+    private customAlertService: CustomAlertService
   ) { }
 
   ngOnInit(): void {
@@ -158,19 +161,37 @@ export class PercentageFeedingListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    this.blockUI.start('Deleting....');
-    const pfIds: string[] = (this.percentageFeedingList.filter(x => x.isChecked === true)).map(x => x._id);
-    if (pfIds && pfIds.length > 0) {
-      this.proceedDelete(pfIds);
-    } else {
-      this.toastrService.error("Please select items to delete.", "Error");
-      this.blockUI.stop();
-    }
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      const pfIds: string[] = (this.percentageFeedingList.filter(x => x.isChecked === true)).map(x => x._id);
+      if (pfIds && pfIds.length > 0) {
+        this.proceedDelete(pfIds);
+      } else {
+        this.toastrService.error("Please select items to delete.", "Error");
+        this.blockUI.stop();
+      }
+      deleteModal.close();
+    });
   }
   
   deleteRecord = (pfId: any) => {
-    this.blockUI.start('Deleting....');
-    this.proceedDelete([].concat(pfId));
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      this.proceedDelete([].concat(pfId));
+      deleteModal.close();
+    });
   }
   
   proceedDelete = (pfIds: string[]) => {

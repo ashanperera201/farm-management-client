@@ -279,6 +279,7 @@ export class StockAddComponent implements OnInit, DoCheck {
             if (cycleVal) {
               this.cycleValue = +cycleVal + 1;
               localStorage.setItem('cycle-count', this.cycleValue + '');
+              this.addStockForm.get("cycle")?.patchValue('cycle' + this.cycleValue);
             }
             this.toastrService.success("Stock data saved successfully.", "Successfully Saved");
           }

@@ -10,6 +10,8 @@ import { ClubMemberAddComponent } from '../club-member-add/club-member-add.compo
 import * as moment from 'moment';
 import { Store } from '@ngrx/store';
 import { AppState, removeClubMember, setClubMember, updateClubMember } from '../../../redux';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 
 
 @Component({
@@ -34,7 +36,8 @@ export class ClubMemberListComponent implements OnInit {
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fileService: FileService,
-    private store: Store<AppState>) { }
+    private store: Store<AppState>,
+    private customAlertService: CustomAlertService) { }
 
   ngOnInit(): void {
     this.fetchClubMembers();
@@ -102,7 +105,12 @@ export class ClubMemberListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    if(confirm("Are you sure to delete ?")) {
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
       this.blockUI.start('Deleting....');
       const clubMemberIds: string[] = (this.clubMemberList.filter(x => x.isChecked === true)).map(x => x._id);
       if (clubMemberIds && clubMemberIds.length > 0) {
@@ -111,14 +119,21 @@ export class ClubMemberListComponent implements OnInit {
         this.toastrService.error("Please select items to delete.", "Error");
         this.blockUI.stop();
       }
-    }
+      deleteModal.close();
+    });
   }
 
   deleteClubMemberRecord = (clubMemberId: any) => {
-      if(confirm("Are you sure to delete ?")) {
-        this.blockUI.start('Deleting....');
-        this.proceedDelete([].concat(clubMemberId));
-      }
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+  
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      this.proceedDelete([].concat(clubMemberId));
+      deleteModal.close();
+    });
   }
 
   proceedDelete = (clubMemberIds: string[]) => {

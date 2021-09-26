@@ -16,6 +16,8 @@ import { FileService } from 'src/app/shared/services/file.service';
 import { PondService } from 'src/app/shared/services/pond.service';
 import { WeeklyApplicationsService } from 'src/app/shared/services/weekly-applications.service';
 import { WeeklyApplicationAddComponent } from '../weekly-application-add/weekly-application-add.component';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 
 @Component({
   selector: 'app-weekly-application-list',
@@ -46,7 +48,8 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     private store: Store<AppState>,
     private clubMemberService: ClubMemberService,
     private farmService: FarmService,
-    private pondService: PondService) { }
+    private pondService: PondService,
+    private customAlertService: CustomAlertService) { }
 
   ngOnInit(): void {
     this.initFilterForm();
@@ -170,19 +173,37 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
 
 
   deleteSelected = () => {
-    this.blockUI.start('Deleting....');
-    const pfIds: string[] = (this.weeklyApplicationList.filter(x => x.isChecked === true)).map(x => x._id);
-    if (pfIds && pfIds.length > 0) {
-      this.proceedDelete(pfIds);
-    } else {
-      this.toastrService.error("Please select items to delete.", "Error");
-      this.blockUI.stop();
-    }
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      const pfIds: string[] = (this.weeklyApplicationList.filter(x => x.isChecked === true)).map(x => x._id);
+      if (pfIds && pfIds.length > 0) {
+        this.proceedDelete(pfIds);
+      } else {
+        this.toastrService.error("Please select items to delete.", "Error");
+        this.blockUI.stop();
+      }
+      deleteModal.close();
+    });
   }
 
   deleteRecord = (pfId: any) => {
-    this.blockUI.start('Deleting....');
-    this.proceedDelete([].concat(pfId));
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      this.proceedDelete([].concat(pfId));
+      deleteModal.close();
+    });
   }
 
   proceedDelete = (weeklyApplicationIds: string[]) => {

@@ -8,6 +8,8 @@ import { FileService } from '../../../shared/services/file.service';
 import { ExportTypes } from '../../../../app/shared/enums/export-type';
 import { PondService } from '../../../../app/shared/services/pond.service';
 import { PondAddComponent } from '../pond-add/pond-add.component';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 
 @Component({
   selector: 'app-pond-list',
@@ -30,7 +32,8 @@ export class PondListComponent implements OnInit {
     private pondService: PondService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
-    private fileService: FileService) { }
+    private fileService: FileService,
+    private customAlertService: CustomAlertService) { }
 
   ngOnInit(): void {
     this.fetchPondsList();
@@ -96,19 +99,37 @@ export class PondListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    this.blockUI.start('Deleting....');
-    const pondIds: string[] = (this.pondList.filter(x => x.isChecked === true)).map(x => x._id);
-    if (pondIds && pondIds.length > 0) {
-      this.proceedDelete(pondIds);
-    } else {
-      this.toastrService.error("Please select items to delete.", "Error");
-      this.blockUI.stop();
-    }
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      const pondIds: string[] = (this.pondList.filter(x => x.isChecked === true)).map(x => x._id);
+      if (pondIds && pondIds.length > 0) {
+        this.proceedDelete(pondIds);
+      } else {
+        this.toastrService.error("Please select items to delete.", "Error");
+        this.blockUI.stop();
+      }
+      deleteModal.close();
+    });
   }
 
   deleteRecord = (pondId: any) => {
-    this.blockUI.start('Deleting....');
-    this.proceedDelete([].concat(pondId));
+    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+
+    (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
+      deleteModal.close();
+    });
+
+    (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+      this.blockUI.start('Deleting....');
+      this.proceedDelete([].concat(pondId));
+      deleteModal.close();
+    });
   }
 
   proceedDelete = (pondIds: string[]) => {
