@@ -64,6 +64,7 @@ export class HarvestListComponent implements OnInit {
     if (addFarmModal.componentInstance.afterSave) {
       addFarmModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
+          this.harvestList = Object.assign([], this.harvestList)
           this.harvestList.unshift(res);
         }
       });

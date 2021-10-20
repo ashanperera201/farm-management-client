@@ -20,7 +20,7 @@ export class FeedBrandListComponent implements OnInit {
 
   @BlockUI() blockUI!: NgBlockUI;
 
-  isAllChecked! : boolean;
+  isAllChecked!: boolean;
   feedBrandList: any[] = [];
   feedBrandIdList: any[] = [];
   filterParam!: string;
@@ -63,6 +63,7 @@ export class FeedBrandListComponent implements OnInit {
     if (addFeedBrandModal.componentInstance.afterSave) {
       addFeedBrandModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res && res.feedBrand) {
+          this.feedBrandList = Object.assign([], this.feedBrandList)
           this.feedBrandList.unshift(res.feedBrand);
         }
       });
@@ -81,7 +82,7 @@ export class FeedBrandListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -101,7 +102,7 @@ export class FeedBrandListComponent implements OnInit {
   }
 
   deleteRecord = (feedId: any) => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -153,7 +154,7 @@ export class FeedBrandListComponent implements OnInit {
           'Grades': x.grades,
           'Price': x.price,
           'Shrimp Weight': x.shrimpWeight,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
         }
       });
       this.fileService.exportAsExcelFile(csvData, "feed_brands");
@@ -167,7 +168,7 @@ export class FeedBrandListComponent implements OnInit {
           'Grades': x.grades,
           'Price': x.price,
           'Shrimp Weight': x.shrimpWeight,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
         }
       });
       const headers: any[] = ['Brand Name', 'Grades', 'Price', 'Shrimp Weight', 'Created On'];

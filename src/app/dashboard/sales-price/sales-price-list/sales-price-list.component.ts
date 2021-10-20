@@ -65,9 +65,7 @@ export class SalesPriceListComponent implements OnInit {
       modalDialogClass: 'modal-md',
     });
     addSalesPriceModal.componentInstance.afterSave.subscribe((res: any) => {
-      if (res && res.result) {
-        this.salesPriceList.unshift(res.result);
-      }
+      this.fetchSalesPrice();
     });
   }
 
@@ -93,7 +91,7 @@ export class SalesPriceListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -113,7 +111,7 @@ export class SalesPriceListComponent implements OnInit {
   }
 
   deleteRecord = (pfId: any) => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();

@@ -66,6 +66,7 @@ export class ClubMemberListComponent implements OnInit {
     });
     addClubMemberModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res && res.clubMember) {
+        this.clubMemberList = Object.assign([],this.clubMemberList)
         this.clubMemberList.unshift(res.clubMember);
       }
     });
@@ -83,9 +84,9 @@ export class ClubMemberListComponent implements OnInit {
     if (addClubMemberModal.componentInstance.afterSave) {
       addClubMemberModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
-           const index = this.clubMemberList.findIndex((up: any) => up._id === res._id);
+          const index = this.clubMemberList.findIndex((up: any) => up._id === res._id);
           let clubMemberRefs = JSON.parse(JSON.stringify(this.clubMemberList));
-  
+
           clubMemberRefs[index].firstName = res.firstName;
           clubMemberRefs[index].lastName = res.lastName;
           clubMemberRefs[index].email = res.email;
@@ -95,7 +96,7 @@ export class ClubMemberListComponent implements OnInit {
           clubMemberRefs[index].userName = res.userName;
           clubMemberRefs[index].password = res.password;
           clubMemberRefs[index].nic = res.nic;
-  
+
           this.clubMemberList = [...clubMemberRefs];
           // ** 
           this.store.dispatch(updateClubMember(this.clubMemberList[index]));
@@ -105,7 +106,7 @@ export class ClubMemberListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
     });
@@ -124,11 +125,11 @@ export class ClubMemberListComponent implements OnInit {
   }
 
   deleteClubMemberRecord = (clubMemberId: any) => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
     });
-  
+
     (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
       this.blockUI.start('Deleting....');
       this.proceedDelete([].concat(clubMemberId));

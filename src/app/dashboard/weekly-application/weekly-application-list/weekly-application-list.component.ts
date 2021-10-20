@@ -158,6 +158,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     });
     addWeeklyApplicationModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res) {
+        this.weeklyApplicationList = Object.assign([], this.weeklyApplicationList)
         this.weeklyApplicationList.unshift(res);
       }
     });

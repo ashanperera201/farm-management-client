@@ -148,6 +148,7 @@ export class WeeklySamplingListComponent implements OnInit {
     });
     addWeeklySamplingModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res) {
+        this.weelySamplingList = Object.assign([], this.weelySamplingList)
         this.weelySamplingList.unshift(res);
       }
     });

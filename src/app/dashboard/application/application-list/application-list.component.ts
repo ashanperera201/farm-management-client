@@ -66,6 +66,7 @@ fetchApplicationsList = () => {
   if (addApplicationModal.componentInstance.afterSave) {
     addApplicationModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res && res.applications) {
+        this.applicationList = Object.assign([],this.applicationList)
         this.applicationList.unshift(res.applications);
       }
     })

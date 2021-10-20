@@ -108,7 +108,7 @@ export class FeedChartListComponent implements OnInit {
 
   calculateDateOfCulture = (stock: any) => {
     if (stock) {
-      this.blockUI.start('Fetching data........');
+      // this.blockUI.start('Fetching data........');
       //const currentDate = new Date();
       const stockDate = new Date(stock.dateOfStocking);
       const subtractedDate = this.currentDate.getDate() - stockDate.getDate();
@@ -136,6 +136,7 @@ export class FeedChartListComponent implements OnInit {
   }
 
   calculateData(doc: any) {
+    debugger 
     const currentDate: any = new Date();
     if (currentDate.getTime() > doc.getTime()) {
       const diffTime = Math.abs(currentDate - doc);

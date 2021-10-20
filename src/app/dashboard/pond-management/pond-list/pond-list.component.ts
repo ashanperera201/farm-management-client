@@ -62,6 +62,7 @@ export class PondListComponent implements OnInit {
     if (addPondModal.componentInstance.afterSave) {
       this.pondListSubscriptions.push(addPondModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
+          this.pondList = Object.assign([], this.pondList)
           this.pondList.unshift(res);
         }
       }));

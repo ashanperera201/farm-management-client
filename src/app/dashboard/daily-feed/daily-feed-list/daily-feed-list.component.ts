@@ -157,6 +157,7 @@ export class DailyFeedListComponent implements OnInit {
     });
     addDailyFeedrModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res) {
+        this.dailyFeedList = Object.assign([],this.dailyFeedList)
         this.dailyFeedList.unshift(res);
       }
     });

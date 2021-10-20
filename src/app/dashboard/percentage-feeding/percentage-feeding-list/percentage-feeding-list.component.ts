@@ -154,6 +154,7 @@ export class PercentageFeedingListComponent implements OnInit {
     });
     addPercentageFeedingrModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res) {
+        this.percentageFeedingList = Object.assign([], this.percentageFeedingList)
         this.percentageFeedingList.unshift(res);
       }
     });

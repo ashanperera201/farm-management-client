@@ -65,6 +65,7 @@ export class FarmListComponent implements OnInit, OnDestroy {
     if (addFarmModal.componentInstance.afterSave) {
       this.farmListSubscriptions.push(addFarmModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
+            this.farmList = Object.assign([],this.farmList)
             this.farmList.unshift(res);
         }
       }));
