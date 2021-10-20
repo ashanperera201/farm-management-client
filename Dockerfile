@@ -20,4 +20,4 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 4150
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD npm run start
