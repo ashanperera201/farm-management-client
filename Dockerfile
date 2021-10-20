@@ -16,8 +16,9 @@ FROM nginx:stable-alpine
 
 COPY --from=builder /usr/src/app/dist/farm-management-client /usr/share/nginx/html
 
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+# COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+
+# COPY nginx.conf /etc/nginx/nginx.conf
+# COPY /dist/farm-management-client /usr/share/nginx/html
 
 EXPOSE 4150
-
-CMD npm run start
