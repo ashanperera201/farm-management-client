@@ -68,7 +68,7 @@ export class StockAddComponent implements OnInit, DoCheck {
   }
 
   ngDoCheck() {
-    this.addStockForm.get('actualPlRemains')?.patchValue(this.addStockForm.value.plCount);
+    // this.addStockForm.get('actualPlRemains')?.patchValue(this.addStockForm.value.plCount);
   }
 
   configValues = () => {
@@ -149,11 +149,11 @@ export class StockAddComponent implements OnInit, DoCheck {
       dateOfStocking: new FormControl(null, Validators.compose([Validators.required])),
       fullStocked: new FormControl(null, Validators.compose([Validators.required])),
       plPrice: new FormControl(null, Validators.compose([Validators.required])),
-      actualPlRemains: new FormControl(null, Validators.compose([Validators.required])),
+      // actualPlRemains: new FormControl(null, Validators.compose([Validators.required])),
       cycle: new FormControl(null, Validators.compose([Validators.required])),
     });
 
-    this.addStockForm.controls['actualPlRemains'].disable();
+    // this.addStockForm.controls['actualPlRemains'].disable();
     this.addStockForm.controls['cycle'].disable();
   }
 
@@ -242,7 +242,7 @@ export class StockAddComponent implements OnInit, DoCheck {
         stock.dateOfStocking = this.parserFormatter.format(stockForm.dateOfStocking);
         stock.fullStocked = stockForm.fullStocked;
         stock.plPrice = stockForm.plPrice;
-        stock.actualPlRemains = stockForm.actualPlRemains;
+        // stock.actualPlRemains = stockForm.actualPlRemains;
         stock.cycle = stockForm.cycle;
 
         this.stockService.updateStock(stock).subscribe(res => {
@@ -267,7 +267,7 @@ export class StockAddComponent implements OnInit, DoCheck {
         stock.dateOfStocking = this.parserFormatter.format(stockForm.dateOfStocking);
         stock.fullStocked = stockForm.fullStocked;
         stock.plPrice = stockForm.plPrice;
-        stock.actualPlRemains = stockForm.actualPlRemains;
+        // stock.actualPlRemains = stockForm.actualPlRemains;
         stock.cycle = stockForm.cycle;
 
         this.stockService.saveStock(stock).subscribe(res => {

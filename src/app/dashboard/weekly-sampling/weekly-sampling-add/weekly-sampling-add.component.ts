@@ -44,6 +44,12 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
     pondList: []
   }
 
+  weeks: any[] = [
+    {
+      
+    }
+  ]
+
   constructor(
     private pondService: PondService,
     private clubMemberService: ClubMemberService,

@@ -5,6 +5,7 @@
     "ng": "ng",
     "heroku-postbuild": "ng build --prod",
     "start": "node server.js",
+    "dev:start": "ng serve --o",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

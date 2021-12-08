@@ -10,13 +10,15 @@ import { PondListComponent } from './pond-list/pond-list.component';
 import { PondAddComponent } from './pond-add/pond-add.component';
 import { PondCardComponent } from './pond-card/pond-card.component';
 import { PondRoutingModule } from './pond-management.routing';
+import { PondAddMultipleComponent } from './pond-add-multiple/pond-add-multiple.component';
 
 @NgModule({
   declarations: [
     PondManagementComponent,
     PondListComponent,
     PondAddComponent,
-    PondCardComponent
+    PondCardComponent,
+    PondAddMultipleComponent
   ],
   imports: [
     CommonModule,

@@ -61,10 +61,10 @@ export class PondAddComponent implements OnInit {
         this.addPondForm.patchValue(form);
         this.ownerOnChange();
         this.addPondForm.get("farmer")?.patchValue(form.farmer);
+      }
     }
+    this.blockUI.stop();
   }
-  this.blockUI.stop();
-}
 
   patchExistsRecord = () => {
     const pond = Object.assign({}, this.existingPond);
@@ -119,6 +119,12 @@ export class PondAddComponent implements OnInit {
     }
   }
 
+  farmOnChange = () => {
+    const farmId = this.addPondForm.get('farmer')?.value;
+    const pondCount = this.farmList.find(x => x._id === farmId);
+    debugger
+  }
+
   savePond = () => {
     this.blockUI.start('Processing.....');
     if (this.addPondForm.valid) {
@@ -143,8 +149,8 @@ export class PondAddComponent implements OnInit {
           this.blockUI.stop();
           this.toastrService.error("Unable to update pond data", "Error");
         });
-    }
-    else {
+      }
+      else {
         const pond = new pondModel();
         pond.owner = this.addPondForm.value.owner;
         pond.farmer = this.addPondForm.value.farmer;
@@ -165,12 +171,12 @@ export class PondAddComponent implements OnInit {
           this.blockUI.stop();
           this.toastrService.error("Unable to save pond data", "Error");
         });
-    }
+      }
     }
   }
 
   setOwnerAndFarm = (result: any): any => {
-    const owner: any = this.initialData.ownerList.find((x:any) => x._id === result.owner);
+    const owner: any = this.initialData.ownerList.find((x: any) => x._id === result.owner);
     const farm: any = this.farmList.find(x => x._id === result.farmer);
     if (owner || farm) {
       result.owner = owner;

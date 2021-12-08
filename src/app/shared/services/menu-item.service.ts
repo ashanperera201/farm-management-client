@@ -117,30 +117,30 @@ export class MenuItemService {
         isMenuOpened: false,
         subItems: []
       },
-      {
-        id: 9,
-        displayName: 'Feed Chart',
-        route: '/dashboard/feed-chart/view-all',
-        svgIconPath: './assets/media/svg/icons/Communication/Dial-numbers.svg',
-        classes: 'menu-item',
-        activeClass: '',
-        selected: false,
-        isMenuHeading: false,
-        isMenuOpened: false,
-        subItems: []
-      },
-      {
-        id: 10,
-        displayName: 'Percentage of feeding',
-        route: '/dashboard/percentage-feeding/view-all',
-        svgIconPath: './assets/media/svg/icons/Electric/Outlet.svg',
-        classes: 'menu-item',
-        activeClass: '',
-        selected: false,
-        isMenuHeading: false,
-        isMenuOpened: false,
-        subItems: []
-      },
+      // {
+      //   id: 9,
+      //   displayName: 'Feed Chart',
+      //   route: '/dashboard/feed-chart/view-all',
+      //   svgIconPath: './assets/media/svg/icons/Communication/Dial-numbers.svg',
+      //   classes: 'menu-item',
+      //   activeClass: '',
+      //   selected: false,
+      //   isMenuHeading: false,
+      //   isMenuOpened: false,
+      //   subItems: []
+      // },
+      // {
+      //   id: 10,
+      //   displayName: 'Percentage of feeding',
+      //   route: '/dashboard/percentage-feeding/view-all',
+      //   svgIconPath: './assets/media/svg/icons/Electric/Outlet.svg',
+      //   classes: 'menu-item',
+      //   activeClass: '',
+      //   selected: false,
+      //   isMenuHeading: false,
+      //   isMenuOpened: false,
+      //   subItems: []
+      // },
       {
         id: 11,
         displayName: 'Daily Feed',
@@ -272,18 +272,18 @@ export class MenuItemService {
             isMenuOpened: false,
             subItems: []
           },
-          {
-            id: 6,
-            displayName: 'Percentage Feeding',
-            route: '/dashboard/report-management/percentage-feeding',
-            svgIconPath: '',
-            classes: 'menu-item',
-            activeClass: '',
-            selected: false,
-            isMenuHeading: false,
-            isMenuOpened: false,
-            subItems: []
-          },
+          // {
+          //   id: 6,
+          //   displayName: 'Percentage Feeding',
+          //   route: '/dashboard/report-management/percentage-feeding',
+          //   svgIconPath: '',
+          //   classes: 'menu-item',
+          //   activeClass: '',
+          //   selected: false,
+          //   isMenuHeading: false,
+          //   isMenuOpened: false,
+          //   subItems: []
+          // },
           {
             id: 7,
             displayName: 'Pond Brand Detail',

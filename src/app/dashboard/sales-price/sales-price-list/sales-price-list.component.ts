@@ -11,8 +11,9 @@ import { FileService } from '../../../shared/services/file.service';
 import { SalesPriceService } from '../../../shared/services/sales-price.service';
 import { SalesPriceAddComponent } from '../sales-price-add/sales-price-add.component';
 import { removeSalesPrice } from '../../../redux/actions/sales-price.actions';
-import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
-import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
+import { CustomAlertComponent } from '../../../shared/components/custom-alert/custom-alert.component';
+import { CustomAlertService } from '../../../shared/components/custom-alert/custom-alert.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-sales-price-list',
@@ -30,6 +31,9 @@ export class SalesPriceListComponent implements OnInit {
   exportTypes = ExportTypes;
   pageSize: number = 10;
   page: any = 1;
+
+  storeData: any;
+  worksheet: any;
 
   constructor(
     private salesPriceService: SalesPriceService,
@@ -153,6 +157,28 @@ export class SalesPriceListComponent implements OnInit {
   singleSelectionChange = (index: number) => {
     this.isAllChecked = false;
     this.salesPriceList[index]['isChecked'] = !this.salesPriceList[index]['isChecked'];
+  }
+
+  onFileChange = (event: any) => {
+    const target: DataTransfer = <DataTransfer>(event.target);
+    if (target.files.length !== 1) {
+      throw new Error('Cannot use multiple files');
+    }
+    const reader: FileReader = new FileReader();
+    reader.readAsBinaryString(target.files[0]);
+    reader.onload = (e: any) => {
+      const binarystr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
+
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      const userData = XLSX.utils.sheet_to_json(ws);
+
+      this.salesPriceService.saveSalesPriceCollection(userData).subscribe(res => { 
+        this.fetchSalesPrice();
+      })
+    };
   }
 
   exportSalesPriceList = (type: any) => {

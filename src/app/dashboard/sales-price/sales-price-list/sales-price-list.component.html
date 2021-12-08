@@ -4,10 +4,17 @@
       <h3 class="card-label">Sales Price List</h3>
     </div>
     <div class="card-toolbar">
-      <a type="button" class="btn btn-primary m-1" (click)="addNewSalesPrice()" *ngxPermissionsOnly="['ADD_SALES_PRICE']"><i class="fa fa-plus"
-          aria-hidden="true"></i> Add Sales Price</a>
-      <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()" *ngxPermissionsOnly="['DELETE_SALES_PRICES']"><i class="fa fa-trash"
-          aria-hidden="true"></i>Delete Sales Price</a>
+      <a type="button" class="btn btn-primary m-1" (click)="fileUplaod.click()"><i class="fas fa-file-alt"></i> Upload Sales
+        Price</a>
+      <a type="button" class="btn btn-primary m-1" (click)="addNewSalesPrice()"
+        *ngxPermissionsOnly="['ADD_SALES_PRICE']"><i class="fa fa-plus" aria-hidden="true"></i> Add Sales Price</a>
+      <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"
+        *ngxPermissionsOnly="['DELETE_SALES_PRICES']"><i class="fa fa-trash" aria-hidden="true"></i>Delete Sales
+        Price</a>
+
+      <input type="file" #fileUplaod class="fileUplaod"
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+        (change)="onFileChange($event)" multiple="false" />
     </div>
   </div>
   <div class="card-body">

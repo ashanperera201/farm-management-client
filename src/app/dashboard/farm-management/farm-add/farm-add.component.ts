@@ -66,7 +66,7 @@ export class FarmAddComponent implements OnInit, OnDestroy {
     this.addFarmForm = new FormGroup({
       owner: new FormControl(null, Validators.compose([Validators.required])),
       farmName: new FormControl(null, Validators.compose([Validators.required])),
-      contactNo: new FormControl(null, Validators.compose([Validators.required])),
+      // contactNo: new FormControl(null, Validators.compose([Validators.required])),
       address: new FormControl(null, Validators.compose([Validators.required])),
       pondCount: new FormControl(null, Validators.compose([Validators.required, Validators.min(0)])),
     });
