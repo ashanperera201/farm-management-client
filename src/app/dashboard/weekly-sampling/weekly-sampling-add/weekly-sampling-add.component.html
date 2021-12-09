@@ -11,7 +11,7 @@
   <div [formGroup]="addWeeklySamplingForm">
     <div class="form-row mb-4">
       <div class="col">
-        <label class="font-size-h7  text-dark required">Owner</label>
+        <label class="font-size-h7  text-dark required">Club Member</label>
         <select name="owner" id="owner" formControlName="owner" class="form-control" (change)="ownerOnChange()">
           <option value=null disabled selected>Select Owner</option>
           <option *ngFor="let o of initialData?.ownerList" [value]="o._id">{{o.firstName}} {{o.lastName}}</option>
@@ -26,21 +26,14 @@
         </div> -->
       </div>
       <div class="col">
-        <label class="font-size-h7  text-dark required">Owner</label>
-        <select name="owner" id="owner" formControlName="owner" class="form-control" (change)="ownerOnChange()">
-          <option value=null disabled selected>Select Owner</option>
-          <option *ngFor="let o of initialData?.ownerList" [value]="o._id">{{o.firstName}} {{o.lastName}}</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-row mb-4">
-      <div class="col">
         <label class="font-size-h7  text-dark required">Farm</label>
         <select name="farm" id="farm" formControlName="farmer" class="form-control" (change)="farmOnChange()">
           <option value=null disabled selected>Select Farm</option>
           <option *ngFor="let f of farmList" [value]="f._id">{{f.farmName}}</option>
         </select>
       </div>
+    </div>
+    <div class="form-row mb-4">    
       <div class="col">
         <label class="font-size-h7  text-dark required">Pond</label>
         <select name="farm" id="farm" formControlName="pond" class="form-control">
@@ -48,11 +41,18 @@
           <option *ngFor="let pond of pondList" [value]="pond._id">{{pond.pondNo}}</option>
         </select>
       </div>
-    </div>
-    <div class="form-row mb-4">
       <div class="col">
         <label class="font-size-h7  text-dark required">Date of Culture</label>
         <input type="text" class="form-control" placeholder="Date of Culture" formControlName="dateOfCulture">
+      </div>
+    </div>
+    <div class="form-row mb-4">
+      <div class="col">
+        <label class="font-size-h7  text-dark required">Week No</label>
+        <select name="week" id="week" formControlName="week" class="form-control">
+          <option value=null disabled selected>Select Week</option>
+          <option *ngFor="let week of weeks" [value]="week.value">{{week.description}}</option>
+        </select>
       </div>
       <div class="col">
         <label class="font-size-h7  text-dark required">Total Bio Mass</label>

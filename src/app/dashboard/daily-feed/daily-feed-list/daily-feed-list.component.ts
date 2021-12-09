@@ -182,7 +182,8 @@ export class DailyFeedListComponent implements OnInit {
           feedRef[index].owner = res.owner;
           feedRef[index].farmer = res.farmer;
           feedRef[index].pondNo = res.pondNo;
-          feedRef[index].dailyFeedDate = res.dailyFeedDate;
+          // feedRef[index].dailyFeedDate = res.dailyFeedDate;
+          feedRef[index].week = res.week;
           feedRef[index].calculatedDailyFeed = res.calculatedDailyFeed;
           feedRef[index].actualNumberOfKilos = res.actualNumberOfKilos;
           feedRef[index].remark = res.remark;

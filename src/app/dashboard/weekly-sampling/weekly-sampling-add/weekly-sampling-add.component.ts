@@ -44,11 +44,7 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
     pondList: []
   }
 
-  weeks: any[] = [
-    {
-      
-    }
-  ]
+  weeks: any[] = [];
 
   constructor(
     private pondService: PondService,
@@ -102,6 +98,7 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
           this.initialData.pondList = pondServiceRes.result;
         }
         this.configValues();
+        this.getWeekNumber();
         this.blockUI.stop();
       }, (e) => {
         this.blockUI.stop();
@@ -152,6 +149,7 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
       owner: new FormControl(null, Validators.compose([Validators.required])),
       pond: new FormControl(null, Validators.compose([Validators.required])),
       dateOfCulture: new FormControl(null, Validators.compose([Validators.required])),
+      week: new FormControl(null, Validators.compose([Validators.required])),
       totalWeight: new FormControl(null, Validators.compose([Validators.required])),
       totalShrimp: new FormControl(null, Validators.compose([Validators.required])),
       averageBodyWeight: new FormControl(null, Validators.compose([Validators.required])),
@@ -250,6 +248,7 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
         existsSample.owner = formRawValues.owner;
         existsSample.pond = formRawValues.pond;
         existsSample.dateOfCulture = formRawValues.dateOfCulture;
+        existsSample.week = formRawValues.week;
         existsSample.totalWeight = formRawValues.totalWeight;
         existsSample.totalShrimp = formRawValues.totalShrimp;
         existsSample.averageBodyWeight = formRawValues.averageBodyWeight;
@@ -298,6 +297,17 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
           this.blockUI.stop();
         }));
       }
+    }
+  }
+
+  getWeekNumber = () => {
+    for (let i = 1; i <= 25; i++) {
+      this.weeks.push(
+        {
+          value: 'week' + i,
+          description: 'Week ' + i
+        }
+      );
     }
   }
 
