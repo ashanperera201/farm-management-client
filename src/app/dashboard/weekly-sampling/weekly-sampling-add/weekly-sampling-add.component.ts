@@ -25,6 +25,7 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
   @Input() isEditMode: boolean = false;
   @Input() existingWeeklySampling: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+  @Input() weeklySamplingFormData: any[] = [];
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -256,46 +257,59 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
         existsSample.gainInWeight = formRawValues.gainInWeight;
         existsSample.expectedSurvivalPercentage = formRawValues.expectedSurvivalPercentage;
 
-        this.weeklySamplingSubscription.push(this.weeklySamplingService.updateWeeklySampling(existsSample).subscribe(serviceRes => {
-          if (serviceRes) {
-            existsSample.farmer = farmer;
-            existsSample.owner = owner;
-            existsSample.pond = pond;
-
-            this.afterSave.emit(existsSample);
-            this.store.dispatch(updateWeeklySamplings(existsSample));
-            this.toastrService.success('Successfully updated.', 'Success');
-            this.closeModal();
-          }
-        }, () => {
-          this.toastrService.error('Failed to update.', 'Error');
-        }))
+        let validWeekdata = this.validateWeekNumber();
+        if (validWeekdata) {
+          this.weeklySamplingSubscription.push(this.weeklySamplingService.updateWeeklySampling(existsSample).subscribe(serviceRes => {
+            if (serviceRes) {
+              existsSample.farmer = farmer;
+              existsSample.owner = owner;
+              existsSample.pond = pond;
+  
+              this.afterSave.emit(existsSample);
+              this.store.dispatch(updateWeeklySamplings(existsSample));
+              this.toastrService.success('Successfully updated.', 'Success');
+              this.closeModal();
+            }
+          }, () => {
+            this.toastrService.error('Failed to update.', 'Error');
+          }))
+        } else {
+          this.toastrService.error("Do not allow to update data", "Error");
+        }
+        
 
       } else {
-        this.blockUI.start('Saving in progress...');
         const formRawValues: any = this.addWeeklySamplingForm.getRawValue();
         let payload = {
           ...formRawValues,
           samplingDate: this.parserFormatter.format(formRawValues.samplingDate)
         };
-        this.weeklySamplingSubscription.push(this.weeklySamplingService.createWeeklySampling(payload).subscribe((weeklySampling: any) => {
-          if (weeklySampling && weeklySampling.validity) {
-            const savedResult = weeklySampling.result.weeklySampling;
-
-            savedResult.farmer = farmer;
-            savedResult.owner = owner;
-            savedResult.pond = pond;
-
-            this.afterSave.emit(savedResult);
-            this.store.dispatch(addWeeklySamplings(savedResult));
-            this.toastrService.success("Successfully saved.", "Success");
-            this.closeModal();
-          }
+        let validWeekdata = this.validateWeekNumber();
+        if (validWeekdata) {
+          this.blockUI.start('Saving in progress...');
+          this.weeklySamplingSubscription.push(this.weeklySamplingService.createWeeklySampling(payload).subscribe((weeklySampling: any) => {
+            if (weeklySampling && weeklySampling.validity) {
+              const savedResult = weeklySampling.result.weeklySampling;
+  
+              savedResult.farmer = farmer;
+              savedResult.owner = owner;
+              savedResult.pond = pond;
+  
+              this.afterSave.emit(savedResult);
+              this.store.dispatch(addWeeklySamplings(savedResult));
+              this.toastrService.success("Successfully saved.", "Success");
+              this.closeModal();
+            }
+            this.blockUI.stop();
+          }, () => {
+            this.toastrService.error("Failed to save.", "Error");
+            this.blockUI.stop();
+          }));
+        } else {
+          this.toastrService.error("Do not allow to save data", "Error");
           this.blockUI.stop();
-        }, () => {
-          this.toastrService.error("Failed to save.", "Error");
-          this.blockUI.stop();
-        }));
+        }
+        
       }
     }
   }
@@ -310,6 +324,33 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
       );
     }
   }
+
+  validateWeekNumber = () => {
+    let owner = this.addWeeklySamplingForm.value.owner;
+    let farmer = this.addWeeklySamplingForm.value.farmer;
+    let pond = this.addWeeklySamplingForm.value.pond;
+    let week = this.addWeeklySamplingForm.value.week;
+    let valid = true;
+    let returnData = null;
+
+    if (this.weeklySamplingFormData.length > 0) {
+      returnData = this.weeklySamplingFormData.filter(data => 
+        data.owner._id == owner && data.farmer._id == farmer && data.pond._id == pond && data.week == week        
+      );
+
+      if (returnData.length > 0) {
+        valid = false;
+      } else {
+        valid = true;
+      }
+    } else {
+      valid = true;
+    }
+
+    return valid;
+
+  }
+
 
   ngOnDestroy(): void {
     if (this.weeklySamplingSubscription && this.weeklySamplingSubscription.length > 0) {
