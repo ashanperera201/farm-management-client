@@ -46,6 +46,7 @@ export class DailyFeedAddComponent implements OnInit {
   }
   //TODO
   calculatedDailyFeed = 25;
+  weeks: any[] = [];
 
   constructor(
     private dailyFeedService : DailyFeedService,
@@ -73,7 +74,8 @@ export class DailyFeedAddComponent implements OnInit {
       owner: new FormControl(null, Validators.compose([Validators.required])),
       farmer: new FormControl(null, Validators.compose([Validators.required])),
       pond: new FormControl(null, Validators.compose([Validators.required])),
-      dailyFeedDate: new FormControl(null, Validators.compose([Validators.required])),
+      // dailyFeedDate: new FormControl(null, Validators.compose([Validators.required])),
+      week: new FormControl(null, Validators.compose([Validators.required])),
       calculatedDailyFeed: new FormControl(this.calculatedDailyFeed),
       actualNumberOfKilos: new FormControl(null, Validators.compose([Validators.required])),
       remark: new FormControl(null)
@@ -97,6 +99,7 @@ export class DailyFeedAddComponent implements OnInit {
         this.initialData.farmList = farmRes.result;
       }
       this.configValues();
+      this.getWeekNumber();
     }, () => {
       this.blockUI.stop();
     }))
@@ -132,7 +135,8 @@ export class DailyFeedAddComponent implements OnInit {
       feed.owner = this.existingDailyFeed.owner._id;
       feed.farmer = this.existingDailyFeed.farmer._id;
       feed.pond = this.existingDailyFeed.pond._id;
-      feed.dailyFeedDate =  this.model;
+      // feed.dailyFeedDate =  this.model;
+      feed.week = this.existingDailyFeed.week;
       feed.calculatedDailyFeed = this.existingDailyFeed.calculatedDailyFeed;
       feed.actualNumberOfKilos = this.existingDailyFeed.actualNumberOfKilos;
       feed.remark = this.existingDailyFeed.remark;
@@ -152,7 +156,8 @@ export class DailyFeedAddComponent implements OnInit {
         dailyFeed.owner = this.addDailyFeedForm.value.owner;
         dailyFeed.farmer = this.addDailyFeedForm.value.farmer;
         dailyFeed.pond = this.addDailyFeedForm.value.pond;
-        dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
+        // dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
+        dailyFeed.week = this.addDailyFeedForm.value.week;
         dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
         dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
         dailyFeed.remark = this.addDailyFeedForm.value.remark;
@@ -176,7 +181,8 @@ export class DailyFeedAddComponent implements OnInit {
         dailyFeed.owner = this.addDailyFeedForm.value.owner;
         dailyFeed.farmer = this.addDailyFeedForm.value.farmer;
         dailyFeed.pond = this.addDailyFeedForm.value.pond;
-        dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
+        // dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
+        dailyFeed.week = this.addDailyFeedForm.value.week;
         dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
         dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
         dailyFeed.remark = this.addDailyFeedForm.value.remark;
@@ -244,6 +250,17 @@ export class DailyFeedAddComponent implements OnInit {
 
   onKeyPressChangesDecimal = (event: any): boolean => {
     return keyPressDecimals(event);
+  }
+
+  getWeekNumber = () => {
+    for (let i = 1; i <= 25; i++) {
+      this.weeks.push(
+        {
+          value: 'week' + i,
+          description: 'Week ' + i
+        }
+      );
+    }
   }
 
 }

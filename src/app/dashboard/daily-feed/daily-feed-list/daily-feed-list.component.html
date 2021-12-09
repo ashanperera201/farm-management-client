@@ -1,11 +1,11 @@
 <div class="card card-custom">
     <div class="card-header">
         <div class="card-title">
-            <h3 class="card-label">Daily Feed</h3>
+            <h3 class="card-label">Weekly Feed</h3>
         </div>
         <div class="card-toolbar">
             <a type="button" class="btn btn-primary m-1" (click)="addNewDailyFeed()"
-                *ngxPermissionsOnly="['ADD_DAILY_FEED']"><i class="fa fa-plus" aria-hidden="true"></i> Add New Daily
+                *ngxPermissionsOnly="['ADD_DAILY_FEED']"><i class="fa fa-plus" aria-hidden="true"></i> Add New Weekly 
                 Feed</a>
             <a type="button" class="btn btn-danger ml-2" (click)="deleteSelected()"
                 *ngxPermissionsOnly="['DELETE_DAILY_FEEDS']"><i class="fa fa-trash" aria-hidden="true"></i>Delete
@@ -89,7 +89,7 @@
                     <th> Owner </th>
                     <th> Farmer </th>
                     <th> Pond </th>
-                    <th> Feed Date </th>
+                    <th> Week No </th>
                     <th> Calculated Dialy feed </th>
                     <th> Actual No of Kilos </th>
                     <th> Remark </th>
@@ -108,7 +108,7 @@
                         <td>{{dailyFeed?.owner?.firstName}} {{dailyFeed?.owner?.lastName}}</td>
                         <td>{{dailyFeed?.farmer?.farmName}}</td>
                         <td>{{dailyFeed?.pond?.pondNo}}</td>
-                        <td>{{dailyFeed?.dailyFeedDate | date: 'yyyy-MM-dd'}}</td>
+                        <td>{{dailyFeed?.week}}</td>
                         <td>{{dailyFeed?.calculatedDailyFeed}}</td>
                         <td>{{dailyFeed?.actualNumberOfKilos}}</td>
                         <td>{{dailyFeed?.remark}}</td>

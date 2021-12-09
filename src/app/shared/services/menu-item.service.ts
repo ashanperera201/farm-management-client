@@ -143,8 +143,8 @@ export class MenuItemService {
       // },
       {
         id: 11,
-        displayName: 'Daily Feed',
-        route: '/dashboard/daily-feed/view-all',
+        displayName: 'Weekly Feed',
+        route: '/dashboard/weekly-feed/view-all',
         svgIconPath: './assets/media/svg/icons/Layout/Layout-arrange.svg',
         classes: 'menu-item',
         activeClass: '',
