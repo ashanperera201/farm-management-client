@@ -153,8 +153,11 @@ export class DailyFeedListComponent implements OnInit {
       animation: true,
       keyboard: true,
       backdrop: true,
-      modalDialogClass: 'modal-md',
+      modalDialogClass: 'modal-md'
     });
+
+    addDailyFeedrModal.componentInstance.dailyFeedData = this.dailyFeedList;
+
     addDailyFeedrModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res) {
         this.dailyFeedList = Object.assign([],this.dailyFeedList)
@@ -171,6 +174,7 @@ export class DailyFeedListComponent implements OnInit {
       backdrop: true,
       modalDialogClass: 'modal-md',
     });
+    updateDailyFeedModal.componentInstance.dailyFeedData = this.dailyFeedList;
     updateDailyFeedModal.componentInstance.existingDailyFeed = dailyFeed;
     updateDailyFeedModal.componentInstance.isEditMode = true;
 
@@ -184,7 +188,8 @@ export class DailyFeedListComponent implements OnInit {
           feedRef[index].pondNo = res.pondNo;
           // feedRef[index].dailyFeedDate = res.dailyFeedDate;
           feedRef[index].week = res.week;
-          feedRef[index].calculatedDailyFeed = res.calculatedDailyFeed;
+          // feedRef[index].calculatedDailyFeed = res.calculatedDailyFeed;
+          feedRef[index].feedBrand = res.feedBrand;
           feedRef[index].actualNumberOfKilos = res.actualNumberOfKilos;
           feedRef[index].remark = res.remark;
 

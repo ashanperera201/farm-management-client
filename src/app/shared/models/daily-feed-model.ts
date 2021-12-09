@@ -4,7 +4,8 @@ farmer! : any;
 pond! : any;
 // dailyFeedDate: any;
 week: any;
-calculatedDailyFeed: any;
+// calculatedDailyFeed: any;
+feedBrand: any;
 actualNumberOfKilos: any;
 remark: any
 }

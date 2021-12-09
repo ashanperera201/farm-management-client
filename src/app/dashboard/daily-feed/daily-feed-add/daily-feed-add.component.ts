@@ -1,7 +1,7 @@
 import { FarmDetailReportComponent } from './../../reporting/farm-detail-report/farm-detail-report.component';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbDateParserFormatter, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -15,6 +15,8 @@ import { DailyFeedService } from './../../../shared/services/daily-feed.service'
 import * as moment from 'moment';
 import { Store } from '@ngrx/store';
 import { addDailyFeed, AppState, updateDailyFeed } from '../../../redux';
+import { FeedBrandService } from 'src/app/shared/services/feed-brand.service';
+import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
 
 @Component({
   selector: 'app-daily-feed-add',
@@ -26,15 +28,16 @@ export class DailyFeedAddComponent implements OnInit {
   @Input() isEditMode: boolean = false;
   @Input() existingDailyFeed: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
+  @Input() dailyFeedData: any[] = [];
 
   @BlockUI() blockUI!: NgBlockUI;
 
   saveButtonText: string = 'Submit';
   headerText: string = 'Add Daily Feed';
-  feedBrandList: any[] = [];
   ownerList: any[] = [];
   farmList: any[] = [];
   pondList: any[] = [];
+  feedBrandList: any[] = [];
   existingData = new DailyFeedModel();
   addDailyFeedForm!: FormGroup;
   dailyFeedSubscriptions: Subscription[] = [];
@@ -56,7 +59,9 @@ export class DailyFeedAddComponent implements OnInit {
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal,
     private parserFormatter: NgbDateParserFormatter,
-    private store: Store<AppState>) {
+    private feedbandService: FeedBrandService,
+    private store: Store<AppState>,
+    private modalService: NgbModal) {
       this.model = {
         year: 0,
         month: 0,
@@ -76,7 +81,8 @@ export class DailyFeedAddComponent implements OnInit {
       pond: new FormControl(null, Validators.compose([Validators.required])),
       // dailyFeedDate: new FormControl(null, Validators.compose([Validators.required])),
       week: new FormControl(null, Validators.compose([Validators.required])),
-      calculatedDailyFeed: new FormControl(this.calculatedDailyFeed),
+      // calculatedDailyFeed: new FormControl(this.calculatedDailyFeed),
+      feedBrand: new FormControl(null, Validators.compose([Validators.required])),
       actualNumberOfKilos: new FormControl(null, Validators.compose([Validators.required])),
       remark: new FormControl(null)
     });
@@ -92,6 +98,11 @@ export class DailyFeedAddComponent implements OnInit {
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
         this.initialData.pondList = resPonds.result;
+      }
+      return this.feedbandService.fetchFeedBands()
+    })).pipe(switchMap((resFeed: any) => {
+      if (resFeed && resFeed.result) {
+        this.feedBrandList = resFeed.result;
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
@@ -137,7 +148,8 @@ export class DailyFeedAddComponent implements OnInit {
       feed.pond = this.existingDailyFeed.pond._id;
       // feed.dailyFeedDate =  this.model;
       feed.week = this.existingDailyFeed.week;
-      feed.calculatedDailyFeed = this.existingDailyFeed.calculatedDailyFeed;
+      // feed.calculatedDailyFeed = this.existingDailyFeed.calculatedDailyFeed;
+      feed.feedBrand = this.existingDailyFeed.feedBrand;
       feed.actualNumberOfKilos = this.existingDailyFeed.actualNumberOfKilos;
       feed.remark = this.existingDailyFeed.remark;
       this.addDailyFeedForm.patchValue(feed);
@@ -158,49 +170,120 @@ export class DailyFeedAddComponent implements OnInit {
         dailyFeed.pond = this.addDailyFeedForm.value.pond;
         // dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
         dailyFeed.week = this.addDailyFeedForm.value.week;
-        dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
+        // dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
+        dailyFeed.feedBrand = this.addDailyFeedForm.value.feedBrand;
         dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
         dailyFeed.remark = this.addDailyFeedForm.value.remark;
 
-        this.dailyFeedService.updateDailyFeed(dailyFeed).subscribe(res => {
-          if (res) {
-            const dailyFeedData = this.setOtherData(dailyFeed);
-            this.afterSave.emit(dailyFeedData);
-            this.closeModal();
-            this.store.dispatch(updateDailyFeed(dailyFeed));
-            this.toastrService.success("Daily Feed data updated successfully", "Success");
-          }
-          this.blockUI.stop();
-        }, () => {
-          this.toastrService.error("Unable to update data", "Error");
-          this.blockUI.stop();
-        });
-      }
-      else {
-        const dailyFeed = new DailyFeedModel();
-        dailyFeed.owner = this.addDailyFeedForm.value.owner;
-        dailyFeed.farmer = this.addDailyFeedForm.value.farmer;
-        dailyFeed.pond = this.addDailyFeedForm.value.pond;
-        // dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
-        dailyFeed.week = this.addDailyFeedForm.value.week;
-        dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
-        dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
-        dailyFeed.remark = this.addDailyFeedForm.value.remark;
+        let validateWeek = this.validateWeekNumber();
 
-        this.dailyFeedService.saveDailyFeed(dailyFeed).subscribe(res => {
-          if (res && res.result) {
-            const dailyFeedData = this.setOtherData(res.result);
-            this.afterSave.emit(dailyFeedData);
-            this.closeModal();
-            this.store.dispatch(addDailyFeed(res.result));
-            this.toastrService.success("Data saved successfully", "Success");
-          }
-          this.blockUI.stop();
-        }, () => {
-          this.toastrService.error("Unable to save data", "Error");
-          this.blockUI.stop();
-        });
+        if (validateWeek) {
+          this.dailyFeedService.updateDailyFeed(dailyFeed).subscribe(res => {
+            if (res) {
+              const dailyFeedData = this.setOtherData(dailyFeed);
+              this.afterSave.emit(dailyFeedData);
+              this.closeModal();
+              this.store.dispatch(updateDailyFeed(dailyFeed));
+              this.toastrService.success("Daily Feed data updated successfully", "Success");
+            }
+            this.blockUI.stop();
+          }, () => {
+            this.toastrService.error("Unable to update data", "Error");
+            this.blockUI.stop();
+          });
+        } else {
+          this.toastrService.error("Do not allow to update data", "Error");
+        }
+
+        
       }
+
+      let customAlertModalRef = this.modalService.open(CustomAlertComponent, {
+        animation: true,
+        keyboard: true,
+        backdrop: true
+      });
+      customAlertModalRef.componentInstance.title = 'Confirmation';
+      customAlertModalRef.componentInstance.message = 'Do you have multiple feed brands for this week ';
+      customAlertModalRef.componentInstance.saveButton = 'Yes';
+      customAlertModalRef.componentInstance.cancelButton = 'No';
+
+      (customAlertModalRef.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {        
+        if (!this.isEditMode) {
+          const dailyFeed = new DailyFeedModel();
+          dailyFeed.owner = this.addDailyFeedForm.value.owner;
+          dailyFeed.farmer = this.addDailyFeedForm.value.farmer;
+          dailyFeed.pond = this.addDailyFeedForm.value.pond;
+          // dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
+          dailyFeed.week = this.addDailyFeedForm.value.week;
+          // dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
+          dailyFeed.feedBrand = this.addDailyFeedForm.value.feedBrand;
+          dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
+          dailyFeed.remark = this.addDailyFeedForm.value.remark;
+  
+          let validData = this.validateWeekNumber();
+          if (validData) {
+            this.dailyFeedService.saveDailyFeed(dailyFeed).subscribe(res => {
+              if (res && res.result) {
+                const dailyFeedData = this.setOtherData(res.result);
+                this.afterSave.emit(dailyFeedData);
+                this.closeModal();
+                this.store.dispatch(addDailyFeed(res.result));
+                this.toastrService.success("Data saved successfully", "Success");
+              }
+              this.blockUI.stop();
+            }, () => {
+              this.toastrService.error("Unable to save data", "Error");
+              this.blockUI.stop();
+            });
+          } else {
+            this.toastrService.error("Do not allow to save data", "Error");
+          }
+          
+        }
+        customAlertModalRef.close();
+      });
+  
+      (customAlertModalRef.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
+        if (!this.isEditMode) {
+          const dailyFeed = new DailyFeedModel();
+          dailyFeed.owner = this.addDailyFeedForm.value.owner;
+          dailyFeed.farmer = this.addDailyFeedForm.value.farmer;
+          dailyFeed.pond = this.addDailyFeedForm.value.pond;
+          // dailyFeed.dailyFeedDate = this.parserFormatter.format(this.addDailyFeedForm.value.dailyFeedDate);
+          dailyFeed.week = this.addDailyFeedForm.value.week;
+          // dailyFeed.calculatedDailyFeed = this.addDailyFeedForm.value.calculatedDailyFeed;
+          dailyFeed.feedBrand = this.addDailyFeedForm.value.feedBrand;
+          dailyFeed.actualNumberOfKilos = this.addDailyFeedForm.value.actualNumberOfKilos;
+          dailyFeed.remark = this.addDailyFeedForm.value.remark;
+  
+          let validData = this.validateWeekNumber();
+          if (validData) {
+            this.dailyFeedService.saveDailyFeed(dailyFeed).subscribe(res => {
+              if (res && res.result) {
+                const dailyFeedData = this.setOtherData(res.result);
+                this.afterSave.emit(dailyFeedData);
+                //this.closeModal();
+                this.store.dispatch(addDailyFeed(res.result));
+                this.toastrService.success("Data saved successfully", "Success");
+                this.addDailyFeedForm.get("feedBrand")?.setValue('');
+                this.addDailyFeedForm.get("actualNumberOfKilos")?.setValue('');
+                this.addDailyFeedForm.get("remark")?.setValue('');
+                this.bindTempData();
+              }
+              this.blockUI.stop();
+            }, () => {
+              this.toastrService.error("Unable to save data", "Error");
+              this.blockUI.stop();
+            });
+          } else {
+            this.toastrService.error("Do not allow to save data", "Error");
+          }
+        }
+
+        customAlertModalRef.close();
+      });
+      
     }
   }
 
@@ -261,6 +344,39 @@ export class DailyFeedAddComponent implements OnInit {
         }
       );
     }
+  }
+
+  bindTempData = () => {
+    this.addDailyFeedForm.get("owner")?.setValue(this.addDailyFeedForm.value.owner);
+    this.addDailyFeedForm.get("farmer")?.setValue(this.addDailyFeedForm.value.farmer);
+    this.addDailyFeedForm.get("pond")?.setValue(this.addDailyFeedForm.value.pond);
+    this.addDailyFeedForm.get("week")?.setValue(this.addDailyFeedForm.value.week);
+  }
+
+  validateWeekNumber = () => {
+    let owner = this.addDailyFeedForm.value.owner;
+    let farmer = this.addDailyFeedForm.value.farmer;
+    let pond = this.addDailyFeedForm.value.pond;
+    let week = this.addDailyFeedForm.value.week;
+    let valid = true;
+    let returnData = null;
+
+    if (this.dailyFeedData.length > 0) {
+      returnData = this.dailyFeedData.filter(data => 
+        data.owner._id == owner && data.farmer._id == farmer && data.pond._id == pond && data.week == week        
+      );
+
+      if (returnData.length > 0) {
+        valid = false;
+      } else {
+        valid = true;
+      }
+    } else {
+      valid = true;
+    }
+
+    return valid;
+
   }
 
 }

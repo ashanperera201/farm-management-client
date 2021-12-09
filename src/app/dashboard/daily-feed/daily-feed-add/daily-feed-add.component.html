@@ -55,9 +55,16 @@
           </div>
         </div>
         <div class="form-row mb-4">
-            <div class="col">
+            <!-- <div class="col">
                 <label class="font-size-h7  text-dark required">Calculated Daily Feed</label>
                 <input type="text" class="form-control" formControlName="calculatedDailyFeed" readonly>
+            </div> -->
+            <div class="col">
+                <label class="font-size-h7  text-dark required">Feed Brand</label>
+                <select name="feed-brand" id="feed-brand" formControlName="feedBrand" class="form-control">
+                  <option value=null disabled selected>Select Feed Brand</option>
+                  <option *ngFor="let feedBrand of feedBrandList" [value]="feedBrand._id">{{feedBrand.brandName}}</option>
+                </select>
             </div>
             <div class="col">
                 <label class="font-size-h7  text-dark required">Actual No Of Killos Per Week</label>

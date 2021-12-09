@@ -146,6 +146,9 @@ export class WeeklySamplingListComponent implements OnInit {
       backdrop: true,
       modalDialogClass: 'modal-lg',
     });
+
+    addWeeklySamplingModal.componentInstance.weeklySamplingFormData = this.weelySamplingList;
+
     addWeeklySamplingModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res) {
         this.weelySamplingList = Object.assign([], this.weelySamplingList)
@@ -162,6 +165,7 @@ export class WeeklySamplingListComponent implements OnInit {
       modalDialogClass: 'modal-lg',
     });
 
+    addWeeklySamplingModal.componentInstance.weeklySamplingFormData = this.weelySamplingList;
     addWeeklySamplingModal.componentInstance.existingWeeklySampling = JSON.parse(JSON.stringify(weeklySample));
     addWeeklySamplingModal.componentInstance.isEditMode = true;
 
