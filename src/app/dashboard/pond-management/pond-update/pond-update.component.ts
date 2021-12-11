@@ -14,19 +14,18 @@ import { keyPressDecimals } from '../../../shared/utils';
 import { AppState } from '../../../redux';
 
 @Component({
-  selector: 'app-pond-add',
-  templateUrl: './pond-add.component.html',
-  styleUrls: ['./pond-add.component.scss']
+  selector: 'app-pond-update',
+  templateUrl: './pond-update.component.html',
+  styleUrls: ['./pond-update.component.scss']
 })
-export class PondAddComponent implements OnInit {
-  @Input() isEditMode: boolean = false;
+export class PondUpdateComponent implements OnInit {
   @Input() existingPond: any;
   @Output() afterSave: EventEmitter<any> = new EventEmitter<any>();
 
   @BlockUI() blockUI!: NgBlockUI;
 
-  saveButtonText: string = 'Submit';
-  headerText: string = 'Add Pond';
+  saveButtonText: string = 'Update';
+  headerText: string = 'Update Pond';
   feedBrandList: any[] = [];
   addPondForm!: FormGroup;
   pondFormControls: any;
@@ -55,17 +54,13 @@ export class PondAddComponent implements OnInit {
   }
 
   configValues = () => {
-    if (this.isEditMode) {
-      this.saveButtonText = "Update";
-      this.headerText = "Update Pond";
-      if (this.existingPond) {
-        const form = this.existingPond;
-        form.owner = this.existingPond.owner._id;
-        form.farmer = this.existingPond.farmer._id;
-        this.addPondForm.patchValue(form);
-        this.ownerOnChange();
-        this.addPondForm.get("farmer")?.patchValue(form.farmer);
-      }
+    if (this.existingPond) {
+      const form = this.existingPond;
+      form.owner = this.existingPond.owner._id;
+      form.farmer = this.existingPond.farmer._id;
+      this.addPondForm.patchValue(form);
+      this.ownerOnChange();
+      this.addPondForm.get("farmer")?.patchValue(form.farmer);
     }
     this.blockUI.stop();
   }
@@ -82,24 +77,12 @@ export class PondAddComponent implements OnInit {
     this.addPondForm = this.formBuilder.group({
       farmer: new FormControl(null, Validators.compose([Validators.required])),
       owner: new FormControl(null, Validators.compose([Validators.required])),
-      pondDetails: new FormArray([])
-    })
-  }
-
-  initiateSubForm = (): FormGroup => {
-    return this.formBuilder.group({
       pondNo: new FormControl(null, Validators.compose([Validators.required])),
       areaOfPond: new FormControl(null, Validators.compose([Validators.required])),
       gradeOfPond: new FormControl(null, Validators.compose([Validators.required])),
       fixedCost: new FormControl(null, Validators.compose([Validators.required, Validators.min(0)])),
     })
   }
-
-  get getFormGroup(): { [key: string]: AbstractControl } { return this.addPondForm.controls; }
-
-  get getFormArray(): FormArray { return this.getFormGroup.pondDetails as FormArray; }
-
-  get getFormGroups(): FormGroup[] { return this.getFormArray.controls as FormGroup[]; }
 
   clearAddPondFormForm = () => {
     this.addPondForm.reset();
@@ -135,56 +118,29 @@ export class PondAddComponent implements OnInit {
     }
   }
 
-  farmOnChange = () => {
-    const farmId = this.addPondForm.get('farmer')?.value;
-    this.pondCount = this.farmList.find(x => x._id === farmId)?.pondCount;
-
-    this.pondFormControls = this.addPondForm.get('pondDetails') as FormArray;
-    for (let i = 0; i < this.pondCount; i++) {
-      this.pondFormControls.push(this.initiateSubForm())
-    }
-  }
-
-  savePond = () => {
+  updatePond = () => {
     this.blockUI.start('Processing.....');
     if (this.addPondForm.valid) {
-      // if (this.isEditMode) {
-      //   const pond = this.existingPond;
-      //   pond.owner = this.addPondForm.value.owner;
-      //   pond.farmer = this.addPondForm.value.farmer;
-      //   pond.pondNo = this.addPondForm.value.pondNo;
-      //   pond.areaOfPond = this.addPondForm.value.areaOfPond;
-      //   pond.gradeOfPond = this.addPondForm.value.gradeOfPond;
-      //   pond.fixedCost = this.addPondForm.value.fixedCost;
+      const pond = this.existingPond;
+      pond.owner = this.addPondForm.value.owner;
+      pond.farmer = this.addPondForm.value.farmer;
+      pond.pondNo = this.addPondForm.value.pondNo;
+      pond.areaOfPond = this.addPondForm.value.areaOfPond;
+      pond.gradeOfPond = this.addPondForm.value.gradeOfPond;
+      pond.fixedCost = this.addPondForm.value.fixedCost;
 
-      //   this.pondService.updatePond(pond).subscribe(res => {
-      //     if (res && res.result) {
-      //       const pondData = this.setOwnerAndFarm(pond);
-      //       this.closeModal();
-      //       this.afterSave.emit(pondData);
-      //       this.toastrService.success("Pond data updated successfully.", "Successfully Saved");
-      //     }
-      //     this.blockUI.stop();
-      //   }, () => {
-      //     this.blockUI.stop();
-      //     this.toastrService.error("Unable to update pond data", "Error");
-      //   });
-      // }
-      // else {
-      let pondPayload: any = this.addPondForm.getRawValue();
-
-      this.pondService.savePond(pondPayload).subscribe(res => {
+      this.pondService.updatePond(pond).subscribe(res => {
         if (res && res.result) {
-          this.afterSave.emit(res.result);
+          const pondData = this.setOwnerAndFarm(pond);
           this.closeModal();
-          this.toastrService.success("Pond data saved successfully.", "Successfully Saved");
+          this.afterSave.emit(pondData);
+          this.toastrService.success("Pond data updated successfully.", "Successfully Saved");
         }
         this.blockUI.stop();
       }, () => {
         this.blockUI.stop();
-        this.toastrService.error("Unable to save pond data", "Error");
+        this.toastrService.error("Unable to update pond data", "Error");
       });
-      // }
     }
   }
 

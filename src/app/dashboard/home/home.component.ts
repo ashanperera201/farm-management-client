@@ -147,8 +147,8 @@ export class HomeComponent implements OnInit {
 
   calculateTotalFeedCost() {
     this.feedList.forEach((feed: any) => {
-      this.feedPondCost += feed.calculatedDailyFeed;
-      this.feedFarmCost += feed.calculatedDailyFeed;
+      this.feedPondCost += feed?.calculatedDailyFeed ? feed?.calculatedDailyFeed : 0;
+      this.feedFarmCost += feed?.calculatedDailyFeed ? feed?.calculatedDailyFeed : 0;
       this.feedPondCost = this.feedPondCost / this.pondsCount;
       this.feedFarmCost = this.feedFarmCost / this.farmsCount;
     });

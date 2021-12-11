@@ -136,7 +136,6 @@ export class FeedChartListComponent implements OnInit {
   }
 
   calculateData(doc: any) {
-    debugger 
     const currentDate: any = new Date();
     if (currentDate.getTime() > doc.getTime()) {
       const diffTime = Math.abs(currentDate - doc);

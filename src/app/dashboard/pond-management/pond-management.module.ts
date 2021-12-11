@@ -11,6 +11,7 @@ import { PondAddComponent } from './pond-add/pond-add.component';
 import { PondCardComponent } from './pond-card/pond-card.component';
 import { PondRoutingModule } from './pond-management.routing';
 import { PondAddMultipleComponent } from './pond-add-multiple/pond-add-multiple.component';
+import { PondUpdateComponent } from './pond-update/pond-update.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { PondAddMultipleComponent } from './pond-add-multiple/pond-add-multiple.
     PondListComponent,
     PondAddComponent,
     PondCardComponent,
-    PondAddMultipleComponent
+    PondAddMultipleComponent,
+    PondUpdateComponent
   ],
   imports: [
     CommonModule,

@@ -13,6 +13,7 @@ import { WeeklySamplingService } from '../../../shared/services/weekly-sampling.
 import { FarmService } from '../../../shared/services/farm.service';
 import { PondService } from '../../../shared/services/pond.service';
 import { keyPressNumbers } from '../../../shared/utils';
+import { HarvestService } from '../../../shared/services/harvest.service';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
   ownerList: any[] = [];
   modelSampling: NgbDateStruct;
   stockDetails: any[] = [];
+  harvesting: any[] = [];
   weeklySamplingSubscription: Subscription[] = [];
 
   initialData: any = {
@@ -52,6 +54,7 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
     private clubMemberService: ClubMemberService,
     private weeklySamplingService: WeeklySamplingService,
     private farmService: FarmService,
+    private harvestService: HarvestService,
     private toastrService: ToastrService,
     private activeModal: NgbActiveModal,
     private parserFormatter: NgbDateParserFormatter,
@@ -76,11 +79,22 @@ export class WeeklySamplingAddComponent implements OnInit, OnDestroy {
       if (stockDetails) {
         this.stockDetails = stockDetails;
       }
+      return this.harvestService.fetchHarvests()
+    })).pipe(switchMap(havesting => {
+      if (havesting && havesting.validity) {
+        this.harvesting = havesting.result;
+      }
       return this.store.select(selectWeeklySamplings)
     })).pipe(switchMap(weeklySamplings => {
       if (weeklySamplings) {
-        const pAvgBodyWeight = weeklySamplings[weeklySamplings.length - 1].averageBodyWeight;
-        this.addWeeklySamplingForm.get("previousAwb")?.setValue(pAvgBodyWeight);
+        const farm = weeklySamplings[weeklySamplings.length - 1].farmer;
+        const isHarvested = this.harvesting.some((x: any) => x.farmer._id === farm._id);
+        if (isHarvested) {
+          this.addWeeklySamplingForm.get("previousAwb")?.setValue(0);
+        } else { 
+          const pAvgBodyWeight = weeklySamplings[weeklySamplings.length - 1].averageBodyWeight;
+          this.addWeeklySamplingForm.get("previousAwb")?.setValue(pAvgBodyWeight);
+        }
       }
       return this.clubMemberService.fetchClubMembers();
     })).pipe(switchMap(clubMemberRes => {
