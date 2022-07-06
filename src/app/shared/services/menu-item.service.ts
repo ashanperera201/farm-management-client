@@ -19,7 +19,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_D_MENU',
       },
       // {
       //   id: 2,
@@ -43,7 +44,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_CM_MENU',
       },
       {
         id: 3,
@@ -55,7 +57,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_FM_MENU',
       },
       {
         id: 4,
@@ -67,7 +70,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_PM_MENU',
       },
       {
         id: 5,
@@ -79,7 +83,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_AM_MENU',
       },
       {
         id: 6,
@@ -91,7 +96,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_FBM_MENU',
       },
       {
         id: 7,
@@ -103,7 +109,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: '	SHOW_PLS_MENU',
       },
       {
         id: 8,
@@ -115,7 +122,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_WS_MENU',
       },
       // {
       //   id: 9,
@@ -151,7 +159,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_WF_MENU',
       },
       {
         id: 12,
@@ -163,7 +172,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_WEEKLY_APP_MENU',
       },
       {
         id: 13,
@@ -175,7 +185,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_HM_MENU',
       },
       {
         id: 14,
@@ -187,7 +198,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_SP_MENU',
       },
       {
         id: 15,
@@ -199,7 +211,8 @@ export class MenuItemService {
         selected: false,
         isMenuHeading: false,
         isMenuOpened: false,
-        subItems: []
+        subItems: [],
+        permissionCode: 'SHOW_WP_MENU',
       },
       {
         id: 16,
@@ -344,7 +357,8 @@ export class MenuItemService {
             isMenuOpened: false,
             subItems: []
           },
-        ]
+        ],
+        permissionCode: 'SHOW_REPORTING_MENU',
       },
       {
         id: 16,
@@ -393,7 +407,8 @@ export class MenuItemService {
             isMenuOpened: false,
             subItems: []
           }
-        ]
+        ],
+        permissionCode: 'SHOW_USER_MANAGEMENT_MENU',
       }
     ]
   }

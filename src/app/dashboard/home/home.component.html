@@ -70,7 +70,7 @@
                         new
                         records</span>
                 </h3>
-                <div class="card-toolbar"  *ngxPermissionsOnly="['WIDGET_VIEW_CLUB_MEMBER_DETAILS']">
+                <div class="card-toolbar" *ngxPermissionsOnly="['WIDGET_VIEW_CLUB_MEMBER_DETAILS']">
                     <a class="btn btn-success font-weight-bolder font-size-sm">
                         <span [inlineSVG]="'./assets/media/svg/icons/Communication/Archive.svg'"
                             class="svg-icon svg-icon-md svg-icon-white">
@@ -86,7 +86,7 @@
     </div>
 </div>
 
-<div class="row chart"  *ngxPermissionsOnly="['WIDGET_DAILY_PIE_CHARTS']">
+<div class="row chart" *ngxPermissionsOnly="['WIDGET_DAILY_PIE_CHARTS']">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card card-custom">
             <div class="card-header border-0">
@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<div class="row"  *ngxPermissionsOnly="['WIDGET_SALES_PRICE']">
+<div class="row" *ngxPermissionsOnly="['WIDGET_SALES_PRICE']">
     <div class="col-lg-4 col-md-12 col-sm-12">
         <div class="card card-custom">
             <div class="card-header border-0">
@@ -127,4 +127,8 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="row" *ngxPermissionsOnly="['FARMER-DASHBOARD']">
+    <img [src]="welcomeImg" alt="welcomeImg">
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { PerfectScrollbarModule, PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { SideNavigationComponent } from './side-navigation/side-navigation.component';
 import { NavigationContentComponent } from './navigation-content/navigation-content.component';
@@ -26,7 +27,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CommonModule,
     RouterModule,
     InlineSVGModule,
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    NgxPermissionsModule.forChild(),
   ],
   exports: [
     ToolbarComponent,

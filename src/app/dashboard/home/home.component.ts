@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
   dashboardSubscription: Subscription[] = [];
   percentageFeedingList: any[] = [];
   salesPriceList: any[] = [];
+  welcomeImg: string = 'https://media.istockphoto.com/photos/hand-holding-the-welcome-aboard-written-speech-bubble-picture-id1333195925?b=1&k=20&m=1333195925&s=170667a&w=0&h=xZ3EZOqWrE6UYgRXR_4raYZCy850EtN1OqBpbMUPUvE=';
 
 
   // POND RELATED CHART CONFIGS

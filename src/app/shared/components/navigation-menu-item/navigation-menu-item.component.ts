@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxPermissionsService } from 'ngx-permissions'
 import { MenuItemService } from '../../services/menu-item.service';
 
 @Component({
@@ -15,28 +16,34 @@ export class NavigationMenuItemComponent implements OnInit {
   menuItems: any[] = [];
   currentIndex!: number;
 
-  constructor(private menuItemService: MenuItemService, private router: Router) { }
+  constructor(
+    private menuItemService: MenuItemService,
+    private router: Router,
+    private ngxPermissionsService: NgxPermissionsService) { }
 
   ngOnInit(): void {
     this.menuItems = this.menuItemService.getMenuItems();
   }
 
+  onMenuItemClick = (index: number, permissionCode: string) => {
+    this.ngxPermissionsService.hasPermission(permissionCode).then(res => {
+      if (res) {
+        if (this.currentIndex >= 0) {
+          this.menuItems[this.currentIndex].selected = !this.menuItems[this.currentIndex].selected;
+          this.menuItems[this.currentIndex].activeClass = '';
+          this.currentIndex = -1;
+        }
 
-  onMenuItemClick = (index: number) => {
-    if (this.currentIndex >= 0) {
-      this.menuItems[this.currentIndex].selected = !this.menuItems[this.currentIndex].selected;
-      this.menuItems[this.currentIndex].activeClass = '';
-      this.currentIndex = -1;
-    }
-
-    if (this.menuItems[index].subItems.length > 0) {
-      this.menuItems[index].selected = !this.menuItems[index].selected;
-      this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-submenu menu-item-open' : '';
-    } else {
-      this.menuItems[index].selected = !this.menuItems[index].selected;
-      this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
-      this.currentIndex = index;
-    }
+        if (this.menuItems[index].subItems.length > 0) {
+          this.menuItems[index].selected = !this.menuItems[index].selected;
+          this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-submenu menu-item-open' : '';
+        } else {
+          this.menuItems[index].selected = !this.menuItems[index].selected;
+          this.menuItems[index].activeClass = this.menuItems[index].selected ? 'menu-item-active' : '';
+          this.currentIndex = index;
+        }
+      }
+    })
   }
 
   proceedNavigation = (menuItem: any) => {
