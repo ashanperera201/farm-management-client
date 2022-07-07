@@ -18,6 +18,7 @@ import { WeeklyApplicationsService } from 'src/app/shared/services/weekly-applic
 import { WeeklyApplicationAddComponent } from '../weekly-application-add/weekly-application-add.component';
 import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
 import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
+import { LoggedUserService } from 'src/app/shared/services/logged-user.service';
 
 @Component({
   selector: 'app-weekly-application-list',
@@ -45,6 +46,8 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     ownerList: [],
     pondList: []
   }
+  isFarmer!: boolean | undefined;
+
 
   constructor(private weeklyApplicationsService: WeeklyApplicationsService,
     private toastrService: ToastrService,
@@ -54,15 +57,17 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     private clubMemberService: ClubMemberService,
     private farmService: FarmService,
     private pondService: PondService,
-    private customAlertService: CustomAlertService) { }
+    private customAlertService: CustomAlertService,
+    private loggedUserService: LoggedUserService) { }
 
   ngOnInit(): void {
+    this.isFarmer = this.loggedUserService.getUserRoles().some(x => x === 'FARMER');
     this.initFilterForm();
     this.fetchWeeklyApplication();
     this.fetchInitialData();
   }
 
-  initFilterForm= () => {
+  initFilterForm = () => {
     this.filterForm = new FormGroup({
       owner: new FormControl(null),
       farmer: new FormControl(null),
@@ -73,8 +78,8 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
   resetFilters = () => {
     this.filterForm.reset();
     this.weeklyApplicationList = this.initialWeeklyApplicationList;
-    this.farmList =   [];
-    this.pondList =   [];
+    this.farmList = [];
+    this.pondList = [];
     this.ownerList = this.initialData.ownerList;
   }
 
@@ -84,7 +89,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     const farmer = this.filterForm.get("farmer")?.value;
     const pond = this.filterForm.get("pond")?.value;
 
-    if(owner){
+    if (owner) {
       this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.owner?._id === owner);
       const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
       if (filteredFarmList && filteredFarmList.length > 0) {
@@ -93,7 +98,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
         this.farmList = [];
       }
     }
-    if(farmer){
+    if (farmer) {
       this.weeklyApplicationList = this.weeklyApplicationList.filter(x => x.farmer?._id === farmer);
       const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farmer) && (x.owner && x.owner._id === owner));
       if (pondList && pondList.length > 0) {
@@ -102,7 +107,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
         this.pondList = [];
       }
     }
-    if(pond){
+    if (pond) {
       this.weeklyApplicationList = this.initialWeeklyApplicationList.filter(x => x.pond?._id === pond);
     }
   }
@@ -115,9 +120,10 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     this.blockUI.start('Fetching Data......');
     this.weeklyApplicationSubscriptions.push(this.weeklyApplicationsService.getAllWeeklyApplication().subscribe(res => {
       if (res && res.result) {
-        this.weeklyApplicationList = res.result;
-        this.initialWeeklyApplicationList = res.result;
-        this.store.dispatch(setWeeklyApplication(res.result));
+        const serviceResult = this.isFarmer ? res.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : res.result;
+        this.weeklyApplicationList = serviceResult;
+        this.initialWeeklyApplicationList = serviceResult;
+        this.store.dispatch(setWeeklyApplication(serviceResult));
       }
       this.blockUI.stop();
     }, () => {
@@ -177,7 +183,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     if (updateWeeklyApplicationModal.componentInstance.afterSave) {
       updateWeeklyApplicationModal.componentInstance.afterSave.subscribe((res: any) => {
         if (res) {
-           const index = this.weeklyApplicationList.findIndex((up: any) => up._id === res._id);
+          const index = this.weeklyApplicationList.findIndex((up: any) => up._id === res._id);
           let weeklyApplicationRefs = JSON.parse(JSON.stringify(this.weeklyApplicationList));
 
           weeklyApplicationRefs[index].owner = res.owner;
@@ -197,7 +203,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
 
 
   deleteSelected = () => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -217,7 +223,7 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
   }
 
   deleteRecord = (pfId: any) => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();

@@ -17,6 +17,7 @@ import { Store } from '@ngrx/store';
 import { AppState, removeDailyFeed, setDailyFeed, updateDailyFeed } from '../../../redux';
 import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { LoggedUserService } from 'src/app/shared/services/logged-user.service';
 
 @Component({
   selector: 'app-daily-feed-list',
@@ -25,7 +26,7 @@ import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/cus
 })
 export class DailyFeedListComponent implements OnInit {
 
-  isAllChecked! : boolean;
+  isAllChecked!: boolean;
   initialDailyFeedList: any[] = [];
   dailyFeedList: any[] = [];
   ownerList: any[] = [];
@@ -42,28 +43,31 @@ export class DailyFeedListComponent implements OnInit {
     ownerList: [],
     pondList: []
   }
+  isFarmer!: boolean | undefined;
 
   @BlockUI() blockUI!: NgBlockUI;
 
   constructor(
-    private dailyFeedService : DailyFeedService,
-    private clubMemberService : ClubMemberService,
-    private farmService : FarmService,
-    private pondService : PondService,
+    private dailyFeedService: DailyFeedService,
+    private clubMemberService: ClubMemberService,
+    private farmService: FarmService,
+    private pondService: PondService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fileService: FileService,
     private store: Store<AppState>,
-    private customAlertService: CustomAlertService
+    private customAlertService: CustomAlertService,
+    private loggedUserService: LoggedUserService,
   ) { }
 
   ngOnInit(): void {
+    this.isFarmer = this.loggedUserService.getUserRoles().some(x => x === 'FARMER');
     this.initFilterForm();
     this.fetchDailyFeed();
     this.fetchInitialData();
   }
 
-  initFilterForm= () => {
+  initFilterForm = () => {
     this.filterForm = new FormGroup({
       owner: new FormControl(null),
       farmer: new FormControl(null),
@@ -74,8 +78,8 @@ export class DailyFeedListComponent implements OnInit {
   resetFilters = () => {
     this.filterForm.reset();
     this.dailyFeedList = this.initialDailyFeedList;
-    this.farmList =   [];
-    this.pondList =   [];
+    this.farmList = [];
+    this.pondList = [];
     this.ownerList = this.initialData.ownerList;
   }
 
@@ -86,7 +90,7 @@ export class DailyFeedListComponent implements OnInit {
     const farmer = this.filterForm.get("farmer")?.value;
     const pond = this.filterForm.get("pond")?.value;
 
-    if(owner){
+    if (owner) {
       this.dailyFeedList = this.dailyFeedList.filter(x => x.owner._id === owner);
       const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
       if (filteredFarmList && filteredFarmList.length > 0) {
@@ -95,7 +99,7 @@ export class DailyFeedListComponent implements OnInit {
         this.farmList = [];
       }
     }
-    if(farmer){
+    if (farmer) {
       this.dailyFeedList = this.dailyFeedList.filter(x => x.farmer._id === farmer);
       const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farmer) && (x.owner && x.owner._id === owner));
       if (pondList && pondList.length > 0) {
@@ -104,22 +108,22 @@ export class DailyFeedListComponent implements OnInit {
         this.pondList = [];
       }
     }
-    if(pond){
+    if (pond) {
       this.dailyFeedList = this.initialDailyFeedList.filter(x => x.pond?._id === pond);
     }
   }
 
   fetchDailyFeed = () => {
     this.blockUI.start('Fetching Daily Feed......');
-    this.dailyFeedSubscriptions.push(this.dailyFeedService.fetchDailyFeeds().subscribe(res=> {
-      if(res && res.result){
-        this.dailyFeedList = res.result;
+    this.dailyFeedSubscriptions.push(this.dailyFeedService.fetchDailyFeeds().subscribe(res => {
+      if (res && res.result) {
+        this.dailyFeedList = this.isFarmer ? res.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : res.result;;
         this.initialDailyFeedList = res.result;
         this.store.dispatch(setDailyFeed(res.result));
       }
       this.blockUI.stop();
     }, () => {
-      this.toastrService.error("Failed to load Data","Error");
+      this.toastrService.error("Failed to load Data", "Error");
       this.blockUI.stop();
     }));
   }
@@ -160,7 +164,7 @@ export class DailyFeedListComponent implements OnInit {
 
     addDailyFeedrModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res) {
-        this.dailyFeedList = Object.assign([],this.dailyFeedList)
+        this.dailyFeedList = Object.assign([], this.dailyFeedList)
         this.dailyFeedList.unshift(res);
       }
     });
@@ -201,7 +205,7 @@ export class DailyFeedListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -219,25 +223,25 @@ export class DailyFeedListComponent implements OnInit {
       deleteModal.close();
     });
   }
-  
+
   deleteRecord = (pfId: any) => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
     });
-  
+
     (deleteModal.componentInstance as CustomAlertComponent).saveClick.subscribe(() => {
       this.blockUI.start('Deleting....');
       this.proceedDelete([].concat(pfId));
       deleteModal.close();
     });
   }
-  
+
   proceedDelete = (pfIds: string[]) => {
     let form = new FormData();
     form.append("dailyFeedIds", JSON.stringify(pfIds));
-  
+
     this.dailyFeedSubscriptions.push(this.dailyFeedService.deleteDailyFeed(form).subscribe((deletedResult: any) => {
       if (deletedResult) {
         this.isAllChecked = false;
@@ -251,7 +255,7 @@ export class DailyFeedListComponent implements OnInit {
       this.blockUI.stop();
     }));
   }
-  
+
   onSelectionChange = () => {
     if (this.isAllChecked) {
       this.dailyFeedList = this.dailyFeedList.map(p => { return { ...p, isChecked: true }; });
@@ -259,7 +263,7 @@ export class DailyFeedListComponent implements OnInit {
       this.dailyFeedList = this.dailyFeedList.map(up => { return { ...up, isChecked: false }; });
     }
   }
-  
+
   singleSelectionChange = (index: number) => {
     this.isAllChecked = false;
     this.dailyFeedList[index]['isChecked'] = !this.dailyFeedList[index]['isChecked'];
@@ -273,7 +277,7 @@ export class DailyFeedListComponent implements OnInit {
         return {
           'Owner': x.owner,
           'Farm': x.farmer,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
         }
       });
       this.fileService.exportAsExcelFile(csvData, "Ponds_Data");
@@ -285,10 +289,10 @@ export class DailyFeedListComponent implements OnInit {
         return {
           'Owner': x.owner,
           'Farm': x.farmer,
-          'Created On':  moment(x.createdOn).format('YYYY-MM-DD'),
+          'Created On': moment(x.createdOn).format('YYYY-MM-DD'),
         }
       });
-      const headers: any[] = ['Owner', 'Farm', 'Created On', 'Pond Count','Area Of Pond', 'Grade of Pond','Fixed Cost' ];
+      const headers: any[] = ['Owner', 'Farm', 'Created On', 'Pond Count', 'Area Of Pond', 'Grade of Pond', 'Fixed Cost'];
       this.fileService.exportToPDF("Ponds Data", headers, pdfData, 'Pond_Data');
       this.blockUI.stop();
     }

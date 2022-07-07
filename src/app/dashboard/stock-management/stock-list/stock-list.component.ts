@@ -12,6 +12,7 @@ import { StockService } from '../../../shared/services/stock.service';
 import { StockAddComponent } from '../stock-add/stock-add.component';
 import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
 import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
+import { LoggedUserService } from 'src/app/shared/services/logged-user.service';
 
 @Component({
   selector: 'app-stock-list',
@@ -29,6 +30,7 @@ export class StockListComponent implements OnInit {
   pageSize: number = 10;
   page: any = 1;
   stockSubscriptions: Subscription[] = [];
+  isFarmer!: boolean | undefined;
 
   constructor(
     private stockService: StockService,
@@ -36,10 +38,12 @@ export class StockListComponent implements OnInit {
     private modalService: NgbModal,
     private fileService: FileService,
     private store: Store<AppState>,
-    private customAlertService: CustomAlertService
+    private customAlertService: CustomAlertService,
+    private loggedUserService: LoggedUserService
   ) { }
 
   ngOnInit(): void {
+    this.isFarmer = this.loggedUserService.getUserRoles().some(x => x === 'FARMER');
     this.fetchStockList();
   }
 
@@ -48,7 +52,7 @@ export class StockListComponent implements OnInit {
     //  TODO **: CHECK WHETHER STORE HAS DATA SET OR NOT LATER : VERSIONS.
     this.stockSubscriptions.push(this.stockService.fetchStock().subscribe(res => {
       if (res && res.result) {
-        this.stockList = res.result;
+        this.stockList = this.isFarmer ? res.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : res.result;
         this.store.dispatch(setStockDetails(this.stockList));
       }
       this.blockUI.stop();
@@ -111,7 +115,7 @@ export class StockListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -131,7 +135,7 @@ export class StockListComponent implements OnInit {
   }
 
   deleteFarmRecord = (stockId: any) => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();

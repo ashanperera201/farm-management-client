@@ -8,11 +8,18 @@ import { TokenManagementService } from './token-management.service';
 export class LoggedUserService {
 
   private userDetails!: any;
+  private userId!: string;
 
   constructor(private tokenManagementService: TokenManagementService, private router: Router) { }
 
   setUserDetails = (userDetails: any) => {
     this.userDetails = userDetails;
+  }
+
+  setUserId = (userId: string) => {
+    localStorage.removeItem('userId')
+    this.userId = userId;
+    localStorage.setItem('userId', this.userId);
   }
 
   getUserRoles = (): string[] => {
@@ -24,11 +31,8 @@ export class LoggedUserService {
   }
 
   getLoggedUserId = () => {
-    let userId: string = "";
-    if (this.userDetails) { 
-      userId = this.userDetails.userId;
-    }
-    return userId;
+    const userIdRef = localStorage.getItem('userId');
+    return userIdRef ?  userIdRef : 'e5038865-ee47-480a-8535-a7e8fe6fdd6f';
   }
 
   isUserLoggedIn = (): boolean => {

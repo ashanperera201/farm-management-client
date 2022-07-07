@@ -17,6 +17,7 @@ import { PondService } from '../../../shared/services/pond.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
 import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
+import { LoggedUserService } from 'src/app/shared/services/logged-user.service';
 
 @Component({
   selector: 'app-weekly-sampling-list',
@@ -42,9 +43,10 @@ export class WeeklySamplingListComponent implements OnInit {
     pondList: []
   }
   filterForm!: FormGroup;
-  clubMemberList : any;
-  farmList : any;
-  pondList : any;
+  clubMemberList: any;
+  farmList: any;
+  pondList: any;
+  isFarmer!: boolean | undefined;
 
   constructor(
     private pondService: PondService,
@@ -55,16 +57,18 @@ export class WeeklySamplingListComponent implements OnInit {
     private fileService: FileService,
     private weeklySamplingService: WeeklySamplingService,
     private store: Store<AppState>,
-    private customAlertService: CustomAlertService
+    private customAlertService: CustomAlertService,
+    private loggedUserService: LoggedUserService
   ) { }
 
   ngOnInit(): void {
+    this.isFarmer = this.loggedUserService.getUserRoles().some(x => x === 'FARMER');
     this.initFilterForm();
     this.fetchWeeklySamplingData();
     this.fetchInitialData();
   }
 
-  initFilterForm= () => {
+  initFilterForm = () => {
     this.filterForm = new FormGroup({
       owner: new FormControl(null),
       farmer: new FormControl(null),
@@ -78,7 +82,7 @@ export class WeeklySamplingListComponent implements OnInit {
     const farmer = this.filterForm.get("farmer")?.value;
     const pond = this.filterForm.get("pond")?.value;
 
-    if(owner){
+    if (owner) {
       this.weelySamplingList = this.weelySamplingList.filter(x => x.owner?._id === owner);
       const filteredFarmList = this.initialData.farmList.filter((x: any) => x.owner && x.owner._id === owner);
       if (filteredFarmList && filteredFarmList.length > 0) {
@@ -87,7 +91,8 @@ export class WeeklySamplingListComponent implements OnInit {
         this.farmList = [];
       }
     }
-    if(farmer){
+    
+    if (farmer) {
       this.weelySamplingList = this.weelySamplingList.filter(x => x.farmer?._id === farmer);
       const pondList = this.initialData.pondList.filter((x: any) => (x.farmer && x.farmer._id === farmer) && (x.owner && x.owner._id === owner));
       if (pondList && pondList.length > 0) {
@@ -97,7 +102,7 @@ export class WeeklySamplingListComponent implements OnInit {
       }
 
     }
-    if(pond){
+    if (pond) {
       this.weelySamplingList = this.initialWeelySamplingList.filter(x => x.pond?._id === pond);
     }
   }
@@ -106,9 +111,11 @@ export class WeeklySamplingListComponent implements OnInit {
     this.blockUI.start('Fetching....');
     this.weeklySamplingSubscriptions.push(this.weeklySamplingService.getAllWeeklySamplings().subscribe((samplingResponse: any) => {
       if (samplingResponse && samplingResponse.validity) {
-        this.weelySamplingList = samplingResponse.result;
-        this.initialWeelySamplingList = samplingResponse.result;
-        this.store.dispatch(setWeeklySamplings(samplingResponse.result));
+        const serviceResult = this.isFarmer ? samplingResponse.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : samplingResponse.result;
+        this.weelySamplingList = serviceResult;
+        this.initialWeelySamplingList = serviceResult;
+        const result = this.isFarmer ? serviceResult.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : serviceResult;
+        this.store.dispatch(setWeeklySamplings(result));
       }
       this.blockUI.stop();
     }, () => {
@@ -194,7 +201,7 @@ export class WeeklySamplingListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -214,7 +221,7 @@ export class WeeklySamplingListComponent implements OnInit {
   }
 
   deleteWeeklySamplingRecord = (weeklySamplingIds: any) => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -285,8 +292,8 @@ export class WeeklySamplingListComponent implements OnInit {
   resetFilters = () => {
     this.filterForm.reset();
     this.weelySamplingList = this.initialWeelySamplingList;
-    this.farmList =   [];
-    this.pondList =   [];
+    this.farmList = [];
+    this.pondList = [];
     this.clubMemberList = this.initialData.ownerList;
   }
 

@@ -11,6 +11,7 @@ import { PondAddComponent } from '../pond-add/pond-add.component';
 import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
 import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 import { PondUpdateComponent } from '../pond-update/pond-update.component';
+import { LoggedUserService } from 'src/app/shared/services/logged-user.service';
 
 @Component({
   selector: 'app-pond-list',
@@ -28,15 +29,18 @@ export class PondListComponent implements OnInit {
   pageSize: number = 10;
   page: any = 1;
   pondListSubscriptions: Subscription[] = [];
+  isFarmer!: boolean | undefined;
 
   constructor(
     private pondService: PondService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private fileService: FileService,
-    private customAlertService: CustomAlertService) { }
+    private customAlertService: CustomAlertService,
+    private loggedUserService: LoggedUserService) { }
 
   ngOnInit(): void {
+    this.isFarmer = this.loggedUserService.getUserRoles().some(x => x === 'FARMER');
     this.fetchPondsList();
   }
 
@@ -44,7 +48,7 @@ export class PondListComponent implements OnInit {
     this.blockUI.start('Fetching Ponds...');
     this.pondListSubscriptions.push(this.pondService.fetchPonds().subscribe(res => {
       if (res && res.result) {
-        this.pondList = res.result;
+        this.pondList = this.isFarmer ? res.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : res.result;
       }
       this.blockUI.stop();
     }, () => {

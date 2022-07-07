@@ -9,7 +9,8 @@ import { AuthService } from '../../shared/services/auth.service';
 import { RegisterComponent } from '../register/register.component';
 import { ForgetPasswordComponent } from '../forget-password/forget-password.component';
 import { TokenManagementService } from '../../shared/services/token-management.service';
-import { keyPressEnter } from '../../shared/utils';
+import { LoggedUserService } from '../../shared/services/logged-user.service';
+
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,7 @@ import { keyPressEnter } from '../../shared/utils';
 })
 
 export class LoginComponent implements OnInit, OnDestroy {
-  
+
   @BlockUI() blockUI!: NgBlockUI;
   loginForm!: FormGroup;
   signUpModal!: NgbModalRef;
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private toastrService: ToastrService,
     private modalService: NgbModal,
     private tokenManagementService: TokenManagementService,
-    private router: Router) { }
+    private router: Router,
+    private loggedUserService: LoggedUserService) { }
 
   ngOnInit(): void {
     this.initLoginForm();
@@ -50,6 +52,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.authSubscription = this.authService.authenticateUser(this.loginForm.value).subscribe(userServiceResult => {
         if (userServiceResult && userServiceResult.validity) {
           const tokenData: any = userServiceResult.result;
+          this.loggedUserService.setUserId(tokenData.userId)
           this.tokenManagementService.storeToken(tokenData.accessToken);
           this.router.navigate(['/dashboard/home']);
           this.blockUI.stop();

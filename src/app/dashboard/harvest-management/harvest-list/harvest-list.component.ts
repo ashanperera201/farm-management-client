@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import {ExportTypes} from '../../../shared/enums/export-type';
-import {FarmAddComponent} from '../../farm-management/farm-add/farm-add.component';
+import { ExportTypes } from '../../../shared/enums/export-type';
+import { FarmAddComponent } from '../../farm-management/farm-add/farm-add.component';
 import * as moment from 'moment';
-import {BlockUI, NgBlockUI} from 'ng-block-ui';
-import {ToastrService} from 'ngx-toastr';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {FileService} from '../../../shared/services/file.service';
-import {HarvestService} from '../../../shared/services/harvest.service';
-import {HarvestAddComponent} from '../harvest-add/harvest-add.component';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FileService } from '../../../shared/services/file.service';
+import { HarvestService } from '../../../shared/services/harvest.service';
+import { HarvestAddComponent } from '../harvest-add/harvest-add.component';
 import { Store } from '@ngrx/store';
 import { AppState, removeHarvest, setHarvest, updateHarvest } from '../../../redux';
 import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
 import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
+import { LoggedUserService } from 'src/app/shared/services/logged-user.service';
 
 @Component({
   selector: 'app-harvest-list',
@@ -28,15 +29,18 @@ export class HarvestListComponent implements OnInit {
   exportTypes = ExportTypes;
   pageSize = 10;
   page = 1;
+  isFarmer!: boolean | undefined;
 
   constructor(private harvestService: HarvestService,
-              private toastrService: ToastrService,
-              private modalService: NgbModal,
-              private fileService: FileService,
-              private store: Store<AppState>,
-              private customAlertService: CustomAlertService) { }
+    private toastrService: ToastrService,
+    private modalService: NgbModal,
+    private fileService: FileService,
+    private store: Store<AppState>,
+    private customAlertService: CustomAlertService,
+    private loggedUserService: LoggedUserService) { }
 
   ngOnInit(): void {
+    this.isFarmer = this.loggedUserService.getUserRoles().some(x => x === 'FARMER');
     this.fetchHarvestList();
   }
 
@@ -44,7 +48,7 @@ export class HarvestListComponent implements OnInit {
     this.blockUI.start('Fetching data....');
     this.harvestService.fetchHarvests().subscribe(res => {
       if (res && res.result) {
-        this.harvestList = res.result;
+        this.harvestList =  this.isFarmer ? res.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : res.result;
         this.store.dispatch(setHarvest(res.result));
       }
       this.blockUI.stop();
@@ -97,7 +101,7 @@ export class HarvestListComponent implements OnInit {
           harvestRefs[index].harvestQuantity = afterSaveRes.harvestQuantity;
           harvestRefs[index].harvestAWB = afterSaveRes.harvestAWB;
           harvestRefs[index].harvestSalePrice = afterSaveRes.harvestSalePrice;
-  
+
           this.harvestList = [...harvestRefs];
           // ** 
           this.store.dispatch(updateHarvest(this.harvestList[index]));
@@ -107,7 +111,7 @@ export class HarvestListComponent implements OnInit {
   }
 
   deleteSelected = () => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();
@@ -127,7 +131,7 @@ export class HarvestListComponent implements OnInit {
   }
 
   deleteHarvestRecord = (harvestId: any) => {
-    const deleteModal =  this.customAlertService.openDeleteconfirmation();
+    const deleteModal = this.customAlertService.openDeleteconfirmation();
 
     (deleteModal.componentInstance as CustomAlertComponent).cancelClick.subscribe(() => {
       deleteModal.close();

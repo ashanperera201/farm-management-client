@@ -12,6 +12,7 @@ import { Store } from '@ngrx/store';
 import { AppState, removeClubMember, setClubMember, updateClubMember } from '../../../redux';
 import { CustomAlertComponent } from 'src/app/shared/components/custom-alert/custom-alert.component';
 import { CustomAlertService } from 'src/app/shared/components/custom-alert/custom-alert.service';
+import { LoggedUserService } from 'src/app/shared/services/logged-user.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class ClubMemberListComponent implements OnInit {
   page: any = 1;
   memberListSubscriptions: Subscription[] = [];
   isAllChecked!: boolean;
+  isFarmer!: boolean | undefined;
 
   @BlockUI() blockUI!: NgBlockUI;
 
@@ -37,9 +39,11 @@ export class ClubMemberListComponent implements OnInit {
     private modalService: NgbModal,
     private fileService: FileService,
     private store: Store<AppState>,
-    private customAlertService: CustomAlertService) { }
+    private customAlertService: CustomAlertService,
+    private loggedUserService: LoggedUserService) { }
 
   ngOnInit(): void {
+    this.isFarmer = this.loggedUserService.getUserRoles().some(x => x === 'FARMER');
     this.fetchClubMembers();
   }
 
@@ -47,7 +51,7 @@ export class ClubMemberListComponent implements OnInit {
     this.blockUI.start('Fetching Club Members......');
     this.memberListSubscriptions.push(this.clubMemberService.fetchClubMembers().subscribe(res => {
       if (res && res.result) {
-        this.clubMemberList = res.result;
+        this.clubMemberList = this.isFarmer ? res.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : res.result;
         this.store.dispatch(setClubMember(res.result));
       }
       this.blockUI.stop();
@@ -66,7 +70,7 @@ export class ClubMemberListComponent implements OnInit {
     });
     addClubMemberModal.componentInstance.afterSave.subscribe((res: any) => {
       if (res && res.clubMember) {
-        this.clubMemberList = Object.assign([],this.clubMemberList)
+        this.clubMemberList = Object.assign([], this.clubMemberList)
         this.clubMemberList.unshift(res.clubMember);
       }
     });
