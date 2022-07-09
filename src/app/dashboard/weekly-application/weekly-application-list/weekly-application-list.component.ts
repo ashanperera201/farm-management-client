@@ -136,19 +136,22 @@ export class WeeklyApplicationListComponent implements OnInit, AfterViewInit {
     this.blockUI.start('Fetching Data...');
     this.weeklyApplicationSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.ownerList = ownerRes.result;
+        const wnRes = this.isFarmer ? ownerRes.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : ownerRes.result;
+        this.ownerList = wnRes;
         this.initialData.ownerList = ownerRes.result;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.initialData.pondList = resPonds.result;
+        const pndRes = this.isFarmer ? resPonds.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : resPonds.result;
+        this.initialData.pondList = pndRes;
         this.pondList = [];
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.initialData.farmList = farmRes.result;
+        const frmList = this.isFarmer ? farmRes.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : farmRes.result;
+        this.initialData.farmList = frmList;
         this.farmList = [];
       }
     }))

@@ -127,19 +127,22 @@ export class WeeklySamplingListComponent implements OnInit {
     this.blockUI.start('Fetching Data...');
     this.weeklySamplingSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.initialData.ownerList = ownerRes.result;
-        this.clubMemberList = ownerRes.result;
+        const res = this.isFarmer ? ownerRes.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : ownerRes.result;
+        this.initialData.ownerList = res;
+        this.clubMemberList = res;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.initialData.pondList = resPonds.result;
+        const pondRes = this.isFarmer ? resPonds.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : resPonds.result;
+        this.initialData.pondList = pondRes;
         this.pondList = [];
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.initialData.farmList = farmRes.result;
+        const resFarm = this.isFarmer ? farmRes.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : farmRes.result;
+        this.initialData.farmList = resFarm;
         this.farmList = [];
       }
     }))

@@ -1,5 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { switchMap } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { ClubMemberService } from '../../../shared/services/club-member.service'
 import { keyPressNumbers } from '../../../shared/utils/keyboard-event';
 import { WeeklyPerformanceReportComponent } from '../weekly-performance-report/weekly-performance-report.component';
 import { AppState, selectsalesPrice, selectStockDetails, selectWeeklySamplings } from '../../../redux';
+import { LoggedUserService } from 'src/app/shared/services/logged-user.service';
 
 
 @Component({
@@ -39,17 +40,20 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   weeklySamplingFilterdata: any;
   stockFilterdata: any;
   salesPriceFilterdata: any;
+  isFarmer!: boolean | undefined;
 
   constructor(
-    private clubMemberService : ClubMemberService,
-    private farmService : FarmService,
-    private pondService : PondService,
-    private modalService : NgbModal,
-    private toastrService : ToastrService,
-    private store: Store<AppState>
+    private clubMemberService: ClubMemberService,
+    private farmService: FarmService,
+    private pondService: PondService,
+    private modalService: NgbModal,
+    private toastrService: ToastrService,
+    private store: Store<AppState>,
+    private loggedUserService: LoggedUserService
   ) { }
 
   ngOnInit(): void {
+    this.isFarmer = this.loggedUserService.getUserRoles().some(x => x === 'FARMER');
     this.initAddPondForm();
     this.fetchInitialData();
   }
@@ -67,17 +71,20 @@ export class WeeklyPerformanceShowComponent implements OnInit {
     this.blockUI.start('Fetching Data...');
     this.weeklyPerformanceSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.ownerList = ownerRes.result;
+        const wnRes = this.isFarmer ? ownerRes.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : ownerRes.result;
+        this.ownerList = wnRes;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.initialData.pondList = resPonds.result;
+        const pondRes = this.isFarmer ? resPonds.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : resPonds.result;
+        this.initialData.pondList = pondRes;
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.initialData.farmList = farmRes.result;
+        const frmRes = this.isFarmer ? farmRes.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : farmRes.result;
+        this.initialData.farmList = frmRes;
       }
     }, () => {
       this.blockUI.stop();
@@ -114,7 +121,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
   }
 
   showWeeklyPerformance = () => {
-    if(this.weeklyPerformanceForm.valid && this.weeklyPerformanceForm.value.weekNumber > 0){
+    if (this.weeklyPerformanceForm.valid && this.weeklyPerformanceForm.value.weekNumber > 0) {
       const performanceReportModal = this.modalService.open(WeeklyPerformanceReportComponent, {
         animation: true,
         keyboard: true,
@@ -124,14 +131,13 @@ export class WeeklyPerformanceShowComponent implements OnInit {
       performanceReportModal.componentInstance.initialData = this.weeklyPerformanceForm.value;
     }
     else {
-      this.toastrService.error("Please enter valid values","Error");
+      this.toastrService.error("Please enter valid values", "Error");
     }
     //TO DO
     this.store.select(selectWeeklySamplings).subscribe(res => {
       if (res) {
         this.weeklySamplingFilterdata = res.filter((x: any) => (x.owner && x.owner._id === this.weeklyPerformanceForm.get("owner")?.value) && (x.farmer && x.farmer._id === this.weeklyPerformanceForm.get("farmer")?.value) && (x.pond && x.pond._id === this.weeklyPerformanceForm.get("pondNo")?.value));
-        if(this.weeklySamplingFilterdata && this.weeklySamplingFilterdata.legth > 0)
-        {
+        if (this.weeklySamplingFilterdata && this.weeklySamplingFilterdata.legth > 0) {
           this.gainInWeight = this.weeklySamplingFilterdata[0].gainInWeight;
         }
       }
@@ -140,7 +146,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
     this.store.select(selectStockDetails).subscribe(res => {
       if (res) {
         this.stockFilterdata = res.filter((x: any) => (x.owner && x.owner._id === this.weeklyPerformanceForm.get("owner")?.value) && (x.farmer && x.farmer._id === this.weeklyPerformanceForm.get("farmer")?.value) && (x.pond && x.pond._id === this.weeklyPerformanceForm.get("pondNo")?.value));
-        if(this.stockFilterdata && this.stockFilterdata.length > 0 && this.weeklySamplingFilterdata && this.weeklySamplingFilterdata.length >0){
+        if (this.stockFilterdata && this.stockFilterdata.length > 0 && this.weeklySamplingFilterdata && this.weeklySamplingFilterdata.length > 0) {
           this.totalBioMass = this.weeklySamplingFilterdata[0].expectedSurvivalPercentage * this.stockFilterdata[0].plCount * this.weeklySamplingFilterdata[0].averageBodyWeight;
         }
       }
@@ -149,7 +155,7 @@ export class WeeklyPerformanceShowComponent implements OnInit {
     this.store.select(selectsalesPrice).subscribe(res => {
       if (res) {
         this.salesPriceFilterdata = res.filter((x: any) => (x.owner && x.owner._id === this.weeklyPerformanceForm.get("owner")?.value) && (x.farmer && x.farmer._id === this.weeklyPerformanceForm.get("farmer")?.value) && (x.pond && x.pond._id === this.weeklyPerformanceForm.get("pondNo")?.value));
-        
+
       }
     })
   }

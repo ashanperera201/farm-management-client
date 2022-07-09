@@ -117,7 +117,7 @@ export class DailyFeedListComponent implements OnInit {
     this.blockUI.start('Fetching Daily Feed......');
     this.dailyFeedSubscriptions.push(this.dailyFeedService.fetchDailyFeeds().subscribe(res => {
       if (res && res.result) {
-        this.dailyFeedList = this.isFarmer ? res.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : res.result;;
+        this.dailyFeedList = this.isFarmer ? res.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : res.result;
         this.initialDailyFeedList = res.result;
         this.store.dispatch(setDailyFeed(res.result));
       }
@@ -132,19 +132,22 @@ export class DailyFeedListComponent implements OnInit {
     this.blockUI.start('Fetching Data...');
     this.dailyFeedSubscriptions.push(this.clubMemberService.fetchClubMembers().pipe(switchMap((ownerRes: any) => {
       if (ownerRes && ownerRes.result) {
-        this.initialData.ownerList = ownerRes.result;
-        this.ownerList = ownerRes.result;
+        const wnRes = this.isFarmer ? ownerRes.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : ownerRes.result;
+        this.initialData.ownerList = wnRes;
+        this.ownerList = wnRes;
       }
       return this.pondService.fetchPonds()
     })).pipe(switchMap((resPonds: any) => {
       if (resPonds && resPonds.result) {
-        this.initialData.pondList = resPonds.result;
+        const pndRes = this.isFarmer ? resPonds.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : resPonds.result;
+        this.initialData.pondList = pndRes;
         this.pondList = [];
       }
       return this.farmService.fetchFarms()
     })).subscribe((farmRes: any) => {
       if (farmRes && farmRes.result) {
-        this.initialData.farmList = farmRes.result;
+        const frmRes = this.isFarmer ? farmRes.result.filter((x: any) => x.createdBy === this.loggedUserService.getLoggedUserId()) : farmRes.result;
+        this.initialData.farmList = frmRes;
         this.farmList = [];
       }
     }));
