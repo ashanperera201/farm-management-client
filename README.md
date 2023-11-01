@@ -26,4 +26,5 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
-<img width="1920" alt="Untitled" src="https://github.com/ashanperera201/farm-management-client/assets/20725200/2ff1e315-7f30-40c7-b923-a9fabe2da438">
+
+<img width="1920" alt="Untitled" src="https://github.com/ashanperera201/farm-management-client/assets/20725200/118f7493-0afc-42bf-b87e-75f268eb63eb">
